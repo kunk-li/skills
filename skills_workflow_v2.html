@@ -1,0 +1,1474 @@
+<!doctype html>
+<html lang="zh-CN"><head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Skills 流程优化方案 v2</title>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<style>
+  :root {
+    --bg: #0F0F0F;
+    --surface: #1A1A1A;
+    --surface-2: #242424;
+    --ink: #F5F5F5;
+    --ink-dim: #999;
+    --line: #2E2E2E;
+    --accent: #FF6B35;
+    --accent-2: #FFD93D;
+    --success: #6BCB77;
+    --danger: #FF4757;
+    --info: #4D96FF;
+  }
+  * { box-sizing: border-box; }
+  html,body { margin:0; padding:0; background:var(--bg); color:var(--ink);
+    font-family: "PingFang SC","Hiragino Sans GB","Microsoft YaHei",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    line-height:1.6; -webkit-font-smoothing:antialiased; }
+
+  /* === HERO === */
+  .hero { padding:80px 60px 60px; background:linear-gradient(135deg,#1A1A1A 0%,#0F0F0F 50%,#1A0F0F 100%);
+    border-bottom:1px solid var(--line); position:relative; overflow:hidden; }
+  .hero::before { content:''; position:absolute; top:-50%; right:-10%; width:600px; height:600px;
+    background:radial-gradient(circle,rgba(255,107,53,.15),transparent 70%); pointer-events:none; }
+  .hero .kicker { font-family:"JetBrains Mono",monospace; font-size:11px; letter-spacing:.3em;
+    color:var(--accent); text-transform:uppercase; margin-bottom:20px; display:inline-block;
+    padding:6px 14px; border:1px solid var(--accent); border-radius:99px; }
+  .hero h1 { font-size:60px; margin:0 0 16px; font-weight:900; letter-spacing:-.03em; line-height:1.05; }
+  .hero h1 .accent { background:linear-gradient(135deg,var(--accent),var(--accent-2)); -webkit-background-clip:text;
+    background-clip:text; color:transparent; }
+  .hero .en { color:var(--ink-dim); font-size:20px; font-weight:300; margin-top:8px; display:block; letter-spacing:0; }
+  .hero p.lead { color:#BBB; max-width:840px; font-size:16px; margin:24px 0 32px; }
+  .meta { display:flex; gap:40px; flex-wrap:wrap; }
+  .meta-item { padding:16px 24px; background:rgba(255,255,255,.04); border:1px solid var(--line);
+    border-radius:8px; min-width:140px; }
+  .meta-item b { display:block; font-family:"JetBrains Mono",monospace; font-size:28px;
+    color:var(--accent-2); font-weight:700; }
+  .meta-item span { font-size:12px; color:var(--ink-dim); letter-spacing:.1em; text-transform:uppercase; }
+
+  /* === 优化项卡片 === */
+  .improvements { padding:60px; background:var(--surface); border-bottom:1px solid var(--line); }
+  .section-title { font-size:13px; letter-spacing:.25em; color:var(--accent); text-transform:uppercase;
+    margin:0 0 12px; font-family:"JetBrains Mono",monospace; }
+  .section-h2 { font-size:36px; font-weight:800; margin:0 0 40px; letter-spacing:-.02em; }
+  .imp-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(320px,1fr)); gap:16px; }
+  .imp-card { background:var(--surface-2); border:1px solid var(--line); border-radius:10px; padding:24px;
+    position:relative; transition:.2s; }
+  .imp-card:hover { border-color:var(--accent); transform:translateY(-2px); }
+  .imp-card .num { font-family:"JetBrains Mono",monospace; font-size:11px; color:var(--accent);
+    letter-spacing:.2em; }
+  .imp-card h3 { margin:8px 0 12px; font-size:18px; }
+  .imp-card p { margin:0 0 12px; color:var(--ink-dim); font-size:13.5px; }
+  .imp-card .priority { display:inline-block; padding:3px 10px; border-radius:4px; font-size:10px;
+    font-family:"JetBrains Mono",monospace; font-weight:700; letter-spacing:.1em; }
+  .imp-card .priority.p0 { background:var(--danger); color:#fff; }
+  .imp-card .priority.p1 { background:var(--accent); color:#fff; }
+  .imp-card .priority.p2 { background:var(--info); color:#fff; }
+  .imp-card .priority.p3 { background:#555; color:#fff; }
+
+  /* === 全局拓扑 === */
+  .overview { padding:60px; background:var(--bg); border-bottom:1px solid var(--line); }
+  .mermaid-wrap { overflow:auto; background:#FAFAFA; padding:32px; border-radius:12px;
+    border:1px solid var(--line); max-height:1200px; }
+  .legend { display:flex; gap:20px; flex-wrap:wrap; margin-top:20px; padding:16px; background:var(--surface);
+    border-radius:8px; border:1px solid var(--line); font-size:12.5px; color:var(--ink-dim); }
+  .legend-item { display:flex; align-items:center; gap:8px; }
+  .legend-dot { width:14px; height:14px; border-radius:3px; }
+
+  /* === 阶段索引 === */
+  .toc { padding:40px 60px; background:var(--surface); border-bottom:1px solid var(--line); }
+  .toc-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr)); gap:10px; }
+  .toc a { display:flex; align-items:center; gap:12px; padding:14px 16px; border:1px solid var(--line);
+    border-radius:8px; text-decoration:none; color:var(--ink); font-size:13px; transition:.15s;
+    background:var(--surface-2); }
+  .toc a:hover { border-color:var(--accent); background:#2A1F1A; transform:translateX(3px); }
+  .toc a .icon { font-size:18px; }
+  .toc a small { color:var(--ink-dim); font-family:"JetBrains Mono",monospace; }
+
+  /* === 节点卡片 === */
+  main { max-width:1500px; margin:0 auto; padding:60px; }
+  .stage { margin-bottom:80px; }
+  .stage-header { display:flex; align-items:center; gap:24px; padding:24px 28px;
+    background:linear-gradient(135deg,var(--stage-bg),color-mix(in srgb,var(--stage-bg) 80%, transparent));
+    color:var(--stage-fg); border-radius:12px; margin-bottom:32px;
+    border-left:6px solid var(--stage-fg); }
+  .stage-icon { font-size:36px; }
+  .stage-num { font-family:"JetBrains Mono",monospace; font-size:36px; font-weight:800; opacity:.4; }
+  .stage-header h2 { margin:0; font-size:26px; font-weight:800; }
+  .stage-en { margin:4px 0 0; font-size:13px; opacity:.7; font-family:"JetBrains Mono",monospace; }
+  .stage-count { margin-left:auto; font-size:12px; padding:8px 14px; background:rgba(0,0,0,.15);
+    border-radius:99px; font-weight:600; }
+
+  .cards { display:grid; grid-template-columns:repeat(auto-fill,minmax(400px,1fr)); gap:20px; }
+  .card { background:var(--surface); border:1px solid var(--line); border-radius:10px; padding:22px;
+    transition:.2s; position:relative; }
+  .card:hover { border-color:var(--stage-fg); box-shadow:0 12px 40px rgba(0,0,0,.4); transform:translateY(-2px); }
+  .card.is-new { border-color:var(--accent-2); border-width:2px;
+    box-shadow:0 0 0 4px rgba(255,217,61,.1); }
+  .card.is-crosscut { background:repeating-linear-gradient(135deg,var(--surface),var(--surface) 10px,var(--surface-2) 10px,var(--surface-2) 11px); }
+
+  .card-head { display:flex; align-items:center; gap:10px; margin-bottom:10px; flex-wrap:wrap; }
+  .nid { font-family:"JetBrains Mono",monospace; font-size:11px; padding:4px 8px; background:var(--stage-bg);
+    color:var(--stage-fg); border-radius:4px; font-weight:700; }
+  .card h3 { margin:0; font-size:17px; font-weight:700; flex:1; }
+  .sub { font-size:11px; color:var(--ink-dim); }
+
+  .badges { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:12px; }
+  .badge { font-size:10px; padding:3px 8px; border-radius:4px; font-weight:600; letter-spacing:.05em; }
+  .badge.new { background:var(--accent-2); color:#000; }
+  .badge.crosscut { background:#444; color:var(--accent-2); border:1px dashed var(--accent-2); }
+  .badge.enh { background:rgba(255,107,53,.15); color:var(--accent); border:1px solid var(--accent); }
+
+  .goal { font-size:13px; color:var(--ink-dim); margin:0 0 16px; padding-bottom:14px;
+    border-bottom:1px dashed var(--line); }
+
+  .block { margin-bottom:14px; }
+  .block-label { font-size:10.5px; font-weight:700; letter-spacing:.1em; color:var(--ink-dim);
+    text-transform:uppercase; margin-bottom:8px; display:flex; align-items:center; gap:6px; }
+  .docs { list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:4px; }
+  .docs li { font-size:12px; padding:6px 10px; border-radius:4px; font-family:"JetBrains Mono",monospace;
+    background:var(--surface-2); border-left:3px solid var(--line); color:#DDD; }
+  .docs.in li { border-left-color:var(--success); }
+  .docs.out li { border-left-color:var(--accent); }
+
+  .chips { display:flex; flex-wrap:wrap; gap:5px; }
+  .chip { font-size:10.5px; padding:4px 9px; background:var(--stage-fg); color:#fff;
+    border-radius:99px; font-family:"JetBrains Mono",monospace; opacity:.95; }
+
+  .next { margin-top:14px; padding-top:12px; border-top:1px solid var(--line);
+    font-size:11px; color:var(--ink-dim); font-family:"JetBrains Mono",monospace; }
+
+  /* === 底部架构图 === */
+  .architecture { padding:60px; background:var(--surface); border-top:1px solid var(--line); }
+  .arch-diagram { background:var(--bg); border:1px solid var(--line); border-radius:12px; padding:40px;
+    font-family:"JetBrains Mono",monospace; font-size:13px; line-height:1.8; color:#BBB;
+    overflow-x:auto; white-space:pre; }
+
+  footer { padding:40px 60px; text-align:center; color:var(--ink-dim); font-size:12px;
+    border-top:1px solid var(--line); background:var(--surface); }
+  footer .v { color:var(--accent-2); font-weight:700; font-family:"JetBrains Mono",monospace; }
+</style>
+</head><body>
+
+<header class="hero">
+  <div class="kicker">Skills Workflow · Optimized v2</div>
+  <h1>Skills 流程优化方案<br/><span class="accent">v2 · Reactive Edition</span>
+    <span class="en">From Static DAG → Reactive Event-Driven System</span></h1>
+  <p class="lead">在 v1 流程基础上引入 <b>事件总线</b>、<b>产物契约</b>、<b>渐进门禁</b>、<b>反馈回流</b>、<b>熔断保护</b>、<b>分层路由</b>、<b>SLA 人工队列</b> 七项核心改造,把"被动执行的 DAG"升级为"主动感知的反应式系统"。</p>
+  <div class="meta">
+    <div class="meta-item"><b>+1</b><span>新增节点 (N005)</span></div>
+    <div class="meta-item"><b>7</b><span>核心优化项</span></div>
+    <div class="meta-item"><b>4</b><span>横切订阅者</span></div>
+    <div class="meta-item"><b>40</b><span>节点总数</span></div>
+    <div class="meta-item"><b>3</b><span>新基础设施</span></div>
+  </div>
+</header>
+
+<section class="improvements">
+  <div class="section-title">Seven Optimizations · 七项优化</div>
+  <h2 class="section-h2">改造项一览</h2>
+  <div class="imp-grid">
+    <div class="imp-card"><span class="priority p0">P0</span><div class="num">// 优化 02</div><h3>📜 产物契约层</h3><p>从字符串文件名升级为带 Schema、版本号、生产者-消费者元数据的契约对象。改字段必升版本,下游可感知。</p></div>
+    <div class="imp-card"><span class="priority p0">P0</span><div class="num">// 优化 06</div><h3>🚦 渐进式门禁 (Shift-Left)</h3><p>把检查能力下沉到每个节点(节点自检),N100/N260/N380 退化为汇总判定。问题在节点内修复,不流转下游。</p></div>
+    <div class="imp-card"><span class="priority p1">P1</span><div class="num">// 优化 01</div><h3>⚡ 事件总线</h3><p>横切层(文档/任务/治理)从 DAG 末尾节点改为事件订阅者,主流程任何节点完成即触发,文档不再滞后于代码。</p></div>
+    <div class="imp-card"><span class="priority p1">P1</span><div class="num">// 优化 04</div><h3>🔄 线上反馈回流</h3><p>新增 N005 节点聚合监控/复盘/缺陷/NPS,反推数据驱动的需求假设,直接喂给 N010 与 N060。</p></div>
+    <div class="imp-card"><span class="priority p2">P2</span><div class="num">// 优化 03</div><h3>🎯 三层分层路由</h3><p>N370 路由从 130+ 全集选择,改为 阶段→节点→节点内 三层决策,每层 ≤11 选 1,准确率显著提升。</p></div>
+    <div class="imp-card"><span class="priority p2">P2</span><div class="num">// 优化 07</div><h3>👥 人工确认 SLA 队列</h3><p>每个待确认项打 P0/P1/P2 优先级 + SLA 时限 + 风险标注 + 推荐动作。超时自动升级,人不再被淹没。</p></div>
+    <div class="imp-card"><span class="priority p3">P3</span><div class="num">// 优化 05</div><h3>⚡ 回环熔断器</h3><p>所有回环边(热修复/质量升级)增加 max_iterations + cooldown + 自动升级机制,防止"修一次坏一次"死循环。</p></div>
+  </div>
+</section>
+
+<section class="overview">
+  <div class="section-title">Global Topology · 全局拓扑(优化版)</div>
+  <h2 class="section-h2">流程拓扑图</h2>
+  <div class="mermaid-wrap">
+<pre class="mermaid">
+flowchart TD
+  classDef new fill:#FFE8B0,stroke:#8A5A00,stroke-width:3px,color:#000
+  classDef crosscut fill:#F0F0F0,stroke:#666,stroke-dasharray: 5 5,color:#333
+  classDef gate fill:#FFE0E0,stroke:#A02020,stroke-width:2px,color:#000
+  EventBus(["⚡ 事件总线 Event Bus<br/>产物事件 / 状态事件 / 异常事件"])
+  style EventBus fill:#FFF8DC,stroke:#B8860B,stroke-width:3px,color:#000
+  Contract[("📜 产物契约层<br/>Artifact Schema Validator")]
+  style Contract fill:#E0F0FF,stroke:#1E47A8,stroke-width:2px,color:#000
+  subgraph G_5["反馈回流层"]
+    N005["✨ N005<br/>线上信号聚合"]
+  end
+  subgraph G_10["需求与产品定义"]
+    N010["N010<br/>需求输入归档"]
+    N020["N020<br/>需求去重聚类"]
+    N030["N030<br/>需求背景补全"]
+    N040["N040<br/>用户问题洞察"]
+    N050["N050<br/>竞品研究"]
+    N060["N060<br/>需求规划评估"]
+    N070["N070<br/>需求结构化建模"]
+    N080["N080<br/>原型解析"]
+    N090["N090<br/>PRD产出与评审"]
+  end
+  subgraph G_100["需求质量保障"]
+    N100["🚦 N100<br/>需求质量门禁"]
+  end
+  subgraph G_110["协同交接"]
+    N110["N110<br/>需求交接与验收"]
+  end
+  subgraph G_120["技术方案设计"]
+    N120["N120<br/>技术需求理解"]
+    N130["N130<br/>技术方案分析与评审"]
+    N140["N140<br/>架构与边界设计"]
+    N150["N150<br/>API设计与校验"]
+    N160["N160<br/>数据模型设计"]
+    N170["N170<br/>高级与非功能设计"]
+    N180["N180<br/>研发任务规划"]
+  end
+  subgraph G_190["编码与实现"]
+    N190["N190<br/>代码骨架生成"]
+    N200["N200<br/>实现辅助代码生成"]
+    N210["N210<br/>代码质量静态检查"]
+    N220["N220<br/>Code Review与提交协同"]
+  end
+  subgraph G_230["测试与质量保障"]
+    N230["N230<br/>测试设计"]
+    N240["N240<br/>回归与自动化编排"]
+    N250["⚡ N250<br/>测试结果与缺陷管理"]
+    N260["🚦 N260<br/>质量门禁与专项测试"]
+  end
+  subgraph G_270["发布与交付"]
+    N270["⚡ N270<br/>发布准备与策略"]
+    N280["N280<br/>配置环境与发布执行"]
+    N290["N290<br/>发布验证与上线验收"]
+  end
+  subgraph G_300["运行与故障处理"]
+    N300["N300<br/>运行监控与日志定位"]
+    N310["⚡ N310<br/>处置响应与修复评估"]
+    N320["N320<br/>故障复盘沉淀"]
+  end
+  subgraph G_370["平台底座与编排"]
+    N370["N370<br/>平台路由与多技能编排"]
+    N380["🚦 N380<br/>平台门禁与人工协同"]
+    N390["N390<br/>平台治理与模板质量"]
+  end
+  subgraph CROSS["📡 横切订阅者(事件驱动)"]
+    direction LR
+    N330["N330<br/>技术与运维文档输出"]
+    N340["N340<br/>协作文档与经验沉淀"]
+    N350["N350<br/>协同任务与风险管理"]
+    N390["N390<br/>平台治理与模板质量"]
+  end
+  class N330,N340,N350,N390 crosscut
+  N005 --> N010
+  N005 --> N060
+  N010 --> N020
+  N020 --> N030
+  N030 --> N040
+  N030 --> N050
+  N030 --> N060
+  N030 --> N070
+  N040 --> N060
+  N040 --> N090
+  N050 --> N060
+  N060 --> N070
+  N060 --> N090
+  N060 --> N360
+  N070 --> N080
+  N070 --> N090
+  N070 --> N100
+  N070 --> N230
+  N070 --> N260
+  N080 --> N090
+  N080 --> N100
+  N090 --> N100
+  N090 --> N110
+  N100 --> N110
+  N100 --> N370
+  N110 --> N120
+  N110 --> N230
+  N110 --> N360
+  N120 --> N130
+  N120 --> N150
+  N120 --> N160
+  N130 --> N140
+  N130 --> N150
+  N130 --> N160
+  N130 --> N170
+  N130 --> N180
+  N140 --> N180
+  N150 --> N190
+  N150 --> N200
+  N150 --> N240
+  N160 --> N170
+  N160 --> N190
+  N160 --> N200
+  N160 --> N260
+  N170 --> N180
+  N170 --> N210
+  N170 --> N260
+  N180 --> N190
+  N180 --> N220
+  N180 --> N240
+  N180 --> N270
+  N190 --> N200
+  N190 --> N210
+  N200 --> N210
+  N210 --> N220
+  N210 --> N250
+  N210 --> N260
+  N210 --> N370
+  N220 --> N240
+  N220 --> N270
+  N220 --> N300
+  N230 --> N240
+  N230 --> N260
+  N240 --> N250
+  N240 --> N260
+  N240 --> N270
+  N250 --> N260
+  N250 --> N300
+  N250 --> N360
+  N260 --> N270
+  N260 --> N280
+  N260 --> N370
+  N270 --> N280
+  N270 --> N290
+  N270 --> N360
+  N280 --> N290
+  N290 --> N300
+  N300 --> N310
+  N300 --> N320
+  N310 --> N320
+  N310 --> N270
+  N340 --> N360
+  N350 --> N360
+  N350 --> N370
+  N360 --> N370
+  N370 --> N380
+  N100 -.产物事件.-> EventBus
+  N150 -.产物事件.-> EventBus
+  N220 -.产物事件.-> EventBus
+  N270 -.产物事件.-> EventBus
+  N320 -.产物事件.-> EventBus
+  EventBus -.订阅.-> N330
+  EventBus -.订阅.-> N340
+  EventBus -.订阅.-> N350
+  EventBus -.订阅.-> N390
+  N300 -.线上信号.-> N005
+  N320 -.复盘信号.-> N005
+  N250 -.缺陷信号.-> N005
+  N005 ==数据驱动需求==> N010
+  N005 ==紧急重排==> N060
+  Contract -.校验.-> N110
+  Contract -.校验.-> N180
+  Contract -.校验.-> N240
+  N310 -.|⚡ 熔断器: max 3次|.-> N270
+  class N005 new
+  class N100,N260,N380 gate
+</pre>
+  </div>
+  <div class="legend">
+    <div class="legend-item"><span class="legend-dot" style="background:#FFE8B0;border:2px solid #8A5A00;"></span>✨ 新增节点 (N005)</div>
+    <div class="legend-item"><span class="legend-dot" style="background:#FFE0E0;border:2px solid #A02020;"></span>🚦 渐进门禁汇总</div>
+    <div class="legend-item"><span class="legend-dot" style="background:#FFF8DC;border:2px solid #B8860B;"></span>⚡ 事件总线</div>
+    <div class="legend-item"><span class="legend-dot" style="background:#E0F0FF;border:2px solid #1E47A8;"></span>📜 契约校验层</div>
+    <div class="legend-item"><span class="legend-dot" style="background:#F0F0F0;border:2px dashed #666;"></span>📡 事件订阅者(横切)</div>
+    <div class="legend-item"><span style="font-family:monospace;">==粗实线==</span> 数据驱动反馈环</div>
+    <div class="legend-item"><span style="font-family:monospace;">-.虚线.-></span> 事件 / 信号</div>
+  </div>
+</section>
+
+<nav class="toc">
+  <div class="section-title" style="margin-bottom:20px;">Stage Index · 阶段索引</div>
+  <div class="toc-grid">
+    <a href="#stage-5"><span class="icon">🔄</span><span><b>反馈回流层</b><br/><small>Production Signal Loop · 新增 · 1n</small></span></a>
+    <a href="#stage-10"><span class="icon">📋</span><span><b>需求与产品定义</b><br/><small>Requirement & Product Definition · 9n</small></span></a>
+    <a href="#stage-100"><span class="icon">🛡️</span><span><b>需求质量保障</b><br/><small>Requirement Quality Assurance · 1n</small></span></a>
+    <a href="#stage-110"><span class="icon">🤝</span><span><b>协同交接</b><br/><small>Handover · 1n</small></span></a>
+    <a href="#stage-120"><span class="icon">🏗️</span><span><b>技术方案设计</b><br/><small>Technical Solution Design · 7n</small></span></a>
+    <a href="#stage-190"><span class="icon">⚙️</span><span><b>编码与实现</b><br/><small>Coding & Implementation · 4n</small></span></a>
+    <a href="#stage-230"><span class="icon">🧪</span><span><b>测试与质量保障</b><br/><small>Testing & QA · 4n</small></span></a>
+    <a href="#stage-270"><span class="icon">🚀</span><span><b>发布与交付</b><br/><small>Release & Delivery · 3n</small></span></a>
+    <a href="#stage-300"><span class="icon">📡</span><span><b>运行与故障处理</b><br/><small>Operations & Incident · 3n</small></span></a>
+    <a href="#stage-330"><span class="icon">📚</span><span><b>文档与知识沉淀</b><br/><small>Documentation [事件订阅] · 2n</small></span></a>
+    <a href="#stage-350"><span class="icon">🔗</span><span><b>协同与管理</b><br/><small>Coordination [事件订阅] · 2n</small></span></a>
+    <a href="#stage-370"><span class="icon">🧠</span><span><b>平台底座与编排</b><br/><small>Platform Foundation · 3n</small></span></a>
+  </div>
+</nav>
+
+<main>
+<section class="stage" id="stage-5" style="--stage-bg:#FFE8B0;--stage-fg:#8A5A00;">
+  <header class="stage-header">
+    <div class="stage-icon">🔄</div>
+    <div class="stage-num">005</div>
+    <div>
+      <h2>反馈回流层</h2>
+      <p class="stage-en">Production Signal Loop · 新增</p>
+    </div>
+    <div class="stage-count">1 节点</div>
+  </header>
+  <div class="cards">
+<article class="card is-new" id="N005">
+  <div class="card-head">
+    <span class="nid">N005</span>
+    <h3>线上信号聚合</h3>
+    <span class="sub">信号回流</span>
+  </div>
+  <div class="badges"><span class="badge new">✨ NEW</span></div>
+  <p class="goal">聚合线上监控、复盘、缺陷、用户反馈,反推数据驱动的需求假设</p>
+  <div class="block">
+    <div class="block-label">📥 Inputs · 输入产物</div>
+    <ul class="docs in"><li>高频报错摘要.md</li><li>故障复盘.md</li><li>缺陷分类表.csv</li><li>用户反馈/NPS</li></ul>
+  </div>
+  <div class="block">
+    <div class="block-label">⚙️ Skills · 调用技能 (3)</div>
+    <div class="chips"><span class="chip">production-signal-aggregation</span><span class="chip">data-driven-requirement-mining</span><span class="chip">user-feedback-clustering</span></div>
+  </div>
+  <div class="block">
+    <div class="block-label">📤 Outputs · 输出产物</div>
+    <ul class="docs out"><li>线上痛点信号包.json</li><li>数据驱动需求建议.csv</li></ul>
+  </div>
+  <div class="next">→ 下游 N010 · N060</div>
+</article>
+</div></section>
+<section class="stage" id="stage-10" style="--stage-bg:#FFE8D6;--stage-fg:#B85C00;">
+  <header class="stage-header">
+    <div class="stage-icon">📋</div>
+    <div class="stage-num">010</div>
+    <div>
+      <h2>需求与产品定义</h2>
+      <p class="stage-en">Requirement & Product Definition</p>
+    </div>
+    <div class="stage-count">9 节点</div>
+  </header>
+  <div class="cards">
+<article class="card" id="N010">
+  <div class="card-head">
+    <span class="nid">N010</span>
+    <h3>需求输入归档</h3>
+    <span class="sub">需求收集</span>
+  </div>
+  
+  <p class="goal">汇总多来源需求并形成统一编号的原始需求输入包</p>
+  <div class="block">
+    <div class="block-label">📥 Inputs · 输入产物</div>
+    <ul class="docs in"><li>原始需求列表</li><li>会议纪要</li><li>客诉/反馈记录</li><li>原型链接/截图</li></ul>
+  </div>
+  <div class="block">
+    <div class="block-label">⚙️ Skills · 调用技能 (1)</div>
+    <div class="chips"><span class="chip">requirement-collection-consolidation</span></div>
+  </div>
+  <div class="block">
+    <div class="block-label">📤 Outputs · 输出产物</div>
+    <ul class="docs out"><li>原始需求池.csv</li><li>需求来源索引.md</li></ul>
+  </div>
+  <div class="next">→ 下游 N020</div>
+</article>
+<article class="card" id="N020">
+  <div class="card-head">
+    <span class="nid">N020</span>
+    <h3>需求去重聚类</h3>
+    <span class="sub">需求收集</span>
+  </div>
+  
+  <p class="goal">识别重复需求、归并相似诉求并输出主题分组</p>
+  <div class="block">
+    <div class="block-label">📥 Inputs · 输入产物</div>
+    <ul class="docs in"><li>原始需求池.csv</li><li>需求来源索引.md</li></ul>
+  </div>
+  <div class="block">
+    <div class="block-label">⚙️ Skills · 调用技能 (1)</div>
+    <div class="chips"><span class="chip">requirement-deduplication-and-clustering</span></div>
+  </div>
+  <div class="block">
+    <div class="block-label">📤 Outputs · 输出产物</div>
+    <ul class="docs out"><li>需求去重结果.csv</li><li>需求主题聚类表.csv</li></ul>
+  </div>
+  <div class="next">→ 下游 N030</div>
+</article>
+<article class="card" id="N030">
+  <div class="card-head">
+    <span class="nid">N030</span>
+    <h3>需求背景补全</h3>
+    <span class="sub">需求分析</span>
+  </div>
+  
+  <p class="goal">补齐业务背景、目标、角色、场景、范围边界和待确认问题</p>
+  <div class="block">
+    <div class="block-label">📥 Inputs · 输入产物</div>
+    <ul class="docs in"><li>需求去重结果.csv</li><li>需求主题聚类表.csv</li><li>PRD/草案.md</li></ul>
+  </div>
+  <div class="block">
+    <div class="block-label">⚙️ Skills · 调用技能 (1)</div>
+    <div class="chips"><span class="chip">requirement-context-enrichment</span></div>
+  </div>
+  <div class="block">
+    <div class="block-label">📤 Outputs · 输出产物</div>
+    <ul class="docs out"><li>需求背景卡.md</li><li>待确认问题清单.csv</li></ul>
+  </div>
+  <div class="next">→ 下游 N040 · N050 · N060 · N070</div>
+</article>
+<article class="card" id="N040">
+  <div class="card-head">
+    <span class="nid">N040</span>
+    <h3>用户问题洞察</h3>
+    <span class="sub">用户研究</span>
+  </div>
+  
+  <p class="goal">提炼用户痛点、用户旅程断点和影响范围</p>
+  <div class="block">
+    <div class="block-label">📥 Inputs · 输入产物</div>
+    <ul class="docs in"><li>需求背景卡.md</li><li>用户反馈摘录.md</li></ul>
+  </div>
+  <div class="block">
+    <div class="block-label">⚙️ Skills · 调用技能 (2)</div>
+    <div class="chips"><span class="chip">user-journey-analysis</span><span class="chip">user-pain-point-analysis</span></div>
+  </div>
+  <div class="block">
+    <div class="block-label">📤 Outputs · 输出产物</div>
+    <ul class="docs out"><li>用户痛点卡.md</li><li>用户旅程断点表.csv</li></ul>
+  </div>
+  <div class="next">→ 下游 N060 · N090</div>
+</article>
+<article class="card" id="N050">
+  <div class="card-head">
+    <span class="nid">N050</span>
+    <h3>竞品研究</h3>
+    <span class="sub">市场研究</span>
+  </div>
+  
+  <p class="goal">形成竞品能力扫描与功能对标结果，为后续规划提供外部参照</p>
+  <div class="block">
+    <div class="block-label">📥 Inputs · 输入产物</div>
+    <ul class="docs in"><li>需求背景卡.md</li><li>竞品资料.md/链接</li></ul>
+  </div>
+  <div class="block">
+    <div class="block-label">⚙️ Skills · 调用技能 (2)</div>
+    <div class="chips"><span class="chip">competitor-analysis</span><span class="chip">competitor-feature-benchmarking</span></div>
+  </div>
+  <div class="block">
+    <div class="block-label">📤 Outputs · 输出产物</div>
+    <ul class="docs out"><li>竞品能力扫描表.csv</li><li>竞品功能对标表.csv</li></ul>
+  </div>
+  <div class="next">→ 下游 N060</div>
+</article>
+<article class="card" id="N060">
+  <div class="card-head">
+    <span class="nid">N060</span>
+    <h3>需求规划评估</h3>
+    <span class="sub">需求规划</span>
+  </div>
+  
+  <p class="goal">综合价值、成本、风险与优先级，形成需求规划建议</p>
+  <div class="block">
+    <div class="block-label">📥 Inputs · 输入产物</div>
+    <ul class="docs in"><li>需求背景卡.md</li><li>用户痛点卡.md</li><li>竞品能力扫描表.csv</li></ul>
+  </div>
+  <div class="block">
+    <div class="block-label">⚙️ Skills · 调用技能 (4)</div>
+    <div class="chips"><span class="chip">requirement-value-assessment</span><span class="chip">requirement-priority-assessment</span><span class="chip">requirement-cost-estimation</span><span class="chip">requirement-risk-assessment</span></div>
+  </div>
+  <div class="block">
+    <div class="block-label">📤 Outputs · 输出产物</div>
+    <ul class="docs out"><li>需求价值评估表.csv</li><li>需求成本预估表.csv</li><li>需求风险预判表.csv</li><li>需求优先级建议.csv</li></ul>
+  </div>
+  <div class="next">→ 下游 N070 · N090 · N360</div>
+</article>
+<article class="card" id="N070">
+  <div class="card-head">
+    <span class="nid">N070</span>
+    <h3>需求结构化建模</h3>
+    <span class="sub">需求结构化</span>
+  </div>
+  <div class="badges"><span class="badge enh" title="优化6">🔍 节点自检</span></div>
+  <p class="goal">将需求拆成功能、规则、状态、权限和数据对象等可交付结构</p>
+  <div class="block">
+    <div class="block-label">📥 Inputs · 输入产物</div>
+    <ul class="docs in"><li>需求背景卡.md</li><li>需求优先级建议.csv</li><li>PRD/草案.md</li></ul>
+  </div>
+  <div class="block">
+    <div class="block-label">⚙️ Skills · 调用技能 (5)</div>
+    <div class="chips"><span class="chip">business-rule-extraction</span><span class="chip">data-object-identification</span><span class="chip">permission-matrix-extraction</span><span class="chip">state-transition-mapping</span><span class="chip">requirement-breakdown</span></div>
+  </div>
+  <div class="block">
+    <div class="block-label">📤 Outputs · 输出产物</div>
+    <ul class="docs out"><li>需求结构树.md</li><li>业务规则清单.csv</li><li>状态流转表.csv</li><li>权限矩阵.csv</li><li>数据对象清单.csv</li></ul>
+  </div>
+  <div class="next">→ 下游 N080 · N090 · N100 · N230 · N260</div>
+</article>
+<article class="card" id="N080">
+  <div class="card-head">
+    <span class="nid">N080</span>
+    <h3>原型解析</h3>
+    <span class="sub">原型理解</span>
+  </div>
+  <div class="badges"><span class="badge enh" title="优化6">🔍 节点自检</span></div>
+  <p class="goal">从页面原型中提取功能点、动作、字段与后端需求</p>
+  <div class="block">
+    <div class="block-label">📥 Inputs · 输入产物</div>
+    <ul class="docs in"><li>原型链接/截图</li><li>需求背景卡.md</li><li>需求结构树.md</li></ul>
+  </div>
+  <div class="block">
+    <div class="block-label">⚙️ Skills · 调用技能 (4)</div>
+    <div class="chips"><span class="chip">prototype-to-feature-points</span><span class="chip">prototype-to-backend-requirements</span><span class="chip">form-field-extraction</span><span class="chip">page-action-extraction</span></div>
+  </div>
+  <div class="block">
+    <div class="block-label">📤 Outputs · 输出产物</div>
+    <ul class="docs out"><li>原型功能点表.csv</li><li>页面动作表.csv</li><li>表单字段清单.csv</li><li>原型后端需求清单.csv</li></ul>
+  </div>
+  <div class="next">→ 下游 N090 · N100</div>
+</article>
+<article class="card" id="N090">
+  <div class="card-head">
+    <span class="nid">N090</span>
+    <h3>PRD产出与评审</h3>
+    <span class="sub">文档产出</span>
+  </div>
+  <div class="badges"><span class="badge enh" title="优化6">🔍 节点自检</span></div>
+  <p class="goal">生成结构化PRD、补全缺项并产出评审问题</p>
+  <div class="block">
+    <div class="block-label">📥 Inputs · 输入产物</div>
+    <ul class="docs in"><li>需求结构树.md</li><li>业务规则清单.csv</li><li>状态流转表.csv</li><li>权限矩阵.csv</li><li>原型功能点表.csv</li></ul>
+  </div>
+  <div class="block">
+    <div class="block-label">⚙️ Skills · 调用技能 (3)</div>
+    <div class="chips"><span class="chip">prd-generation</span><span class="chip">prd-completion</span><span class="chip">prd-review-question-generation</span></div>
+  </div>
+  <div class="block">
+    <div class="block-label">📤 Outputs · 输出产物</div>
+    <ul class="docs out"><li>PRD.md</li><li>PRD补全建议.md</li><li>PRD评审问题清单.csv</li></ul>
+  </div>
+  <div class="next">→ 下游 N100 · N110</div>
+</article>
+</div></section>
+<section class="stage" id="stage-100" style="--stage-bg:#FFD6D6;--stage-fg:#A02020;">
+  <header class="stage-header">
+    <div class="stage-icon">🛡️</div>
+    <div class="stage-num">100</div>
+    <div>
+      <h2>需求质量保障</h2>
+      <p class="stage-en">Requirement Quality Assurance</p>
+    </div>
+    <div class="stage-count">1 节点</div>
+  </header>
+  <div class="cards">
+<article class="card" id="N100">
+  <div class="card-head">
+    <span class="nid">N100</span>
+    <h3>需求质量门禁</h3>
+    <span class="sub">质量审查</span>
+  </div>
+  <div class="badges"><span class="badge enh" title="优化6">🚦 汇总门禁</span><span class="badge enh" title="优化6">📊 聚合判定</span></div>
+  <p class="goal">检查需求完整性、可执行性、一致性、漏洞和未决项，并给出放行结论</p>
+  <div class="block">
+    <div class="block-label">📥 Inputs · 输入产物</div>
+    <ul class="docs in"><li>PRD.md</li><li>需求结构树.md</li><li>业务规则清单.csv</li><li>状态流转表.csv</li><li>权限矩阵.csv</li></ul>
+  </div>
+  <div class="block">
+    <div class="block-label">⚙️ Skills · 调用技能 (6)</div>
+    <div class="chips"><span class="chip">pending-items-extraction</span><span class="chip">requirement-executability-check</span><span class="chip">requirement-completeness-check</span><span class="chip">requirement-vulnerability-scan</span><span class="chip">requirement-conflict-detection</span><span class="chip">requirement-quality-review</span></div>
+  </div>
+  <div class="block">
+    <div class="block-label">📤 Outputs · 输出产物</div>
+    <ul class="docs out"><li>完整性检查单.csv</li><li>可执行性检查单.csv</li><li>需求矛盾问题单.csv</li><li>需求漏洞清单.csv</li><li>待确认项清单.csv</li><li>需求质量审查单.md</li></ul>
+  </div>
+  <div class="next">→ 下游 N110 · N370</div>
+</article>
+</div></section>
+<section class="stage" id="stage-110" style="--stage-bg:#FFF4CC;--stage-fg:#8A6500;">
+  <header class="stage-header">
+    <div class="stage-icon">🤝</div>
+    <div class="stage-num">110</div>
+    <div>
+      <h2>协同交接</h2>
+      <p class="stage-en">Handover</p>
+    </div>
+    <div class="stage-count">1 节点</div>
+  </header>
+  <div class="cards">
+<article class="card" id="N110">
+  <div class="card-head">
+    <span class="nid">N110</span>
+    <h3>需求交接与验收</h3>
+    <span class="sub">交接与变更</span>
+  </div>
+  
+  <p class="goal">产出研发/测试可消费的交接包、验收标准及变更同步信息</p>
+  <div class="block">
+    <div class="block-label">📥 Inputs · 输入产物</div>
+    <ul class="docs in"><li>PRD.md</li><li>需求质量审查单.md</li><li>需求结构树.md</li><li>业务规则清单.csv</li></ul>
+  </div>
+  <div class="block">
+    <div class="block-label">⚙️ Skills · 调用技能 (5)</div>
+    <div class="chips"><span class="chip">engineering-feedback-return</span><span class="chip">handover-package-generation</span><span class="chip">requirement-change-sync</span><span class="chip">requirement-change-impact-analysis</span><span class="chip">acceptance-criteria-generation</span></div>
+  </div>
+  <div class="block">
+    <div class="block-label">📤 Outputs · 输出产物</div>
+    <ul class="docs out"><li>需求交接包.zip</li><li>验收标准.md</li><li>需求变更影响分析.md</li><li>需求变更同步通知.md</li><li>研发反馈回传单.md</li></ul>
+  </div>
+  <div class="next">→ 下游 N120 · N230 · N350 · N360</div>
+</article>
+</div></section>
+<section class="stage" id="stage-120" style="--stage-bg:#D9E8FF;--stage-fg:#1E47A8;">
+  <header class="stage-header">
+    <div class="stage-icon">🏗️</div>
+    <div class="stage-num">120</div>
+    <div>
+      <h2>技术方案设计</h2>
+      <p class="stage-en">Technical Solution Design</p>
+    </div>
+    <div class="stage-count">7 节点</div>
+  </header>
+  <div class="cards">
+<article class="card" id="N120">
+  <div class="card-head">
+    <span class="nid">N120</span>
+    <h3>技术需求理解</h3>
+    <span class="sub">研发理解</span>
+  </div>
+  
+  <p class="goal">将产品需求翻译成研发问题空间并抽取接口意图</p>
+  <div class="block">
+    <div class="block-label">📥 Inputs · 输入产物</div>
+    <ul class="docs in"><li>需求交接包.zip</li><li>需求质量审查单.md</li><li>验收标准.md</li></ul>
+  </div>
+  <div class="block">
+    <div class="block-label">⚙️ Skills · 调用技能 (2)</div>
+    <div class="chips"><span class="chip">engineering-requirement-parsing</span><span class="chip">api-intent-extraction</span></div>
+  </div>
+  <div class="block">
+    <div class="block-label">📤 Outputs · 输出产物</div>
+    <ul class="docs out"><li>开发需求解析.md</li><li>接口意图清单.csv</li></ul>
+  </div>
+  <div class="next">→ 下游 N130 · N150 · N160</div>
+</article>
+<article class="card" id="N130">
+  <div class="card-head">
+    <span class="nid">N130</span>
+    <h3>技术方案分析与评审</h3>
+    <span class="sub">方案输出</span>
+  </div>
+  <div class="badges"><span class="badge enh" title="优化6">🔍 节点自检</span></div>
+  <p class="goal">产出技术方案分析、初稿和评审问题</p>
+  <div class="block">
+    <div class="block-label">📥 Inputs · 输入产物</div>
+    <ul class="docs in"><li>开发需求解析.md</li><li>接口意图清单.csv</li><li>需求漏洞清单.csv</li></ul>
+  </div>
+  <div class="block">
+    <div class="block-label">⚙️ Skills · 调用技能 (3)</div>
+    <div class="chips"><span class="chip">technical-solution-analysis</span><span class="chip">technical-solution-draft-generation</span><span class="chip">solution-review-question-generation</span></div>
+  </div>
+  <div class="block">
+    <div class="block-label">📤 Outputs · 输出产物</div>
+    <ul class="docs out"><li>技术方案分析.md</li><li>技术方案初稿.md</li><li>方案评审问题清单.csv</li></ul>
+  </div>
+  <div class="next">→ 下游 N140 · N150 · N160 · N170 · N180 · N330</div>
+</article>
+<article class="card" id="N140">
+  <div class="card-head">
+    <span class="nid">N140</span>
+    <h3>架构与边界设计</h3>
+    <span class="sub">架构拆分</span>
+  </div>
+  
+  <p class="goal">识别模块边界并给出服务拆分建议</p>
+  <div class="block">
+    <div class="block-label">📥 Inputs · 输入产物</div>
+    <ul class="docs in"><li>技术方案分析.md</li></ul>
+  </div>
+  <div class="block">
+    <div class="block-label">⚙️ Skills · 调用技能 (2)</div>
+    <div class="chips"><span class="chip">service-decomposition-recommendation</span><span class="chip">module-boundary-identification</span></div>
+  </div>
+  <div class="block">
+    <div class="block-label">📤 Outputs · 输出产物</div>
+    <ul class="docs out"><li>模块边界图.md</li><li>服务拆分建议.md</li></ul>
+  </div>
+  <div class="next">→ 下游 N180</div>
+</article>
+<article class="card" id="N150">
+  <div class="card-head">
+    <span class="nid">N150</span>
+    <h3>API设计与校验</h3>
+    <span class="sub">API设计</span>
+  </div>
+  <div class="badges"><span class="badge enh" title="优化6">🔍 节点自检</span></div>
+  <p class="goal">形成接口契约、规范检查结果和错误码设计</p>
+  <div class="block">
+    <div class="block-label">📥 Inputs · 输入产物</div>
+    <ul class="docs in"><li>开发需求解析.md</li><li>接口意图清单.csv</li><li>技术方案分析.md</li></ul>
+  </div>
+  <div class="block">
+    <div class="block-label">⚙️ Skills · 调用技能 (3)</div>
+    <div class="chips"><span class="chip">api-spec-compliance-check</span><span class="chip">api-error-code-design</span><span class="chip">api-design-recommendation</span></div>
+  </div>
+  <div class="block">
+    <div class="block-label">📤 Outputs · 输出产物</div>
+    <ul class="docs out"><li>接口设计草案.yaml</li><li>API规范检查单.csv</li><li>错误码清单.csv</li></ul>
+  </div>
+  <div class="next">→ 下游 N190 · N200 · N240 · N330</div>
+</article>
+<article class="card" id="N160">
+  <div class="card-head">
+    <span class="nid">N160</span>
+    <h3>数据模型设计</h3>
+    <span class="sub">数据设计</span>
+  </div>
+  
+  <p class="goal">形成表结构、索引与数据流设计</p>
+  <div class="block">
+    <div class="block-label">📥 Inputs · 输入产物</div>
+    <ul class="docs in"><li>开发需求解析.md</li><li>技术方案分析.md</li><li>数据对象清单.csv</li></ul>
+  </div>
+  <div class="block">
+    <div class="block-label">⚙️ Skills · 调用技能 (3)</div>
+    <div class="chips"><span class="chip">data-flow-mapping</span><span class="chip">index-design-recommendation</span><span class="chip">table-schema-design-recommendation</span></div>
+  </div>
+  <div class="block">
+    <div class="block-label">📤 Outputs · 输出产物</div>
+    <ul class="docs out"><li>表结构设计草案.sql</li><li>索引建议清单.csv</li><li>数据流图.md</li></ul>
+  </div>
+  <div class="next">→ 下游 N170 · N190 · N200 · N260 · N330</div>
+</article>
+<article class="card" id="N170">
+  <div class="card-head">
+    <span class="nid">N170</span>
+    <h3>高级与非功能设计</h3>
+    <span class="sub">高级设计</span>
+  </div>
+  
+  <p class="goal">补齐并发、幂等、审计、权限、性能和安全设计</p>
+  <div class="block">
+    <div class="block-label">📥 Inputs · 输入产物</div>
+    <ul class="docs in"><li>技术方案分析.md</li><li>需求漏洞清单.csv</li><li>表结构设计草案.sql</li><li>权限矩阵.csv</li></ul>
+  </div>
+  <div class="block">
+    <div class="block-label">⚙️ Skills · 调用技能 (6)</div>
+    <div class="chips"><span class="chip">security-risk-analysis</span><span class="chip">audit-trail-design</span><span class="chip">idempotency-design-recommendation</span><span class="chip">concurrency-control-recommendation</span><span class="chip">performance-risk-analysis</span><span class="chip">authorization-model-design</span></div>
+  </div>
+  <div class="block">
+    <div class="block-label">📤 Outputs · 输出产物</div>
+    <ul class="docs out"><li>并发控制建议.md</li><li>幂等设计建议.md</li><li>审计留痕方案.md</li><li>权限模型设计.md</li><li>性能风险分析.md</li><li>安全风险分析.md</li></ul>
+  </div>
+  <div class="next">→ 下游 N180 · N210 · N260 · N390</div>
+</article>
+<article class="card" id="N180">
+  <div class="card-head">
+    <span class="nid">N180</span>
+    <h3>研发任务规划</h3>
+    <span class="sub">任务管理</span>
+  </div>
+  
+  <p class="goal">将方案转成开发任务、工时和依赖关系</p>
+  <div class="block">
+    <div class="block-label">📥 Inputs · 输入产物</div>
+    <ul class="docs in"><li>技术方案分析.md</li><li>模块边界图.md</li><li>服务拆分建议.md</li><li>数据流图.md</li></ul>
+  </div>
+  <div class="block">
+    <div class="block-label">⚙️ Skills · 调用技能 (3)</div>
+    <div class="chips"><span class="chip">dependency-identification</span><span class="chip">effort-estimation-assistant</span><span class="chip">development-task-breakdown</span></div>
+  </div>
+  <div class="block">
+    <div class="block-label">📤 Outputs · 输出产物</div>
+    <ul class="docs out"><li>开发任务拆分表.csv</li><li>工时估算表.csv</li><li>研发依赖清单.csv</li></ul>
+  </div>
+  <div class="next">→ 下游 N190 · N220 · N240 · N270 · N330 · N350</div>
+</article>
+</div></section>
+<section class="stage" id="stage-190" style="--stage-bg:#D6F0E0;--stage-fg:#1B6B3A;">
+  <header class="stage-header">
+    <div class="stage-icon">⚙️</div>
+    <div class="stage-num">190</div>
+    <div>
+      <h2>编码与实现</h2>
+      <p class="stage-en">Coding & Implementation</p>
+    </div>
+    <div class="stage-count">4 节点</div>
+  </header>
+  <div class="cards">
+<article class="card" id="N190">
+  <div class="card-head">
+    <span class="nid">N190</span>
+    <h3>代码骨架生成</h3>
+    <span class="sub">脚手架生成</span>
+  </div>
+  <div class="badges"><span class="badge enh" title="优化6">🔍 节点自检</span></div>
+  <p class="goal">生成工程骨架及控制器、服务、仓储层基础代码草稿</p>
+  <div class="block">
+    <div class="block-label">📥 Inputs · 输入产物</div>
+    <ul class="docs in"><li>技术方案分析.md</li><li>接口设计草案.yaml</li><li>表结构设计草案.sql</li></ul>
+  </div>
+  <div class="block">
+    <div class="block-label">⚙️ Skills · 调用技能 (4)</div>
+    <div class="chips"><span class="chip">controller-draft-generation</span><span class="chip">repository-draft-generation</span><span class="chip">service-draft-generation</span><span class="chip">code-scaffold-generation</span></div>
+  </div>
+  <div class="block">
+    <div class="block-label">📤 Outputs · 输出产物</div>
+    <ul class="docs out"><li>工程骨架.zip</li><li>Controller草稿.java</li><li>Service草稿.java</li><li>Repository草稿.java</li></ul>
+  </div>
+  <div class="next">→ 下游 N200 · N210</div>
+</article>
+<article class="card" id="N200">
+  <div class="card-head">
+    <span class="nid">N200</span>
+    <h3>实现辅助代码生成</h3>
+    <span class="sub">代码生成</span>
+  </div>
+  <div class="badges"><span class="badge enh" title="优化6">🔍 节点自检</span></div>
+  <p class="goal">生成DTO/VO、枚举、校验器、异常类与SQL草稿，并给出查询优化建议</p>
+  <div class="block">
+    <div class="block-label">📥 Inputs · 输入产物</div>
+    <ul class="docs in"><li>接口设计草案.yaml</li><li>业务规则清单.csv</li><li>错误码清单.csv</li><li>表结构设计草案.sql</li></ul>
+  </div>
+  <div class="block">
+    <div class="block-label">⚙️ Skills · 调用技能 (6)</div>
+    <div class="chips"><span class="chip">dto-vo-generation</span><span class="chip">sql-draft-generation</span><span class="chip">exception-class-generation</span><span class="chip">enum-definition-generation</span><span class="chip">query-optimization-recommendation</span><span class="chip">validator-code-generation</span></div>
+  </div>
+  <div class="block">
+    <div class="block-label">📤 Outputs · 输出产物</div>
+    <ul class="docs out"><li>DTO_VO草稿.zip</li><li>枚举定义.java</li><li>校验器代码.java</li><li>异常类.java</li><li>SQL草稿.sql</li><li>查询优化建议.md</li></ul>
+  </div>
+  <div class="next">→ 下游 N210 · N330</div>
+</article>
+<article class="card" id="N210">
+  <div class="card-head">
+    <span class="nid">N210</span>
+    <h3>代码质量静态检查</h3>
+    <span class="sub">代码质量</span>
+  </div>
+  
+  <p class="goal">检查规范、命名、重复、异常、事务和线程安全风险</p>
+  <div class="block">
+    <div class="block-label">📥 Inputs · 输入产物</div>
+    <ul class="docs in"><li>工程骨架.zip</li><li>Service草稿.java</li><li>并发控制建议.md</li><li>技术方案分析.md</li></ul>
+  </div>
+  <div class="block">
+    <div class="block-label">⚙️ Skills · 调用技能 (8)</div>
+    <div class="chips"><span class="chip">transaction-boundary-check</span><span class="chip">code-standard-check</span><span class="chip">low-quality-code-detection</span><span class="chip">naming-optimization-recommendation</span><span class="chip">null-exception-risk-detection</span><span class="chip">thread-safety-risk-check</span><span class="chip">duplicate-code-detection</span><span class="chip">refactoring-recommendation</span></div>
+  </div>
+  <div class="block">
+    <div class="block-label">📤 Outputs · 输出产物</div>
+    <ul class="docs out"><li>代码规范检查单.csv</li><li>重构建议.md</li><li>命名优化建议.md</li><li>低质量代码清单.csv</li><li>重复代码清单.csv</li><li>风险检查清单.csv</li></ul>
+  </div>
+  <div class="next">→ 下游 N220 · N250 · N260 · N370 · N390</div>
+</article>
+<article class="card" id="N220">
+  <div class="card-head">
+    <span class="nid">N220</span>
+    <h3>Code Review与提交协同</h3>
+    <span class="sub">Code Review</span>
+  </div>
+  
+  <p class="goal">输出审查意见、差异风险点评、PR描述和提交信息</p>
+  <div class="block">
+    <div class="block-label">📥 Inputs · 输入产物</div>
+    <ul class="docs in"><li>代码规范检查单.csv</li><li>开发任务拆分表.csv</li><li>git diff/改动列表</li></ul>
+  </div>
+  <div class="block">
+    <div class="block-label">⚙️ Skills · 调用技能 (4)</div>
+    <div class="chips"><span class="chip">code-review-comment-generation</span><span class="chip">diff-risk-review</span><span class="chip">pull-request-description-generation</span><span class="chip">commit-message-generation</span></div>
+  </div>
+  <div class="block">
+    <div class="block-label">📤 Outputs · 输出产物</div>
+    <ul class="docs out"><li>CodeReview评论.md</li><li>Diff风险点评.md</li><li>PR描述.md</li><li>提交信息.txt</li></ul>
+  </div>
+  <div class="next">→ 下游 N240 · N270 · N300</div>
+</article>
+</div></section>
+<section class="stage" id="stage-230" style="--stage-bg:#E5DCFF;--stage-fg:#4B2E99;">
+  <header class="stage-header">
+    <div class="stage-icon">🧪</div>
+    <div class="stage-num">230</div>
+    <div>
+      <h2>测试与质量保障</h2>
+      <p class="stage-en">Testing & QA</p>
+    </div>
+    <div class="stage-count">4 节点</div>
+  </header>
+  <div class="cards">
+<article class="card" id="N230">
+  <div class="card-head">
+    <span class="nid">N230</span>
+    <h3>测试设计</h3>
+    <span class="sub">测试设计</span>
+  </div>
+  <div class="badges"><span class="badge enh" title="优化6">🔍 节点自检</span></div>
+  <p class="goal">从验收标准和需求结构生成测试点、用例、边界和异常场景</p>
+  <div class="block">
+    <div class="block-label">📥 Inputs · 输入产物</div>
+    <ul class="docs in"><li>验收标准.md</li><li>需求质量审查单.md</li><li>需求结构树.md</li></ul>
+  </div>
+  <div class="block">
+    <div class="block-label">⚙️ Skills · 调用技能 (4)</div>
+    <div class="chips"><span class="chip">exception-scenario-generation</span><span class="chip">test-point-generation</span><span class="chip">test-case-generation</span><span class="chip">boundary-condition-generation</span></div>
+  </div>
+  <div class="block">
+    <div class="block-label">📤 Outputs · 输出产物</div>
+    <ul class="docs out"><li>测试点清单.csv</li><li>测试用例集.xlsx</li><li>边界条件清单.csv</li><li>异常场景清单.csv</li></ul>
+  </div>
+  <div class="next">→ 下游 N240 · N260</div>
+</article>
+<article class="card" id="N240">
+  <div class="card-head">
+    <span class="nid">N240</span>
+    <h3>回归与自动化编排</h3>
+    <span class="sub">回归与自动化</span>
+  </div>
+  
+  <p class="goal">生成回归/冒烟清单、接口脚本和自动化触发编排建议</p>
+  <div class="block">
+    <div class="block-label">📥 Inputs · 输入产物</div>
+    <ul class="docs in"><li>测试用例集.xlsx</li><li>开发任务拆分表.csv</li><li>接口设计草案.yaml</li><li>Diff风险点评.md</li></ul>
+  </div>
+  <div class="block">
+    <div class="block-label">⚙️ Skills · 调用技能 (5)</div>
+    <div class="chips"><span class="chip">smoke-test-checklist-generation</span><span class="chip">regression-test-checklist-generation</span><span class="chip">api-test-script-generation</span><span class="chip">test-automation-orchestration</span><span class="chip">test-automation-trigger-recommendation</span></div>
+  </div>
+  <div class="block">
+    <div class="block-label">📤 Outputs · 输出产物</div>
+    <ul class="docs out"><li>回归测试清单.csv</li><li>冒烟测试清单.csv</li><li>接口测试脚本.zip</li><li>自动化触发建议.md</li><li>自动化测试编排.yaml</li></ul>
+  </div>
+  <div class="next">→ 下游 N250 · N260 · N270</div>
+</article>
+<article class="card" id="N250">
+  <div class="card-head">
+    <span class="nid">N250</span>
+    <h3>测试结果与缺陷管理</h3>
+    <span class="sub">结果与缺陷</span>
+  </div>
+  <div class="badges"><span class="badge enh" title="优化4">📤 信号外发</span><span class="badge enh" title="优化5">⚡ 熔断保护</span></div>
+  <p class="goal">对失败结果做归因并产出缺陷分类、严重级和复现信息</p>
+  <div class="block">
+    <div class="block-label">📥 Inputs · 输入产物</div>
+    <ul class="docs in"><li>测试执行结果</li><li>自动化触发建议.md</li><li>日志摘录.md</li><li>Bug现象记录.md</li></ul>
+  </div>
+  <div class="block">
+    <div class="block-label">⚙️ Skills · 调用技能 (4)</div>
+    <div class="chips"><span class="chip">test-failure-attribution</span><span class="chip">defect-severity-assessment</span><span class="chip">defect-classification</span><span class="chip">defect-reproduction-steps-generation</span></div>
+  </div>
+  <div class="block">
+    <div class="block-label">📤 Outputs · 输出产物</div>
+    <ul class="docs out"><li>测试失败归因.md</li><li>缺陷分类表.csv</li><li>缺陷严重级评估.csv</li><li>缺陷复现步骤.md</li></ul>
+  </div>
+  <div class="next">→ 下游 N260 · N300 · N360</div>
+</article>
+<article class="card" id="N260">
+  <div class="card-head">
+    <span class="nid">N260</span>
+    <h3>质量门禁与专项测试</h3>
+    <span class="sub">质量门禁</span>
+  </div>
+  <div class="badges"><span class="badge enh" title="优化6">🚦 汇总门禁</span><span class="badge enh" title="优化6">📊 聚合判定</span></div>
+  <p class="goal">汇总质量门禁结果并补齐数据一致性、权限、并发、幂等、性能等专项检查</p>
+  <div class="block">
+    <div class="block-label">📥 Inputs · 输入产物</div>
+    <ul class="docs in"><li>测试用例集.xlsx</li><li>回归测试清单.csv</li><li>代码规范检查单.csv</li><li>权限矩阵.csv</li><li>数据流图.md</li><li>幂等设计建议.md</li><li>性能风险分析.md</li></ul>
+  </div>
+  <div class="block">
+    <div class="block-label">⚙️ Skills · 调用技能 (7)</div>
+    <div class="chips"><span class="chip">pre-launch-checklist-generation</span><span class="chip">idempotency-test-point-generation</span><span class="chip">concurrency-test-point-generation</span><span class="chip">performance-test-scenario-generation</span><span class="chip">data-consistency-check-item-generation</span><span class="chip">permission-test-point-generation</span><span class="chip">quality-gate-check</span></div>
+  </div>
+  <div class="block">
+    <div class="block-label">📤 Outputs · 输出产物</div>
+    <ul class="docs out"><li>质量门禁检查单.md</li><li>上线前检查清单.csv</li><li>数据一致性检查项.csv</li><li>权限测试点.csv</li><li>并发测试点.csv</li><li>幂等测试点.csv</li><li>性能测试场景.csv</li></ul>
+  </div>
+  <div class="next">→ 下游 N270 · N280 · N370 · N390</div>
+</article>
+</div></section>
+<section class="stage" id="stage-270" style="--stage-bg:#FFE0F0;--stage-fg:#9C2A6E;">
+  <header class="stage-header">
+    <div class="stage-icon">🚀</div>
+    <div class="stage-num">270</div>
+    <div>
+      <h2>发布与交付</h2>
+      <p class="stage-en">Release & Delivery</p>
+    </div>
+    <div class="stage-count">3 节点</div>
+  </header>
+  <div class="cards">
+<article class="card" id="N270">
+  <div class="card-head">
+    <span class="nid">N270</span>
+    <h3>发布准备与策略</h3>
+    <span class="sub">发布准备</span>
+  </div>
+  <div class="badges"><span class="badge enh" title="优化5">⚡ 熔断保护</span></div>
+  <p class="goal">产出发布说明、发版检查、变更摘要、回滚预案和灰度建议</p>
+  <div class="block">
+    <div class="block-label">📥 Inputs · 输入产物</div>
+    <ul class="docs in"><li>开发任务拆分表.csv</li><li>PR描述.md</li><li>质量门禁检查单.md</li><li>Diff风险点评.md</li></ul>
+  </div>
+  <div class="block">
+    <div class="block-label">⚙️ Skills · 调用技能 (6)</div>
+    <div class="chips"><span class="chip">release-note-generation</span><span class="chip">release-risk-assessment</span><span class="chip">release-checklist-generation</span><span class="chip">change-summary-generation</span><span class="chip">rollback-plan-generation</span><span class="chip">canary-release-recommendation</span></div>
+  </div>
+  <div class="block">
+    <div class="block-label">📤 Outputs · 输出产物</div>
+    <ul class="docs out"><li>发布说明.md</li><li>发版检查清单.csv</li><li>变更摘要.md</li><li>回滚预案.md</li><li>灰度发布建议.md</li><li>发布风险评估.md</li></ul>
+  </div>
+  <div class="next">→ 下游 N280 · N290 · N360</div>
+</article>
+<article class="card" id="N280">
+  <div class="card-head">
+    <span class="nid">N280</span>
+    <h3>配置环境与发布执行</h3>
+    <span class="sub">发布执行</span>
+  </div>
+  
+  <p class="goal">检查配置与环境差异并编排发布任务</p>
+  <div class="block">
+    <div class="block-label">📥 Inputs · 输入产物</div>
+    <ul class="docs in"><li>发布说明.md</li><li>发版检查清单.csv</li><li>环境配置清单</li></ul>
+  </div>
+  <div class="block">
+    <div class="block-label">⚙️ Skills · 调用技能 (3)</div>
+    <div class="chips"><span class="chip">release-task-orchestration</span><span class="chip">environment-difference-check</span><span class="chip">configuration-change-check</span></div>
+  </div>
+  <div class="block">
+    <div class="block-label">📤 Outputs · 输出产物</div>
+    <ul class="docs out"><li>配置变更检查单.csv</li><li>环境差异检查单.csv</li><li>发布任务编排表.csv</li></ul>
+  </div>
+  <div class="next">→ 下游 N290 · N330</div>
+</article>
+<article class="card" id="N290">
+  <div class="card-head">
+    <span class="nid">N290</span>
+    <h3>发布验证与上线验收</h3>
+    <span class="sub">发布验证</span>
+  </div>
+  
+  <p class="goal">形成发布后验证清单并辅助上线验收</p>
+  <div class="block">
+    <div class="block-label">📥 Inputs · 输入产物</div>
+    <ul class="docs in"><li>验收标准.md</li><li>发布说明.md</li><li>发布任务编排表.csv</li></ul>
+  </div>
+  <div class="block">
+    <div class="block-label">⚙️ Skills · 调用技能 (2)</div>
+    <div class="chips"><span class="chip">go-live-acceptance-assistant</span><span class="chip">post-release-validation-checklist</span></div>
+  </div>
+  <div class="block">
+    <div class="block-label">📤 Outputs · 输出产物</div>
+    <ul class="docs out"><li>发布后验证清单.csv</li><li>上线验收记录.md</li></ul>
+  </div>
+  <div class="next">→ 下游 N300</div>
+</article>
+</div></section>
+<section class="stage" id="stage-300" style="--stage-bg:#FFDCC2;--stage-fg:#A04500;">
+  <header class="stage-header">
+    <div class="stage-icon">📡</div>
+    <div class="stage-num">300</div>
+    <div>
+      <h2>运行与故障处理</h2>
+      <p class="stage-en">Operations & Incident</p>
+    </div>
+    <div class="stage-count">3 节点</div>
+  </header>
+  <div class="cards">
+<article class="card" id="N300">
+  <div class="card-head">
+    <span class="nid">N300</span>
+    <h3>运行监控与日志定位</h3>
+    <span class="sub">运行监控与定位</span>
+  </div>
+  <div class="badges"><span class="badge enh" title="优化4">📤 信号外发</span></div>
+  <p class="goal">基于监控、日志、调用链和Bug现象完成异常定位与影响分析</p>
+  <div class="block">
+    <div class="block-label">📥 Inputs · 输入产物</div>
+    <ul class="docs in"><li>发布后验证清单.csv</li><li>日志文件</li><li>监控面板截图</li><li>trace数据</li><li>Diff风险点评.md</li></ul>
+  </div>
+  <div class="block">
+    <div class="block-label">⚙️ Skills · 调用技能 (9)</div>
+    <div class="chips"><span class="chip">bug-analysis</span><span class="chip">trace-call-chain-analysis</span><span class="chip">alert-attribution</span><span class="chip">anomaly-clustering</span><span class="chip">impact-scope-analysis</span><span class="chip">log-analysis</span><span class="chip">root-cause-analysis-recommendation</span><span class="chip">monitoring-metric-interpretation</span><span class="chip">frequent-error-summary</span></div>
+  </div>
+  <div class="block">
+    <div class="block-label">📤 Outputs · 输出产物</div>
+    <ul class="docs out"><li>监控指标解读.md</li><li>日志分析.md</li><li>Trace分析.md</li><li>Bug分析.md</li><li>异常聚类表.csv</li><li>高频报错摘要.md</li><li>根因定位建议.md</li><li>影响范围分析.md</li><li>告警归因.md</li></ul>
+  </div>
+  <div class="next">→ 下游 N310 · N320 · N330</div>
+</article>
+<article class="card" id="N310">
+  <div class="card-head">
+    <span class="nid">N310</span>
+    <h3>处置响应与修复评估</h3>
+    <span class="sub">处置响应</span>
+  </div>
+  <div class="badges"><span class="badge enh" title="优化5">⚡ 熔断保护</span></div>
+  <p class="goal">形成值班处置建议、修复方案建议和热修复风险评估</p>
+  <div class="block">
+    <div class="block-label">📥 Inputs · 输入产物</div>
+    <ul class="docs in"><li>根因定位建议.md</li><li>影响范围分析.md</li><li>告警归因.md</li></ul>
+  </div>
+  <div class="block">
+    <div class="block-label">⚙️ Skills · 调用技能 (3)</div>
+    <div class="chips"><span class="chip">remediation-plan-recommendation</span><span class="chip">on-call-response-recommendation</span><span class="chip">hotfix-risk-assessment</span></div>
+  </div>
+  <div class="block">
+    <div class="block-label">📤 Outputs · 输出产物</div>
+    <ul class="docs out"><li>值班处置建议.md</li><li>修复方案建议.md</li><li>热修复风险评估.md</li></ul>
+  </div>
+  <div class="next">→ 下游 N320 · N270</div>
+</article>
+<article class="card" id="N320">
+  <div class="card-head">
+    <span class="nid">N320</span>
+    <h3>故障复盘沉淀</h3>
+    <span class="sub">复盘沉淀</span>
+  </div>
+  <div class="badges"><span class="badge enh" title="优化4">📤 信号外发</span></div>
+  <p class="goal">整理故障时间线并输出线上问题复盘</p>
+  <div class="block">
+    <div class="block-label">📥 Inputs · 输入产物</div>
+    <ul class="docs in"><li>日志分析.md</li><li>告警归因.md</li><li>根因定位建议.md</li><li>影响范围分析.md</li></ul>
+  </div>
+  <div class="block">
+    <div class="block-label">⚙️ Skills · 调用技能 (2)</div>
+    <div class="chips"><span class="chip">incident-timeline-compilation</span><span class="chip">production-incident-postmortem</span></div>
+  </div>
+  <div class="block">
+    <div class="block-label">📤 Outputs · 输出产物</div>
+    <ul class="docs out"><li>故障时间线.md</li><li>线上问题复盘.md</li></ul>
+  </div>
+  <div class="next">→ 下游 N340 · N390</div>
+</article>
+</div></section>
+<section class="stage" id="stage-330" style="--stage-bg:#DCEFF5;--stage-fg:#1E6B82;">
+  <header class="stage-header">
+    <div class="stage-icon">📚</div>
+    <div class="stage-num">330</div>
+    <div>
+      <h2>文档与知识沉淀</h2>
+      <p class="stage-en">Documentation [事件订阅]</p>
+    </div>
+    <div class="stage-count">2 节点</div>
+  </header>
+  <div class="cards">
+<article class="card is-crosscut" id="N330">
+  <div class="card-head">
+    <span class="nid">N330</span>
+    <h3>技术与运维文档输出</h3>
+    <span class="sub">技术与运维文档</span>
+  </div>
+  <div class="badges"><span class="badge crosscut">📡 事件订阅</span></div>
+  <p class="goal">生成开发、接口、模块、数据、部署和维护文档</p>
+  <div class="block">
+    <div class="block-label">📥 Inputs · 输入产物</div>
+    <ul class="docs in"><li>技术方案分析.md</li><li>接口设计草案.yaml</li><li>表结构设计草案.sql</li><li>发布任务编排表.csv</li><li>值班处置建议.md</li></ul>
+  </div>
+  <div class="block">
+    <div class="block-label">⚙️ Skills · 调用技能 (6)</div>
+    <div class="chips"><span class="chip">development-documentation-generation</span><span class="chip">api-documentation-generation</span><span class="chip">data-dictionary-generation</span><span class="chip">module-design-document-generation</span><span class="chip">maintenance-manual-generation</span><span class="chip">deployment-documentation-generation</span></div>
+  </div>
+  <div class="block">
+    <div class="block-label">📤 Outputs · 输出产物</div>
+    <ul class="docs out"><li>开发文档.md</li><li>接口文档.md</li><li>模块设计说明.md</li><li>数据字典.xlsx</li><li>部署文档.md</li><li>维护手册.md</li></ul>
+  </div>
+  <div class="next">→ 下游 N340</div>
+</article>
+<article class="card is-crosscut" id="N340">
+  <div class="card-head">
+    <span class="nid">N340</span>
+    <h3>协作文档与经验沉淀</h3>
+    <span class="sub">团队协同与经验</span>
+  </div>
+  <div class="badges"><span class="badge crosscut">📡 事件订阅</span></div>
+  <p class="goal">将会议、周报、FAQ和最佳实践沉淀成团队可复用知识</p>
+  <div class="block">
+    <div class="block-label">📥 Inputs · 输入产物</div>
+    <ul class="docs in"><li>会议纪要</li><li>任务状态</li><li>开发文档.md</li><li>接口文档.md</li><li>线上问题复盘.md</li></ul>
+  </div>
+  <div class="block">
+    <div class="block-label">⚙️ Skills · 调用技能 (4)</div>
+    <div class="chips"><span class="chip">faq-generation</span><span class="chip">meeting-minutes-to-action-items</span><span class="chip">weekly-report-generation</span><span class="chip">best-practice-summary</span></div>
+  </div>
+  <div class="block">
+    <div class="block-label">📤 Outputs · 输出产物</div>
+    <ul class="docs out"><li>行动项清单.csv</li><li>周报.md</li><li>FAQ.md</li><li>最佳实践.md</li></ul>
+  </div>
+  <div class="next">→ 下游 N350 · N360 · N390</div>
+</article>
+</div></section>
+<section class="stage" id="stage-350" style="--stage-bg:#E8E8E8;--stage-fg:#444444;">
+  <header class="stage-header">
+    <div class="stage-icon">🔗</div>
+    <div class="stage-num">350</div>
+    <div>
+      <h2>协同与管理</h2>
+      <p class="stage-en">Coordination [事件订阅]</p>
+    </div>
+    <div class="stage-count">2 节点</div>
+  </header>
+  <div class="cards">
+<article class="card is-crosscut" id="N350">
+  <div class="card-head">
+    <span class="nid">N350</span>
+    <h3>协同任务与风险管理</h3>
+    <span class="sub">任务与风险管理</span>
+  </div>
+  <div class="badges"><span class="badge crosscut">📡 事件订阅</span></div>
+  <p class="goal">发起任务、同步状态并识别阻塞与风险项</p>
+  <div class="block">
+    <div class="block-label">📥 Inputs · 输入产物</div>
+    <ul class="docs in"><li>需求交接包.zip</li><li>开发任务拆分表.csv</li><li>需求变更影响分析.md</li></ul>
+  </div>
+  <div class="block">
+    <div class="block-label">⚙️ Skills · 调用技能 (4)</div>
+    <div class="chips"><span class="chip">task-initiation</span><span class="chip">task-status-sync</span><span class="chip">blocker-extraction</span><span class="chip">risk-item-extraction</span></div>
+  </div>
+  <div class="block">
+    <div class="block-label">📤 Outputs · 输出产物</div>
+    <ul class="docs out"><li>任务清单.csv</li><li>任务状态同步.md</li><li>阻塞项清单.csv</li><li>风险项清单.csv</li></ul>
+  </div>
+  <div class="next">→ 下游 N340 · N360 · N370</div>
+</article>
+<article class="card" id="N360">
+  <div class="card-head">
+    <span class="nid">N360</span>
+    <h3>跨团队对齐与版本节奏</h3>
+    <span class="sub">跨团队与版本管理</span>
+  </div>
+  
+  <p class="goal">输出多角色对齐摘要、版本范围裁剪建议和节奏跟踪</p>
+  <div class="block">
+    <div class="block-label">📥 Inputs · 输入产物</div>
+    <ul class="docs in"><li>需求优先级建议.csv</li><li>发布风险评估.md</li><li>测试失败归因.md</li><li>任务状态同步.md</li><li>风险项清单.csv</li></ul>
+  </div>
+  <div class="block">
+    <div class="block-label">⚙️ Skills · 调用技能 (4)</div>
+    <div class="chips"><span class="chip">product-engineering-alignment-summary</span><span class="chip">qa-engineering-alignment-summary</span><span class="chip">version-scope-trimming-recommendation</span><span class="chip">project-rhythm-tracking</span></div>
+  </div>
+  <div class="block">
+    <div class="block-label">📤 Outputs · 输出产物</div>
+    <ul class="docs out"><li>产品研发对齐摘要.md</li><li>测试研发对齐摘要.md</li><li>版本范围裁剪建议.md</li><li>项目节奏跟踪表.csv</li></ul>
+  </div>
+  <div class="next">→ 下游 N370 · N390</div>
+</article>
+</div></section>
+<section class="stage" id="stage-370" style="--stage-bg:#1F2937;--stage-fg:#F9FAFB;">
+  <header class="stage-header">
+    <div class="stage-icon">🧠</div>
+    <div class="stage-num">370</div>
+    <div>
+      <h2>平台底座与编排</h2>
+      <p class="stage-en">Platform Foundation</p>
+    </div>
+    <div class="stage-count">3 节点</div>
+  </header>
+  <div class="cards">
+<article class="card" id="N370">
+  <div class="card-head">
+    <span class="nid">N370</span>
+    <h3>平台路由与多技能编排</h3>
+    <span class="sub">路由与流程引擎</span>
+  </div>
+  <div class="badges"><span class="badge enh" title="优化3">🎯 三层路由</span></div>
+  <p class="goal">根据上下文选择技能、串联流程并推进状态机</p>
+  <div class="block">
+    <div class="block-label">📥 Inputs · 输入产物</div>
+    <ul class="docs in"><li>需求质量审查单.md</li><li>技术方案分析.md</li><li>代码规范检查单.csv</li><li>Bug分析.md</li><li>任务清单.csv</li></ul>
+  </div>
+  <div class="block">
+    <div class="block-label">⚙️ Skills · 调用技能 (4)</div>
+    <div class="chips"><span class="chip">skill-routing-selection</span><span class="chip">context-memory</span><span class="chip">multi-skill-orchestration</span><span class="chip">state-machine-driven-orchestration</span></div>
+  </div>
+  <div class="block">
+    <div class="block-label">📤 Outputs · 输出产物</div>
+    <ul class="docs out"><li>Skill路由决策表.csv</li><li>上下文记忆快照.md</li><li>多skill执行计划.yaml</li><li>状态机流转记录.csv</li></ul>
+  </div>
+  <div class="next">→ 下游 N380 · N390</div>
+</article>
+<article class="card" id="N380">
+  <div class="card-head">
+    <span class="nid">N380</span>
+    <h3>平台门禁与人工协同</h3>
+    <span class="sub">门禁与人工确认</span>
+  </div>
+  <div class="badges"><span class="badge enh" title="优化6">🚦 汇总门禁</span><span class="badge enh" title="优化6">📊 聚合判定</span></div>
+  <p class="goal">执行统一门禁放行、失败兜底和人工确认管理</p>
+  <div class="block">
+    <div class="block-label">📥 Inputs · 输入产物</div>
+    <ul class="docs in"><li>多skill执行计划.yaml</li><li>状态机流转记录.csv</li><li>需求质量审查单.md</li><li>质量门禁检查单.md</li><li>发版检查清单.csv</li></ul>
+  </div>
+  <div class="block">
+    <div class="block-label">⚙️ Skills · 调用技能 (3)</div>
+    <div class="chips"><span class="chip">human-confirmation-node-management</span><span class="chip">fallback-switching</span><span class="chip">gate-pass-decision</span></div>
+  </div>
+  <div class="block">
+    <div class="block-label">📤 Outputs · 输出产物</div>
+    <ul class="docs out"><li>门禁放行记录.csv</li><li>失败兜底切换记录.csv</li><li>人工确认节点清单.csv</li></ul>
+  </div>
+  <div class="next">→ 下游 N390</div>
+</article>
+<article class="card is-crosscut" id="N390">
+  <div class="card-head">
+    <span class="nid">N390</span>
+    <h3>平台治理与模板质量</h3>
+    <span class="sub">治理</span>
+  </div>
+  <div class="badges"><span class="badge crosscut">📡 事件订阅</span></div>
+  <p class="goal">沉淀审计、模板和评分规则，形成全局治理闭环</p>
+  <div class="block">
+    <div class="block-label">📥 Inputs · 输入产物</div>
+    <ul class="docs in"><li>线上问题复盘.md</li><li>代码规范检查单.csv</li><li>质量门禁检查单.md</li><li>门禁放行记录.csv</li><li>周报.md</li></ul>
+  </div>
+  <div class="block">
+    <div class="block-label">⚙️ Skills · 调用技能 (3)</div>
+    <div class="chips"><span class="chip">audit-trail-management</span><span class="chip">template-management</span><span class="chip">quality-scoring-engine</span></div>
+  </div>
+  <div class="block">
+    <div class="block-label">📤 Outputs · 输出产物</div>
+    <ul class="docs out"><li>审计留痕日志.csv</li><li>模板库索引.csv</li><li>质量评分结果.csv</li></ul>
+  </div>
+  <div class="next">→ 下游 — 终点 —</div>
+</article>
+</div></section>
+
+</main>
+
+<section class="architecture">
+  <div class="section-title">Reference Architecture · 参考架构</div>
+  <h2 class="section-h2">v2 反应式系统架构</h2>
+<div class="arch-diagram">                    ┌─────────────────────────────────────────────┐
+                    │       ⚡ 事件总线 (Event Bus)                │
+                    │  produced.* / state.* / exception.* / sla.*  │
+                    └─┬───────────┬───────────┬───────────┬───────┘
+                      │ subscribe │           │           │
+        ┌─────────────┘           │           │           └────────────┐
+        ▼                         ▼           ▼                        ▼
+  ┌──────────┐            ┌──────────┐  ┌──────────┐          ┌──────────────┐
+  │ N330     │            │ N340     │  │ N350     │          │ N390         │
+  │ 文档生成  │            │ 协同沉淀  │  │ 任务管理  │          │ 治理审计      │
+  └──────────┘            └──────────┘  └──────────┘          └──────────────┘
+
+  ════════════════════════════════════════════════════════════════════════════
+
+   主流程 DAG (N005 ─ N320)                          📜 产物契约层
+   ┌──────────────────────────────┐                 ┌─────────────────┐
+   │ N005 ─► N010 ─► ... ─► N320  │ ◄─── 校验 ───   │ Schema Registry │
+   └──────────────────────────────┘                 │ + Versioning    │
+                                                    └─────────────────┘
+   每个节点 → 触发 produced 事件 → 事件总线 → 横切订阅者实时响应
+
+  ════════════════════════════════════════════════════════════════════════════
+
+   🔄 反馈回流环                              🎯 N370 三层路由
+   N300/N320/N250 ─signal─► N005 ─► N010      Stage → Node → Skill
+                                  └► N060      (130+ → 11 → 3-4 → N)
+
+  ════════════════════════════════════════════════════════════════════════════
+
+   ⚡ 熔断器                                  👥 SLA 人工队列
+   max_iter:3 + cooldown:30m + escalate     P0/P1/P2 + SLA + auto-escalate
+</div>
+</section>
+
+<footer>
+  Generated from Skills Workflow Atlas · <span class="v">v2.0 Reactive Edition</span> ·
+  改造前 39 节点 / 11 阶段 → 改造后 40 节点 / 12 阶段 + 事件总线 + 契约层 + 反馈环
+</footer>
+
+<script>
+  mermaid.initialize({
+    startOnLoad: true, theme: 'base',
+    flowchart: { curve: 'basis', padding: 16, htmlLabels: true },
+    themeVariables: {
+      fontFamily: 'JetBrains Mono, monospace',
+      fontSize: '13px',
+      primaryColor: '#FFF',
+      lineColor: '#666'
+    }
+  });
+</script>
+</body></html>
