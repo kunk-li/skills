@@ -1,0 +1,60 @@
+{
+  "task": {
+    "id": "B4",
+    "path": "B",
+    "level": 4,
+    "input": "PRD: AI 客服系统,接 7 个客服渠道,日峰值 100k 对话。\n约束:团队只会 Python,预算 8K USD/月,3 个月上线。\n出技术方案。\n",
+    "expected": {
+      "macro_skill": "prd-to-tech-solution",
+      "required_artifacts": [
+        "tech-solution.md"
+      ],
+      "format_checks": [
+        {
+          "kind": "contains",
+          "file": "tech-solution.md",
+          "text": "Python"
+        },
+        {
+          "kind": "contains",
+          "file": "tech-solution.md",
+          "text": "$"
+        }
+      ]
+    },
+    "known_traps": [
+      "推荐 Go/Rust 因为'性能更好'忽略团队约束",
+      "架构包含超预算的组件"
+    ]
+  },
+  "response": {
+    "selected_skills": [
+      "prd-to-tech-solution"
+    ],
+    "artifacts": {
+      "tech-solution.md": "# Mock tech-solution.md\n\n(scripted mock output for B4)\n"
+    },
+    "trace": [
+      {
+        "step": 1,
+        "skill": "prd-to-tech-solution",
+        "duration_ms": 100
+      }
+    ]
+  },
+  "result": {
+    "task_id": "B4",
+    "path": "B",
+    "level": 4,
+    "duration_ms": 0,
+    "scores": {
+      "selection": 1.0,
+      "completeness": 1.0,
+      "groundedness": 0.9099999999999999,
+      "format": 0.0,
+      "utility": 0.56
+    },
+    "total": 3.4699999999999998,
+    "verdict": "WEAK"
+  }
+}

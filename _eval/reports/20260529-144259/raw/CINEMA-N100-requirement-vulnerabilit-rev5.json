@@ -1,0 +1,53 @@
+{
+  "task": {
+    "id": "CINEMA-N100-requirement-vulnerabilit-rev5",
+    "path": "A",
+    "level": 1,
+    "input": "Given the CinemaAI PRD (v0.3/v0.4) describing an AI-driven anime/short-drama production tool (15 modules, 86+ functions, ~268 PD), and any sibling artifacts already produced upstream, produce a N100 requirement-vulnerability-scan artifact. This is iteration rev5 — incorporate prior session findings. The ground truth is at: 需求漏洞摘要.md (full path embedded in expected.ground_truth_path).",
+    "expected": {
+      "atomic_skill": "requirement-vulnerability-scan",
+      "ground_truth_path": "D:\\projects\\python\\ai_work\\video\\cinemaai\\CinemaAI-PRD\\工作产物\\N100\\需求漏洞摘要.md",
+      "ground_truth_schema_version": "2.1.1",
+      "required_artifacts": [
+        "需求漏洞摘要.md"
+      ]
+    },
+    "source_node": "N100",
+    "source_baseline": null,
+    "rev_iteration": "rev5",
+    "known_traps": [
+      "fabricating findings not in PRD",
+      "missing key items the real artifact captured"
+    ]
+  },
+  "response": {
+    "selected_skills": [
+      "requirement-to-prd"
+    ],
+    "artifacts": {
+      "需求漏洞摘要.md": "# Mock 需求漏洞摘要.md\n\n(scripted mock output for CINEMA-N100-requirement-vulnerabilit-rev5)\n"
+    },
+    "trace": [
+      {
+        "step": 1,
+        "skill": "requirement-to-prd",
+        "duration_ms": 100
+      }
+    ]
+  },
+  "result": {
+    "task_id": "CINEMA-N100-requirement-vulnerabilit-rev5",
+    "path": "A",
+    "level": 1,
+    "duration_ms": 0,
+    "scores": {
+      "selection": 0.0,
+      "completeness": 1.0,
+      "groundedness": 0.87,
+      "format": 1.0,
+      "gt_similarity": 0.99
+    },
+    "total": 3.86,
+    "verdict": "WEAK"
+  }
+}

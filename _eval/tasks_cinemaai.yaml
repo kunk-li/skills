@@ -1,0 +1,549 @@
+- id: CINEMA-N070-business-rule-extraction
+  path: A
+  level: 3
+  input: 'Given the CinemaAI PRD (v0.3/v0.4) describing an AI-driven anime/short-drama production tool (15 modules, 86+ functions,
+    ~268 PD), and any sibling artifacts already produced upstream, produce a N070 business-rule-extraction artifact. The ground
+    truth is at: 业务规则清单.csv (full path embedded in expected.ground_truth_path).'
+  expected:
+    atomic_skill: business-rule-extraction
+    ground_truth_path: D:\projects\python\ai_work\video\cinemaai\CinemaAI-PRD\工作产物\N070\业务规则清单.csv
+    ground_truth_schema_version: null
+    required_artifacts:
+    - 业务规则清单.csv
+  source_node: N070
+  source_baseline: null
+  rev_iteration: ''
+  known_traps:
+  - fabricating findings not in PRD
+  - missing key items the real artifact captured
+- id: CINEMA-N070-data-object-identificati
+  path: A
+  level: 2
+  input: 'Given the CinemaAI PRD (v0.3/v0.4) describing an AI-driven anime/short-drama production tool (15 modules, 86+ functions,
+    ~268 PD), and any sibling artifacts already produced upstream, produce a N070 data-object-identification artifact. The
+    ground truth is at: 数据对象清单.csv (full path embedded in expected.ground_truth_path).'
+  expected:
+    atomic_skill: data-object-identification
+    ground_truth_path: D:\projects\python\ai_work\video\cinemaai\CinemaAI-PRD\工作产物\N070\数据对象清单.csv
+    ground_truth_schema_version: null
+    required_artifacts:
+    - 数据对象清单.csv
+  source_node: N070
+  source_baseline: null
+  rev_iteration: ''
+  known_traps:
+  - fabricating findings not in PRD
+  - missing key items the real artifact captured
+- id: CINEMA-N070-requirement-breakdown
+  path: A
+  level: 3
+  input: 'Given the CinemaAI PRD (00_PRD_v0.3.md (实为 v0.4)) describing an AI-driven anime/short-drama production tool (15
+    modules, 86+ functions, ~268 PD), and any sibling artifacts already produced upstream, produce a N070 requirement-breakdown
+    artifact. The ground truth is at: 需求结构树.md (full path embedded in expected.ground_truth_path).'
+  expected:
+    atomic_skill: requirement-breakdown
+    ground_truth_path: D:\projects\python\ai_work\video\cinemaai\CinemaAI-PRD\工作产物\N070\需求结构树.md
+    ground_truth_schema_version: 1.0.0
+    required_artifacts:
+    - 需求结构树.md
+  source_node: N070
+  source_baseline:
+    prd: 00_PRD_v0.3.md (实为 v0.4)
+    flow_user: 01_用户流程图.md
+    flow_system: 02_系统流程图.md
+  rev_iteration: ''
+  known_traps:
+  - fabricating findings not in PRD
+  - missing key items the real artifact captured
+- id: CINEMA-N070-state-transition-mapping
+  path: A
+  level: 2
+  input: 'Given the CinemaAI PRD (v0.3/v0.4) describing an AI-driven anime/short-drama production tool (15 modules, 86+ functions,
+    ~268 PD), and any sibling artifacts already produced upstream, produce a N070 state-transition-mapping artifact. The ground
+    truth is at: 状态流转表.csv (full path embedded in expected.ground_truth_path).'
+  expected:
+    atomic_skill: state-transition-mapping
+    ground_truth_path: D:\projects\python\ai_work\video\cinemaai\CinemaAI-PRD\工作产物\N070\状态流转表.csv
+    ground_truth_schema_version: null
+    required_artifacts:
+    - 状态流转表.csv
+  source_node: N070
+  source_baseline: null
+  rev_iteration: ''
+  known_traps:
+  - fabricating findings not in PRD
+  - missing key items the real artifact captured
+- id: CINEMA-N100-pending-items-extraction-rev5
+  path: A
+  level: 1
+  input: 'Given the CinemaAI PRD (v0.3/v0.4) describing an AI-driven anime/short-drama production tool (15 modules, 86+ functions,
+    ~268 PD), and any sibling artifacts already produced upstream, produce a N100 pending-items-extraction artifact. This
+    is iteration rev5 — incorporate prior session findings. The ground truth is at: 待确认项摘要.md (full path embedded in expected.ground_truth_path).'
+  expected:
+    atomic_skill: pending-items-extraction
+    ground_truth_path: D:\projects\python\ai_work\video\cinemaai\CinemaAI-PRD\工作产物\N100\待确认项摘要.md
+    ground_truth_schema_version: 2.1.1
+    required_artifacts:
+    - 待确认项摘要.md
+  source_node: N100
+  source_baseline: null
+  rev_iteration: rev5
+  known_traps:
+  - fabricating findings not in PRD
+  - missing key items the real artifact captured
+- id: CINEMA-N100-requirement-completeness-rev5
+  path: A
+  level: 1
+  input: 'Given the CinemaAI PRD (v0.3/v0.4) describing an AI-driven anime/short-drama production tool (15 modules, 86+ functions,
+    ~268 PD), and any sibling artifacts already produced upstream, produce a N100 requirement-completeness-check artifact.
+    This is iteration rev5 — incorporate prior session findings. The ground truth is at: 完整性检查摘要.md (full path embedded in
+    expected.ground_truth_path).'
+  expected:
+    atomic_skill: requirement-completeness-check
+    ground_truth_path: D:\projects\python\ai_work\video\cinemaai\CinemaAI-PRD\工作产物\N100\完整性检查摘要.md
+    ground_truth_schema_version: 2.1.1
+    required_artifacts:
+    - 完整性检查摘要.md
+  source_node: N100
+  source_baseline:
+    prd_version: v0.4 (commit 924aed8)
+    prd_size: 2410 lines
+  rev_iteration: rev5
+  known_traps:
+  - fabricating findings not in PRD
+  - missing key items the real artifact captured
+- id: CINEMA-N100-requirement-conflict-det-rev5
+  path: A
+  level: 1
+  input: 'Given the CinemaAI PRD (v0.3/v0.4) describing an AI-driven anime/short-drama production tool (15 modules, 86+ functions,
+    ~268 PD), and any sibling artifacts already produced upstream, produce a N100 requirement-conflict-detection artifact.
+    This is iteration rev5 — incorporate prior session findings. The ground truth is at: 需求矛盾问题摘要.md (full path embedded in
+    expected.ground_truth_path).'
+  expected:
+    atomic_skill: requirement-conflict-detection
+    ground_truth_path: D:\projects\python\ai_work\video\cinemaai\CinemaAI-PRD\工作产物\N100\需求矛盾问题摘要.md
+    ground_truth_schema_version: 2.1.1
+    required_artifacts:
+    - 需求矛盾问题摘要.md
+  source_node: N100
+  source_baseline: null
+  rev_iteration: rev5
+  known_traps:
+  - fabricating findings not in PRD
+  - missing key items the real artifact captured
+- id: CINEMA-N100-requirement-executabilit-rev5
+  path: A
+  level: 1
+  input: 'Given the CinemaAI PRD (v0.3/v0.4) describing an AI-driven anime/short-drama production tool (15 modules, 86+ functions,
+    ~268 PD), and any sibling artifacts already produced upstream, produce a N100 requirement-executability-check artifact.
+    This is iteration rev5 — incorporate prior session findings. The ground truth is at: 可执行性检查摘要.md (full path embedded in
+    expected.ground_truth_path).'
+  expected:
+    atomic_skill: requirement-executability-check
+    ground_truth_path: D:\projects\python\ai_work\video\cinemaai\CinemaAI-PRD\工作产物\N100\可执行性检查摘要.md
+    ground_truth_schema_version: 2.1.1
+    required_artifacts:
+    - 可执行性检查摘要.md
+  source_node: N100
+  source_baseline: null
+  rev_iteration: rev5
+  known_traps:
+  - fabricating findings not in PRD
+  - missing key items the real artifact captured
+- id: CINEMA-N100-requirement-vulnerabilit-rev5
+  path: A
+  level: 1
+  input: 'Given the CinemaAI PRD (v0.3/v0.4) describing an AI-driven anime/short-drama production tool (15 modules, 86+ functions,
+    ~268 PD), and any sibling artifacts already produced upstream, produce a N100 requirement-vulnerability-scan artifact.
+    This is iteration rev5 — incorporate prior session findings. The ground truth is at: 需求漏洞摘要.md (full path embedded in
+    expected.ground_truth_path).'
+  expected:
+    atomic_skill: requirement-vulnerability-scan
+    ground_truth_path: D:\projects\python\ai_work\video\cinemaai\CinemaAI-PRD\工作产物\N100\需求漏洞摘要.md
+    ground_truth_schema_version: 2.1.1
+    required_artifacts:
+    - 需求漏洞摘要.md
+  source_node: N100
+  source_baseline: null
+  rev_iteration: rev5
+  known_traps:
+  - fabricating findings not in PRD
+  - missing key items the real artifact captured
+- id: CINEMA-N110-acceptance-criteria-gene
+  path: A
+  level: 2
+  input: 'Given the CinemaAI PRD (v0.3/v0.4) describing an AI-driven anime/short-drama production tool (15 modules, 86+ functions,
+    ~268 PD), and any sibling artifacts already produced upstream, produce a N110 acceptance-criteria-generation artifact.
+    The ground truth is at: 验收标准.csv (full path embedded in expected.ground_truth_path).'
+  expected:
+    atomic_skill: acceptance-criteria-generation
+    ground_truth_path: D:\projects\python\ai_work\video\cinemaai\CinemaAI-PRD\工作产物\N110\验收标准.csv
+    ground_truth_schema_version: null
+    required_artifacts:
+    - 验收标准.csv
+  source_node: N110
+  source_baseline: null
+  rev_iteration: ''
+  known_traps:
+  - fabricating findings not in PRD
+  - missing key items the real artifact captured
+- id: CINEMA-N120-api-design-recommendatio
+  path: B
+  level: 3
+  input: 'Given the CinemaAI PRD (v0.3/v0.4) describing an AI-driven anime/short-drama production tool (15 modules, 86+ functions,
+    ~268 PD), and any sibling artifacts already produced upstream, produce a N120 api-design-recommendation artifact. The
+    ground truth is at: API设计.md (full path embedded in expected.ground_truth_path).'
+  expected:
+    atomic_skill: api-design-recommendation
+    ground_truth_path: D:\projects\python\ai_work\video\cinemaai\CinemaAI-PRD\工作产物\N120\API设计.md
+    ground_truth_schema_version: 1.0.0
+    required_artifacts:
+    - API设计.md
+  source_node: N120
+  source_baseline: null
+  rev_iteration: ''
+  known_traps:
+  - fabricating findings not in PRD
+  - missing key items the real artifact captured
+- id: CINEMA-N120-api-error-code-design
+  path: B
+  level: 2
+  input: 'Given the CinemaAI PRD (v0.3/v0.4) describing an AI-driven anime/short-drama production tool (15 modules, 86+ functions,
+    ~268 PD), and any sibling artifacts already produced upstream, produce a N120 api-error-code-design artifact. The ground
+    truth is at: 错误码设计.md (full path embedded in expected.ground_truth_path).'
+  expected:
+    atomic_skill: api-error-code-design
+    ground_truth_path: D:\projects\python\ai_work\video\cinemaai\CinemaAI-PRD\工作产物\N120\错误码设计.md
+    ground_truth_schema_version: 1.0.0
+    required_artifacts:
+    - 错误码设计.md
+  source_node: N120
+  source_baseline: null
+  rev_iteration: ''
+  known_traps:
+  - fabricating findings not in PRD
+  - missing key items the real artifact captured
+- id: CINEMA-N120-api-intent-extraction
+  path: B
+  level: 2
+  input: 'Given the CinemaAI PRD (v0.3/v0.4) describing an AI-driven anime/short-drama production tool (15 modules, 86+ functions,
+    ~268 PD), and any sibling artifacts already produced upstream, produce a N120 api-intent-extraction artifact. The ground
+    truth is at: API意图清单.csv (full path embedded in expected.ground_truth_path).'
+  expected:
+    atomic_skill: api-intent-extraction
+    ground_truth_path: D:\projects\python\ai_work\video\cinemaai\CinemaAI-PRD\工作产物\N120\API意图清单.csv
+    ground_truth_schema_version: null
+    required_artifacts:
+    - API意图清单.csv
+  source_node: N120
+  source_baseline: null
+  rev_iteration: ''
+  known_traps:
+  - fabricating findings not in PRD
+  - missing key items the real artifact captured
+- id: CINEMA-N120-audit-trail-design
+  path: B
+  level: 2
+  input: 'Given the CinemaAI PRD (v0.3/v0.4) describing an AI-driven anime/short-drama production tool (15 modules, 86+ functions,
+    ~268 PD), and any sibling artifacts already produced upstream, produce a N120 audit-trail-design artifact. The ground
+    truth is at: 审计设计.md (full path embedded in expected.ground_truth_path).'
+  expected:
+    atomic_skill: audit-trail-design
+    ground_truth_path: D:\projects\python\ai_work\video\cinemaai\CinemaAI-PRD\工作产物\N120\审计设计.md
+    ground_truth_schema_version: 1.0.0
+    required_artifacts:
+    - 审计设计.md
+  source_node: N120
+  source_baseline: null
+  rev_iteration: ''
+  known_traps:
+  - fabricating findings not in PRD
+  - missing key items the real artifact captured
+- id: CINEMA-N120-authorization-model-desi
+  path: B
+  level: 2
+  input: 'Given the CinemaAI PRD (v0.3/v0.4) describing an AI-driven anime/short-drama production tool (15 modules, 86+ functions,
+    ~268 PD), and any sibling artifacts already produced upstream, produce a N120 authorization-model-design artifact. The
+    ground truth is at: 鉴权模型设计.md (full path embedded in expected.ground_truth_path).'
+  expected:
+    atomic_skill: authorization-model-design
+    ground_truth_path: D:\projects\python\ai_work\video\cinemaai\CinemaAI-PRD\工作产物\N120\鉴权模型设计.md
+    ground_truth_schema_version: 1.0.0
+    required_artifacts:
+    - 鉴权模型设计.md
+  source_node: N120
+  source_baseline: null
+  rev_iteration: ''
+  known_traps:
+  - fabricating findings not in PRD
+  - missing key items the real artifact captured
+- id: CINEMA-N120-concurrency-control-reco
+  path: B
+  level: 3
+  input: 'Given the CinemaAI PRD (v0.3/v0.4) describing an AI-driven anime/short-drama production tool (15 modules, 86+ functions,
+    ~268 PD), and any sibling artifacts already produced upstream, produce a N120 concurrency-control-recommendation artifact.
+    The ground truth is at: 并发控制设计.md (full path embedded in expected.ground_truth_path).'
+  expected:
+    atomic_skill: concurrency-control-recommendation
+    ground_truth_path: D:\projects\python\ai_work\video\cinemaai\CinemaAI-PRD\工作产物\N120\并发控制设计.md
+    ground_truth_schema_version: 1.0.0
+    required_artifacts:
+    - 并发控制设计.md
+  source_node: N120
+  source_baseline: null
+  rev_iteration: ''
+  known_traps:
+  - fabricating findings not in PRD
+  - missing key items the real artifact captured
+- id: CINEMA-N120-data-flow-mapping
+  path: B
+  level: 3
+  input: 'Given the CinemaAI PRD (v0.3/v0.4) describing an AI-driven anime/short-drama production tool (15 modules, 86+ functions,
+    ~268 PD), and any sibling artifacts already produced upstream, produce a N120 data-flow-mapping artifact. The ground truth
+    is at: 数据流图.md (full path embedded in expected.ground_truth_path).'
+  expected:
+    atomic_skill: data-flow-mapping
+    ground_truth_path: D:\projects\python\ai_work\video\cinemaai\CinemaAI-PRD\工作产物\N120\数据流图.md
+    ground_truth_schema_version: 1.0.0
+    required_artifacts:
+    - 数据流图.md
+  source_node: N120
+  source_baseline: null
+  rev_iteration: ''
+  known_traps:
+  - fabricating findings not in PRD
+  - missing key items the real artifact captured
+- id: CINEMA-N120-engineering-requirement-
+  path: B
+  level: 3
+  input: 'Given the CinemaAI PRD (v0.3/v0.4) describing an AI-driven anime/short-drama production tool (15 modules, 86+ functions,
+    ~268 PD), and any sibling artifacts already produced upstream, produce a N120 engineering-requirement-parsing artifact.
+    The ground truth is at: 工程需求解析.md (full path embedded in expected.ground_truth_path).'
+  expected:
+    atomic_skill: engineering-requirement-parsing
+    ground_truth_path: D:\projects\python\ai_work\video\cinemaai\CinemaAI-PRD\工作产物\N120\工程需求解析.md
+    ground_truth_schema_version: null
+    required_artifacts:
+    - 工程需求解析.md
+  source_node: N120
+  source_baseline: null
+  rev_iteration: ''
+  known_traps:
+  - fabricating findings not in PRD
+  - missing key items the real artifact captured
+- id: CINEMA-N120-idempotency-design-recom
+  path: B
+  level: 2
+  input: 'Given the CinemaAI PRD (v0.3/v0.4) describing an AI-driven anime/short-drama production tool (15 modules, 86+ functions,
+    ~268 PD), and any sibling artifacts already produced upstream, produce a N120 idempotency-design-recommendation artifact.
+    The ground truth is at: 幂等设计.md (full path embedded in expected.ground_truth_path).'
+  expected:
+    atomic_skill: idempotency-design-recommendation
+    ground_truth_path: D:\projects\python\ai_work\video\cinemaai\CinemaAI-PRD\工作产物\N120\幂等设计.md
+    ground_truth_schema_version: 1.0.0
+    required_artifacts:
+    - 幂等设计.md
+  source_node: N120
+  source_baseline: null
+  rev_iteration: ''
+  known_traps:
+  - fabricating findings not in PRD
+  - missing key items the real artifact captured
+- id: CINEMA-N120-module-boundary-identifi
+  path: B
+  level: 2
+  input: 'Given the CinemaAI PRD (v0.3/v0.4) describing an AI-driven anime/short-drama production tool (15 modules, 86+ functions,
+    ~268 PD), and any sibling artifacts already produced upstream, produce a N120 module-boundary-identification artifact.
+    The ground truth is at: 模块边界.md (full path embedded in expected.ground_truth_path).'
+  expected:
+    atomic_skill: module-boundary-identification
+    ground_truth_path: D:\projects\python\ai_work\video\cinemaai\CinemaAI-PRD\工作产物\N120\模块边界.md
+    ground_truth_schema_version: 1.0.0
+    required_artifacts:
+    - 模块边界.md
+  source_node: N120
+  source_baseline: null
+  rev_iteration: ''
+  known_traps:
+  - fabricating findings not in PRD
+  - missing key items the real artifact captured
+- id: CINEMA-N120-performance-risk-analysi
+  path: B
+  level: 2
+  input: 'Given the CinemaAI PRD (v0.3/v0.4) describing an AI-driven anime/short-drama production tool (15 modules, 86+ functions,
+    ~268 PD), and any sibling artifacts already produced upstream, produce a N120 performance-risk-analysis artifact. The
+    ground truth is at: 性能风险分析.md (full path embedded in expected.ground_truth_path).'
+  expected:
+    atomic_skill: performance-risk-analysis
+    ground_truth_path: D:\projects\python\ai_work\video\cinemaai\CinemaAI-PRD\工作产物\N120\性能风险分析.md
+    ground_truth_schema_version: 1.0.0
+    required_artifacts:
+    - 性能风险分析.md
+  source_node: N120
+  source_baseline: null
+  rev_iteration: ''
+  known_traps:
+  - fabricating findings not in PRD
+  - missing key items the real artifact captured
+- id: CINEMA-N120-security-risk-analysis
+  path: B
+  level: 2
+  input: 'Given the CinemaAI PRD (v0.3/v0.4) describing an AI-driven anime/short-drama production tool (15 modules, 86+ functions,
+    ~268 PD), and any sibling artifacts already produced upstream, produce a N120 security-risk-analysis artifact. The ground
+    truth is at: 安全风险分析.md (full path embedded in expected.ground_truth_path).'
+  expected:
+    atomic_skill: security-risk-analysis
+    ground_truth_path: D:\projects\python\ai_work\video\cinemaai\CinemaAI-PRD\工作产物\N120\安全风险分析.md
+    ground_truth_schema_version: 1.0.0
+    required_artifacts:
+    - 安全风险分析.md
+  source_node: N120
+  source_baseline: null
+  rev_iteration: ''
+  known_traps:
+  - fabricating findings not in PRD
+  - missing key items the real artifact captured
+- id: CINEMA-N120-table-schema-design-reco
+  path: B
+  level: 2
+  input: 'Given the CinemaAI PRD (v0.3/v0.4) describing an AI-driven anime/short-drama production tool (15 modules, 86+ functions,
+    ~268 PD), and any sibling artifacts already produced upstream, produce a N120 table-schema-design-recommendation artifact.
+    The ground truth is at: 表结构设计.md (full path embedded in expected.ground_truth_path).'
+  expected:
+    atomic_skill: table-schema-design-recommendation
+    ground_truth_path: D:\projects\python\ai_work\video\cinemaai\CinemaAI-PRD\工作产物\N120\表结构设计.md
+    ground_truth_schema_version: 1.0.0
+    required_artifacts:
+    - 表结构设计.md
+  source_node: N120
+  source_baseline: null
+  rev_iteration: ''
+  known_traps:
+  - fabricating findings not in PRD
+  - missing key items the real artifact captured
+- id: CINEMA-N180-dependency-identificatio
+  path: C
+  level: 2
+  input: 'Given the CinemaAI PRD (v0.3/v0.4) describing an AI-driven anime/short-drama production tool (15 modules, 86+ functions,
+    ~268 PD), and any sibling artifacts already produced upstream, produce a N180 dependency-identification artifact. The
+    ground truth is at: 任务依赖图.md (full path embedded in expected.ground_truth_path).'
+  expected:
+    atomic_skill: dependency-identification
+    ground_truth_path: D:\projects\python\ai_work\video\cinemaai\CinemaAI-PRD\工作产物\N180\任务依赖图.md
+    ground_truth_schema_version: 1.0.0
+    required_artifacts:
+    - 任务依赖图.md
+  source_node: N180
+  source_baseline: null
+  rev_iteration: ''
+  known_traps:
+  - fabricating findings not in PRD
+  - missing key items the real artifact captured
+- id: CINEMA-N180-development-task-breakdo
+  path: C
+  level: 3
+  input: 'Given the CinemaAI PRD (v0.3/v0.4) describing an AI-driven anime/short-drama production tool (15 modules, 86+ functions,
+    ~268 PD), and any sibling artifacts already produced upstream, produce a N180 development-task-breakdown artifact. The
+    ground truth is at: 开发任务清单.csv (full path embedded in expected.ground_truth_path).'
+  expected:
+    atomic_skill: development-task-breakdown
+    ground_truth_path: D:\projects\python\ai_work\video\cinemaai\CinemaAI-PRD\工作产物\N180\开发任务清单.csv
+    ground_truth_schema_version: null
+    required_artifacts:
+    - 开发任务清单.csv
+  source_node: N180
+  source_baseline: null
+  rev_iteration: ''
+  known_traps:
+  - fabricating findings not in PRD
+  - missing key items the real artifact captured
+- id: CINEMA-N180-effort-estimation-assist
+  path: C
+  level: 2
+  input: 'Given the CinemaAI PRD (v0.3/v0.4) describing an AI-driven anime/short-drama production tool (15 modules, 86+ functions,
+    ~268 PD), and any sibling artifacts already produced upstream, produce a N180 effort-estimation-assistant artifact. The
+    ground truth is at: 工时估算.md (full path embedded in expected.ground_truth_path).'
+  expected:
+    atomic_skill: effort-estimation-assistant
+    ground_truth_path: D:\projects\python\ai_work\video\cinemaai\CinemaAI-PRD\工作产物\N180\工时估算.md
+    ground_truth_schema_version: 1.0.0
+    required_artifacts:
+    - 工时估算.md
+  source_node: N180
+  source_baseline: null
+  rev_iteration: ''
+  known_traps:
+  - fabricating findings not in PRD
+  - missing key items the real artifact captured
+- id: CINEMA-N190-code-scaffold-generation
+  path: C
+  level: 3
+  input: 'Given the CinemaAI PRD (v0.3/v0.4) describing an AI-driven anime/short-drama production tool (15 modules, 86+ functions,
+    ~268 PD), and any sibling artifacts already produced upstream, produce a N190 code-scaffold-generation artifact. The ground
+    truth is at: monorepo脚手架.md (full path embedded in expected.ground_truth_path).'
+  expected:
+    atomic_skill: code-scaffold-generation
+    ground_truth_path: D:\projects\python\ai_work\video\cinemaai\CinemaAI-PRD\工作产物\N190\monorepo脚手架.md
+    ground_truth_schema_version: 1.0.0
+    required_artifacts:
+    - monorepo脚手架.md
+  source_node: N190
+  source_baseline: null
+  rev_iteration: ''
+  known_traps:
+  - fabricating findings not in PRD
+  - missing key items the real artifact captured
+- id: CINEMA-N190-controller
+  path: C
+  level: 4
+  input: 'Given the CinemaAI PRD (v0.3/v0.4) describing an AI-driven anime/short-drama production tool (15 modules, 86+ functions,
+    ~268 PD), and any sibling artifacts already produced upstream, produce a N190 controller artifact. The ground truth is
+    at: 核心代码草稿.md (full path embedded in expected.ground_truth_path).'
+  expected:
+    atomic_skill: controller
+    ground_truth_path: D:\projects\python\ai_work\video\cinemaai\CinemaAI-PRD\工作产物\N190\核心代码草稿.md
+    ground_truth_schema_version: 1.0.0
+    required_artifacts:
+    - 核心代码草稿.md
+  source_node: N190
+  source_baseline: null
+  rev_iteration: ''
+  known_traps:
+  - fabricating findings not in PRD
+  - missing key items the real artifact captured
+- id: CINEMA-N190-transaction-boundary-che
+  path: C
+  level: 3
+  input: 'Given the CinemaAI PRD (v0.3/v0.4) describing an AI-driven anime/short-drama production tool (15 modules, 86+ functions,
+    ~268 PD), and any sibling artifacts already produced upstream, produce a N190 transaction-boundary-check artifact. The
+    ground truth is at: 事务边界检查.md (full path embedded in expected.ground_truth_path).'
+  expected:
+    atomic_skill: transaction-boundary-check
+    ground_truth_path: D:\projects\python\ai_work\video\cinemaai\CinemaAI-PRD\工作产物\N190\事务边界检查.md
+    ground_truth_schema_version: 1.0.0
+    required_artifacts:
+    - 事务边界检查.md
+  source_node: N190
+  source_baseline: null
+  rev_iteration: ''
+  known_traps:
+  - fabricating findings not in PRD
+  - missing key items the real artifact captured
+- id: CINEMA-N190-validator-code-generatio
+  path: C
+  level: 3
+  input: 'Given the CinemaAI PRD (v0.3/v0.4) describing an AI-driven anime/short-drama production tool (15 modules, 86+ functions,
+    ~268 PD), and any sibling artifacts already produced upstream, produce a N190 validator-code-generation artifact. The
+    ground truth is at: 校验器代码.md (full path embedded in expected.ground_truth_path).'
+  expected:
+    atomic_skill: validator-code-generation
+    ground_truth_path: D:\projects\python\ai_work\video\cinemaai\CinemaAI-PRD\工作产物\N190\校验器代码.md
+    ground_truth_schema_version: 1.0.0
+    required_artifacts:
+    - 校验器代码.md
+  source_node: N190
+  source_baseline: null
+  rev_iteration: ''
+  known_traps:
+  - fabricating findings not in PRD
+  - missing key items the real artifact captured

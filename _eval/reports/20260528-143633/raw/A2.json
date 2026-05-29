@@ -1,0 +1,66 @@
+{
+  "task": {
+    "id": "A2",
+    "path": "A",
+    "level": 2,
+    "input": "会议纪要 2026-03-15 · 运营批量审核工单需求\n- 运营反馈现在工单单条审核太慢,每天 200+ 条要处理\n- 工单 7 个类别:咨询/投诉/退款/订单/账户/合作/其他\n- 角色:运营(执行审核)、主管(抽检 + 重审)、客服(只看自己的工单)\n- 主管小李说\"我希望能批量打标签\"\n- 运营小王说\"我希望命中规则的能自动通过\"(主管小李不同意)\n- 客服 Tina 抱怨\"我现在看不到自己 30 天前的工单\"\n",
+    "expected": {
+      "macro_skill": "requirement-to-prd",
+      "required_artifacts": [
+        "context-brief.md",
+        "breakdown.md",
+        "PRD.md",
+        "review-agenda.md"
+      ],
+      "format_checks": [
+        {
+          "kind": "section_count",
+          "file": "PRD.md",
+          "count": 16
+        },
+        {
+          "kind": "contains",
+          "file": "PRD.md",
+          "text": "权限"
+        }
+      ]
+    },
+    "known_traps": [
+      "把小王的自动通过提案写成确认事实,忽略主管不同意",
+      "把客服 Tina 的抱怨直接当 P0 需求"
+    ]
+  },
+  "response": {
+    "selected_skills": [
+      "requirement-to-prd"
+    ],
+    "artifacts": {
+      "context-brief.md": "# Mock context-brief.md\n\n(scripted mock output for A2)\n",
+      "breakdown.md": "# Mock breakdown.md\n\n(scripted mock output for A2)\n",
+      "PRD.md": "# Mock PRD.md\n\n(scripted mock output for A2)\n",
+      "review-agenda.md": "# Mock review-agenda.md\n\n(scripted mock output for A2)\n"
+    },
+    "trace": [
+      {
+        "step": 1,
+        "skill": "requirement-to-prd",
+        "duration_ms": 100
+      }
+    ]
+  },
+  "result": {
+    "task_id": "A2",
+    "path": "A",
+    "level": 2,
+    "duration_ms": 0,
+    "scores": {
+      "selection": 1.0,
+      "completeness": 1.0,
+      "groundedness": 0.8,
+      "format": 0.0,
+      "utility": 0.9199999999999999
+    },
+    "total": 3.7199999999999998,
+    "verdict": "WEAK"
+  }
+}

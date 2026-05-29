@@ -1,0 +1,452 @@
+[
+  {
+    "task_id": "CINEMA-N070-business-rule-extraction",
+    "path": "A",
+    "level": 3,
+    "duration_ms": 0,
+    "scores": {
+      "selection": 0.0,
+      "completeness": 1.0,
+      "groundedness": 0.62,
+      "format": 1.0,
+      "gt_similarity": 0.97
+    },
+    "total": 3.59,
+    "verdict": "WEAK"
+  },
+  {
+    "task_id": "CINEMA-N070-data-object-identificati",
+    "path": "A",
+    "level": 2,
+    "duration_ms": 0,
+    "scores": {
+      "selection": 0.0,
+      "completeness": 1.0,
+      "groundedness": 0.56,
+      "format": 1.0,
+      "gt_similarity": 0.78
+    },
+    "total": 3.34,
+    "verdict": "WEAK"
+  },
+  {
+    "task_id": "CINEMA-N070-requirement-breakdown",
+    "path": "A",
+    "level": 3,
+    "duration_ms": 0,
+    "scores": {
+      "selection": 0.0,
+      "completeness": 1.0,
+      "groundedness": 0.88,
+      "format": 1.0,
+      "gt_similarity": 0.9199999999999999
+    },
+    "total": 3.8,
+    "verdict": "WEAK"
+  },
+  {
+    "task_id": "CINEMA-N070-state-transition-mapping",
+    "path": "A",
+    "level": 2,
+    "duration_ms": 0,
+    "scores": {
+      "selection": 0.0,
+      "completeness": 1.0,
+      "groundedness": 0.99,
+      "format": 1.0,
+      "gt_similarity": 0.81
+    },
+    "total": 3.8,
+    "verdict": "WEAK"
+  },
+  {
+    "task_id": "CINEMA-N100-pending-items-extraction-rev5",
+    "path": "A",
+    "level": 1,
+    "duration_ms": 0,
+    "scores": {
+      "selection": 0.0,
+      "completeness": 1.0,
+      "groundedness": 0.63,
+      "format": 1.0,
+      "gt_similarity": 0.9199999999999999
+    },
+    "total": 3.55,
+    "verdict": "WEAK"
+  },
+  {
+    "task_id": "CINEMA-N100-requirement-completeness-rev5",
+    "path": "A",
+    "level": 1,
+    "duration_ms": 0,
+    "scores": {
+      "selection": 0.0,
+      "completeness": 1.0,
+      "groundedness": 0.75,
+      "format": 1.0,
+      "gt_similarity": 0.96
+    },
+    "total": 3.71,
+    "verdict": "WEAK"
+  },
+  {
+    "task_id": "CINEMA-N100-requirement-conflict-det-rev5",
+    "path": "A",
+    "level": 1,
+    "duration_ms": 0,
+    "scores": {
+      "selection": 0.0,
+      "completeness": 1.0,
+      "groundedness": 0.8300000000000001,
+      "format": 1.0,
+      "gt_similarity": 0.76
+    },
+    "total": 3.59,
+    "verdict": "WEAK"
+  },
+  {
+    "task_id": "CINEMA-N100-requirement-executabilit-rev5",
+    "path": "A",
+    "level": 1,
+    "duration_ms": 0,
+    "scores": {
+      "selection": 0.0,
+      "completeness": 1.0,
+      "groundedness": 0.61,
+      "format": 1.0,
+      "gt_similarity": 0.77
+    },
+    "total": 3.38,
+    "verdict": "WEAK"
+  },
+  {
+    "task_id": "CINEMA-N100-requirement-vulnerabilit-rev5",
+    "path": "A",
+    "level": 1,
+    "duration_ms": 0,
+    "scores": {
+      "selection": 0.0,
+      "completeness": 1.0,
+      "groundedness": 0.87,
+      "format": 1.0,
+      "gt_similarity": 0.99
+    },
+    "total": 3.86,
+    "verdict": "WEAK"
+  },
+  {
+    "task_id": "CINEMA-N110-acceptance-criteria-gene",
+    "path": "A",
+    "level": 2,
+    "duration_ms": 0,
+    "scores": {
+      "selection": 0.0,
+      "completeness": 1.0,
+      "groundedness": 0.89,
+      "format": 1.0,
+      "gt_similarity": 0.99
+    },
+    "total": 3.88,
+    "verdict": "WEAK"
+  },
+  {
+    "task_id": "CINEMA-N120-api-design-recommendatio",
+    "path": "B",
+    "level": 3,
+    "duration_ms": 0,
+    "scores": {
+      "selection": 0.0,
+      "completeness": 1.0,
+      "groundedness": 0.61,
+      "format": 1.0,
+      "gt_similarity": 0.5700000000000001
+    },
+    "total": 3.18,
+    "verdict": "WEAK"
+  },
+  {
+    "task_id": "CINEMA-N120-api-error-code-design",
+    "path": "B",
+    "level": 2,
+    "duration_ms": 0,
+    "scores": {
+      "selection": 0.0,
+      "completeness": 1.0,
+      "groundedness": 0.74,
+      "format": 1.0,
+      "gt_similarity": 0.79
+    },
+    "total": 3.5300000000000002,
+    "verdict": "WEAK"
+  },
+  {
+    "task_id": "CINEMA-N120-api-intent-extraction",
+    "path": "B",
+    "level": 2,
+    "duration_ms": 0,
+    "scores": {
+      "selection": 0.0,
+      "completeness": 1.0,
+      "groundedness": 0.98,
+      "format": 1.0,
+      "gt_similarity": 0.89
+    },
+    "total": 3.87,
+    "verdict": "WEAK"
+  },
+  {
+    "task_id": "CINEMA-N120-audit-trail-design",
+    "path": "B",
+    "level": 2,
+    "duration_ms": 0,
+    "scores": {
+      "selection": 0.0,
+      "completeness": 1.0,
+      "groundedness": 0.9,
+      "format": 1.0,
+      "gt_similarity": 0.8400000000000001
+    },
+    "total": 3.74,
+    "verdict": "WEAK"
+  },
+  {
+    "task_id": "CINEMA-N120-authorization-model-desi",
+    "path": "B",
+    "level": 2,
+    "duration_ms": 0,
+    "scores": {
+      "selection": 0.0,
+      "completeness": 1.0,
+      "groundedness": 0.8200000000000001,
+      "format": 1.0,
+      "gt_similarity": 0.9199999999999999
+    },
+    "total": 3.74,
+    "verdict": "WEAK"
+  },
+  {
+    "task_id": "CINEMA-N120-concurrency-control-reco",
+    "path": "B",
+    "level": 3,
+    "duration_ms": 0,
+    "scores": {
+      "selection": 0.0,
+      "completeness": 1.0,
+      "groundedness": 0.8400000000000001,
+      "format": 1.0,
+      "gt_similarity": 0.7
+    },
+    "total": 3.54,
+    "verdict": "WEAK"
+  },
+  {
+    "task_id": "CINEMA-N120-data-flow-mapping",
+    "path": "B",
+    "level": 3,
+    "duration_ms": 0,
+    "scores": {
+      "selection": 0.0,
+      "completeness": 1.0,
+      "groundedness": 0.52,
+      "format": 1.0,
+      "gt_similarity": 0.9099999999999999
+    },
+    "total": 3.4299999999999997,
+    "verdict": "WEAK"
+  },
+  {
+    "task_id": "CINEMA-N120-engineering-requirement-",
+    "path": "B",
+    "level": 3,
+    "duration_ms": 0,
+    "scores": {
+      "selection": 0.0,
+      "completeness": 1.0,
+      "groundedness": 0.76,
+      "format": 1.0,
+      "gt_similarity": 0.5
+    },
+    "total": 3.26,
+    "verdict": "WEAK"
+  },
+  {
+    "task_id": "CINEMA-N120-idempotency-design-recom",
+    "path": "B",
+    "level": 2,
+    "duration_ms": 0,
+    "scores": {
+      "selection": 0.0,
+      "completeness": 1.0,
+      "groundedness": 0.65,
+      "format": 1.0,
+      "gt_similarity": 0.59
+    },
+    "total": 3.24,
+    "verdict": "WEAK"
+  },
+  {
+    "task_id": "CINEMA-N120-module-boundary-identifi",
+    "path": "B",
+    "level": 2,
+    "duration_ms": 0,
+    "scores": {
+      "selection": 0.0,
+      "completeness": 1.0,
+      "groundedness": 0.71,
+      "format": 1.0,
+      "gt_similarity": 0.64
+    },
+    "total": 3.35,
+    "verdict": "WEAK"
+  },
+  {
+    "task_id": "CINEMA-N120-performance-risk-analysi",
+    "path": "B",
+    "level": 2,
+    "duration_ms": 0,
+    "scores": {
+      "selection": 0.0,
+      "completeness": 1.0,
+      "groundedness": 0.59,
+      "format": 1.0,
+      "gt_similarity": 0.94
+    },
+    "total": 3.53,
+    "verdict": "WEAK"
+  },
+  {
+    "task_id": "CINEMA-N120-security-risk-analysis",
+    "path": "B",
+    "level": 2,
+    "duration_ms": 0,
+    "scores": {
+      "selection": 0.0,
+      "completeness": 1.0,
+      "groundedness": 0.8,
+      "format": 1.0,
+      "gt_similarity": 0.73
+    },
+    "total": 3.5300000000000002,
+    "verdict": "WEAK"
+  },
+  {
+    "task_id": "CINEMA-N120-table-schema-design-reco",
+    "path": "B",
+    "level": 2,
+    "duration_ms": 0,
+    "scores": {
+      "selection": 0.0,
+      "completeness": 1.0,
+      "groundedness": 0.85,
+      "format": 1.0,
+      "gt_similarity": 0.8
+    },
+    "total": 3.65,
+    "verdict": "WEAK"
+  },
+  {
+    "task_id": "CINEMA-N180-dependency-identificatio",
+    "path": "C",
+    "level": 2,
+    "duration_ms": 0,
+    "scores": {
+      "selection": 0.0,
+      "completeness": 1.0,
+      "groundedness": 0.7,
+      "format": 1.0,
+      "gt_similarity": 0.71
+    },
+    "total": 3.41,
+    "verdict": "WEAK"
+  },
+  {
+    "task_id": "CINEMA-N180-development-task-breakdo",
+    "path": "C",
+    "level": 3,
+    "duration_ms": 0,
+    "scores": {
+      "selection": 0.0,
+      "completeness": 1.0,
+      "groundedness": 0.64,
+      "format": 1.0,
+      "gt_similarity": 0.56
+    },
+    "total": 3.2,
+    "verdict": "WEAK"
+  },
+  {
+    "task_id": "CINEMA-N180-effort-estimation-assist",
+    "path": "C",
+    "level": 2,
+    "duration_ms": 0,
+    "scores": {
+      "selection": 0.0,
+      "completeness": 1.0,
+      "groundedness": 0.69,
+      "format": 1.0,
+      "gt_similarity": 0.95
+    },
+    "total": 3.6399999999999997,
+    "verdict": "WEAK"
+  },
+  {
+    "task_id": "CINEMA-N190-code-scaffold-generation",
+    "path": "C",
+    "level": 3,
+    "duration_ms": 0,
+    "scores": {
+      "selection": 0.0,
+      "completeness": 1.0,
+      "groundedness": 0.56,
+      "format": 1.0,
+      "gt_similarity": 0.54
+    },
+    "total": 3.1,
+    "verdict": "WEAK"
+  },
+  {
+    "task_id": "CINEMA-N190-controller",
+    "path": "C",
+    "level": 4,
+    "duration_ms": 0,
+    "scores": {
+      "selection": 0.0,
+      "completeness": 1.0,
+      "groundedness": 0.6799999999999999,
+      "format": 1.0,
+      "gt_similarity": 0.53
+    },
+    "total": 3.21,
+    "verdict": "WEAK"
+  },
+  {
+    "task_id": "CINEMA-N190-transaction-boundary-che",
+    "path": "C",
+    "level": 3,
+    "duration_ms": 0,
+    "scores": {
+      "selection": 0.0,
+      "completeness": 1.0,
+      "groundedness": 0.52,
+      "format": 1.0,
+      "gt_similarity": 0.54
+    },
+    "total": 3.06,
+    "verdict": "WEAK"
+  },
+  {
+    "task_id": "CINEMA-N190-validator-code-generatio",
+    "path": "C",
+    "level": 3,
+    "duration_ms": 0,
+    "scores": {
+      "selection": 0.0,
+      "completeness": 1.0,
+      "groundedness": 0.76,
+      "format": 1.0,
+      "gt_similarity": 0.66
+    },
+    "total": 3.42,
+    "verdict": "WEAK"
+  }
+]

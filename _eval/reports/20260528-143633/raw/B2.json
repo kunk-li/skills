@@ -1,0 +1,64 @@
+{
+  "task": {
+    "id": "B2",
+    "path": "B",
+    "level": 2,
+    "input": "[完整 Inkstory PRD,含 2 blocker:角色一致性 / 5min 性能可达性]\n请出技术方案 + API + Schema。\n",
+    "expected": {
+      "macro_skill": "prd-to-tech-solution",
+      "required_artifacts": [
+        "tech-solution.md",
+        "api-design.yaml",
+        "schema.sql"
+      ],
+      "format_checks": [
+        {
+          "kind": "contains",
+          "file": "tech-solution.md",
+          "text": "S2"
+        },
+        {
+          "kind": "contains",
+          "file": "tech-solution.md",
+          "text": "一致性"
+        }
+      ]
+    },
+    "known_traps": [
+      "S2 只列 1-2 备选而非 3",
+      "schema 漏 partial unique index"
+    ]
+  },
+  "response": {
+    "selected_skills": [
+      "prd-to-tech-solution"
+    ],
+    "artifacts": {
+      "tech-solution.md": "# Mock tech-solution.md\n\n(scripted mock output for B2)\n",
+      "api-design.yaml": "# Mock api-design.yaml\n\n(scripted mock output for B2)\n",
+      "schema.sql": "# Mock schema.sql\n\n(scripted mock output for B2)\n"
+    },
+    "trace": [
+      {
+        "step": 1,
+        "skill": "prd-to-tech-solution",
+        "duration_ms": 100
+      }
+    ]
+  },
+  "result": {
+    "task_id": "B2",
+    "path": "B",
+    "level": 2,
+    "duration_ms": 0,
+    "scores": {
+      "selection": 1.0,
+      "completeness": 1.0,
+      "groundedness": 0.6,
+      "format": 0.0,
+      "utility": 0.8300000000000001
+    },
+    "total": 3.43,
+    "verdict": "WEAK"
+  }
+}

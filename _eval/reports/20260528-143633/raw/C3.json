@@ -1,0 +1,54 @@
+{
+  "task": {
+    "id": "C3",
+    "path": "C",
+    "level": 3,
+    "input": "[方案] 用 Jira 格式导出,需要 epic/story/task 层级。\n",
+    "expected": {
+      "macro_skill": "solution-to-dev-tasks",
+      "required_artifacts": [
+        "task-table.csv"
+      ],
+      "format_checks": [
+        {
+          "kind": "contains",
+          "file": "task-table.csv",
+          "text": "Epic"
+        }
+      ]
+    },
+    "known_traps": [
+      "epic/story/task 混在一起没分层"
+    ]
+  },
+  "response": {
+    "selected_skills": [
+      "solution-to-dev-tasks"
+    ],
+    "artifacts": {
+      "task-table.csv": "# Mock task-table.csv\n\n(scripted mock output for C3)\n"
+    },
+    "trace": [
+      {
+        "step": 1,
+        "skill": "solution-to-dev-tasks",
+        "duration_ms": 100
+      }
+    ]
+  },
+  "result": {
+    "task_id": "C3",
+    "path": "C",
+    "level": 3,
+    "duration_ms": 0,
+    "scores": {
+      "selection": 1.0,
+      "completeness": 1.0,
+      "groundedness": 0.59,
+      "format": 0.0,
+      "utility": 0.81
+    },
+    "total": 3.4,
+    "verdict": "WEAK"
+  }
+}

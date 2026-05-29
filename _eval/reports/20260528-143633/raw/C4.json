@@ -1,0 +1,50 @@
+{
+  "task": {
+    "id": "C4",
+    "path": "C",
+    "level": 4,
+    "input": "[方案] 团队只有 1 个前端 1 个后端,3 个月内交付。怎么拆?\n",
+    "expected": {
+      "macro_skill": "solution-to-dev-tasks",
+      "required_artifacts": [
+        "task-table.csv",
+        "sprint-plan.md"
+      ]
+    },
+    "known_traps": [
+      "总 pd 远超 120(2 人 × 3 月)却不警告",
+      "没主动建议砍范围"
+    ]
+  },
+  "response": {
+    "selected_skills": [
+      "solution-to-dev-tasks"
+    ],
+    "artifacts": {
+      "task-table.csv": "# Mock task-table.csv\n\n(scripted mock output for C4)\n",
+      "sprint-plan.md": "# Mock sprint-plan.md\n\n(scripted mock output for C4)\n"
+    },
+    "trace": [
+      {
+        "step": 1,
+        "skill": "solution-to-dev-tasks",
+        "duration_ms": 100
+      }
+    ]
+  },
+  "result": {
+    "task_id": "C4",
+    "path": "C",
+    "level": 4,
+    "duration_ms": 0,
+    "scores": {
+      "selection": 1.0,
+      "completeness": 1.0,
+      "groundedness": 0.71,
+      "format": 1.0,
+      "utility": 0.81
+    },
+    "total": 4.52,
+    "verdict": "PASS"
+  }
+}

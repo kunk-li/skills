@@ -1,0 +1,52 @@
+{
+  "task": {
+    "id": "A5",
+    "path": "A",
+    "level": 5,
+    "input": "我的 PRD 已经写完了:\n# 用户消息中心 PRD\n## 1 文档信息 ...\n## 2 背景 用户希望集中查看所有平台消息 ...\n## 3 范围 ...\n## 6 功能需求清单 ...\n## 13 验收标准 ...\n\n帮我补完缺失的部分。\n",
+    "expected": {
+      "atomic_skill": "prd-completion",
+      "must_not_call": "requirement-to-prd",
+      "near_cousins": [
+        "prd-generation"
+      ],
+      "required_artifacts": [
+        "prd-completion-memo.md"
+      ]
+    },
+    "known_traps": [
+      "macro skill 太诱人,看到 PRD 就调 requirement-to-prd",
+      "重新跑 breakdown 浪费时间和上下文"
+    ]
+  },
+  "response": {
+    "selected_skills": [
+      "requirement-to-prd"
+    ],
+    "artifacts": {
+      "prd-completion-memo.md": "# Mock prd-completion-memo.md\n\n(scripted mock output for A5)\n"
+    },
+    "trace": [
+      {
+        "step": 1,
+        "skill": "requirement-to-prd",
+        "duration_ms": 100
+      }
+    ]
+  },
+  "result": {
+    "task_id": "A5",
+    "path": "A",
+    "level": 5,
+    "duration_ms": 0,
+    "scores": {
+      "selection": 0.0,
+      "completeness": 1.0,
+      "groundedness": 0.6799999999999999,
+      "format": 1.0,
+      "utility": 0.63
+    },
+    "total": 3.31,
+    "verdict": "WEAK"
+  }
+}

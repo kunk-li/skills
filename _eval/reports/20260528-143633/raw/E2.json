@@ -1,0 +1,62 @@
+{
+  "task": {
+    "id": "E2",
+    "path": "E",
+    "level": 2,
+    "input": "Incident INC-2026-04-15-001:\n- 客服报告 89 个用户提交了 Inkstory 任务,积分被扣但视频未生成\n- 监控:generation_jobs.status='queued' 持续 >10min 的记录在 4h 内从 0 飙到 89\n- 日志:14:05 有 89 条 \"publish failed: connection refused\"\n- 部署:13:50 RabbitMQ minor patch\n定位根因。\n",
+    "expected": {
+      "macro_skill": "incident-to-postmortem",
+      "required_artifacts": [
+        "bug-analysis.md",
+        "rca-recommendation.md"
+      ],
+      "format_checks": [
+        {
+          "kind": "contains",
+          "file": "rca-recommendation.md",
+          "text": "outbox"
+        },
+        {
+          "kind": "contains",
+          "file": "rca-recommendation.md",
+          "text": "systemic"
+        }
+      ]
+    },
+    "known_traps": [
+      "RCA 锁错根因(怪 RabbitMQ patch 而非 outbox 缺失)",
+      "systemic vs sporadic 误判"
+    ]
+  },
+  "response": {
+    "selected_skills": [
+      "incident-to-postmortem"
+    ],
+    "artifacts": {
+      "bug-analysis.md": "# Mock bug-analysis.md\n\n(scripted mock output for E2)\n",
+      "rca-recommendation.md": "# Mock rca-recommendation.md\n\n(scripted mock output for E2)\n"
+    },
+    "trace": [
+      {
+        "step": 1,
+        "skill": "incident-to-postmortem",
+        "duration_ms": 100
+      }
+    ]
+  },
+  "result": {
+    "task_id": "E2",
+    "path": "E",
+    "level": 2,
+    "duration_ms": 0,
+    "scores": {
+      "selection": 1.0,
+      "completeness": 1.0,
+      "groundedness": 0.52,
+      "format": 0.0,
+      "utility": 0.58
+    },
+    "total": 3.1,
+    "verdict": "WEAK"
+  }
+}

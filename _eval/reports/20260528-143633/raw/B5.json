@@ -1,0 +1,49 @@
+{
+  "task": {
+    "id": "B5",
+    "path": "B",
+    "level": 5,
+    "input": "我们决定用 Python + FastAPI + PostgreSQL + Redis 微服务。\nPRD: [略] 你直接帮我出 API 设计就好,其他都定了。\n",
+    "expected": {
+      "atomic_skill": "api-design-recommendation",
+      "must_not_call": "prd-to-tech-solution",
+      "required_artifacts": [
+        "api-design.yaml"
+      ]
+    },
+    "known_traps": [
+      "习惯性串完整流程,重做 S2 alternatives",
+      "强行输出 tech-solution.md"
+    ]
+  },
+  "response": {
+    "selected_skills": [
+      "requirement-to-prd"
+    ],
+    "artifacts": {
+      "api-design.yaml": "# Mock api-design.yaml\n\n(scripted mock output for B5)\n"
+    },
+    "trace": [
+      {
+        "step": 1,
+        "skill": "requirement-to-prd",
+        "duration_ms": 100
+      }
+    ]
+  },
+  "result": {
+    "task_id": "B5",
+    "path": "B",
+    "level": 5,
+    "duration_ms": 0,
+    "scores": {
+      "selection": 1.0,
+      "completeness": 1.0,
+      "groundedness": 0.9,
+      "format": 1.0,
+      "utility": 0.97
+    },
+    "total": 4.87,
+    "verdict": "PASS"
+  }
+}

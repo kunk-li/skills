@@ -1,0 +1,57 @@
+{
+  "task": {
+    "id": "C2",
+    "path": "C",
+    "level": 2,
+    "input": "[Inkstory 完整方案 + API + Schema]\n拆 4 个 sprint 的任务。\n",
+    "expected": {
+      "macro_skill": "solution-to-dev-tasks",
+      "required_artifacts": [
+        "task-table.csv",
+        "spike-register.md"
+      ],
+      "format_checks": [
+        {
+          "kind": "contains",
+          "file": "spike-register.md",
+          "text": "一致性"
+        }
+      ]
+    },
+    "known_traps": [
+      "spike 排在 sprint 3+ 而非 sprint 1-2",
+      "没标 spike 失败时的回退方案"
+    ]
+  },
+  "response": {
+    "selected_skills": [
+      "solution-to-dev-tasks"
+    ],
+    "artifacts": {
+      "task-table.csv": "# Mock task-table.csv\n\n(scripted mock output for C2)\n",
+      "spike-register.md": "# Mock spike-register.md\n\n(scripted mock output for C2)\n"
+    },
+    "trace": [
+      {
+        "step": 1,
+        "skill": "solution-to-dev-tasks",
+        "duration_ms": 100
+      }
+    ]
+  },
+  "result": {
+    "task_id": "C2",
+    "path": "C",
+    "level": 2,
+    "duration_ms": 0,
+    "scores": {
+      "selection": 1.0,
+      "completeness": 1.0,
+      "groundedness": 0.67,
+      "format": 0.0,
+      "utility": 0.9
+    },
+    "total": 3.5700000000000003,
+    "verdict": "WEAK"
+  }
+}

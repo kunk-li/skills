@@ -1,0 +1,53 @@
+{
+  "task": {
+    "id": "CINEMA-N190-validator-code-generatio",
+    "path": "C",
+    "level": 3,
+    "input": "Given the CinemaAI PRD (v0.3/v0.4) describing an AI-driven anime/short-drama production tool (15 modules, 86+ functions, ~268 PD), and any sibling artifacts already produced upstream, produce a N190 validator-code-generation artifact. The ground truth is at: 校验器代码.md (full path embedded in expected.ground_truth_path).",
+    "expected": {
+      "atomic_skill": "validator-code-generation",
+      "ground_truth_path": "D:\\projects\\python\\ai_work\\video\\cinemaai\\CinemaAI-PRD\\工作产物\\N190\\校验器代码.md",
+      "ground_truth_schema_version": "1.0.0",
+      "required_artifacts": [
+        "校验器代码.md"
+      ]
+    },
+    "source_node": "N190",
+    "source_baseline": null,
+    "rev_iteration": "",
+    "known_traps": [
+      "fabricating findings not in PRD",
+      "missing key items the real artifact captured"
+    ]
+  },
+  "response": {
+    "selected_skills": [
+      "requirement-to-prd"
+    ],
+    "artifacts": {
+      "校验器代码.md": "# Mock 校验器代码.md\n\n(scripted mock output for CINEMA-N190-validator-code-generatio)\n"
+    },
+    "trace": [
+      {
+        "step": 1,
+        "skill": "requirement-to-prd",
+        "duration_ms": 100
+      }
+    ]
+  },
+  "result": {
+    "task_id": "CINEMA-N190-validator-code-generatio",
+    "path": "C",
+    "level": 3,
+    "duration_ms": 0,
+    "scores": {
+      "selection": 0.0,
+      "completeness": 1.0,
+      "groundedness": 0.76,
+      "format": 1.0,
+      "gt_similarity": 0.66
+    },
+    "total": 3.42,
+    "verdict": "WEAK"
+  }
+}

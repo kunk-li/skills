@@ -1,0 +1,55 @@
+{
+  "task": {
+    "id": "E3",
+    "path": "E",
+    "level": 3,
+    "input": "DB 慢:延迟从 100ms 升到 2s。\n昨天的改动:加了一个索引、改了一个 query、扩了连接池。\n定位根因。\n",
+    "expected": {
+      "macro_skill": "incident-to-postmortem",
+      "required_artifacts": [
+        "rca-recommendation.md"
+      ],
+      "format_checks": [
+        {
+          "kind": "contains",
+          "file": "rca-recommendation.md",
+          "text": "EXPLAIN"
+        }
+      ]
+    },
+    "known_traps": [
+      "预先锁定'一定是新索引'不保持假设开放",
+      "不建议具体取证动作"
+    ]
+  },
+  "response": {
+    "selected_skills": [
+      "incident-to-postmortem"
+    ],
+    "artifacts": {
+      "rca-recommendation.md": "# Mock rca-recommendation.md\n\n(scripted mock output for E3)\n"
+    },
+    "trace": [
+      {
+        "step": 1,
+        "skill": "incident-to-postmortem",
+        "duration_ms": 100
+      }
+    ]
+  },
+  "result": {
+    "task_id": "E3",
+    "path": "E",
+    "level": 3,
+    "duration_ms": 0,
+    "scores": {
+      "selection": 1.0,
+      "completeness": 1.0,
+      "groundedness": 0.98,
+      "format": 0.0,
+      "utility": 0.66
+    },
+    "total": 3.64,
+    "verdict": "WEAK"
+  }
+}

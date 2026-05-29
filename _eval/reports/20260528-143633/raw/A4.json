@@ -1,0 +1,59 @@
+{
+  "task": {
+    "id": "A4",
+    "path": "A",
+    "level": 4,
+    "input": "我要做 AI 编辑器,既要像 Notion 一样灵活,又要像 Word 一样专业。\n既要轻量化(< 50MB)又要离线本地训练模型。\n既要给小白用又要给专业排版人员用。\n给我 PRD。\n",
+    "expected": {
+      "macro_skill": "requirement-to-prd",
+      "required_artifacts": [
+        "context-brief.md",
+        "PRD.md",
+        "review-agenda.md"
+      ],
+      "format_checks": [
+        {
+          "kind": "contains",
+          "file": "context-brief.md",
+          "text": "矛盾"
+        }
+      ]
+    },
+    "known_traps": [
+      "调和矛盾自圆其说,不让用户二选一",
+      "把'又要 X 又要 Y'当成已确认需求并行落章"
+    ]
+  },
+  "response": {
+    "selected_skills": [
+      "requirement-to-prd"
+    ],
+    "artifacts": {
+      "context-brief.md": "# Mock context-brief.md\n\n(scripted mock output for A4)\n",
+      "PRD.md": "# Mock PRD.md\n\n(scripted mock output for A4)\n",
+      "review-agenda.md": "# Mock review-agenda.md\n\n(scripted mock output for A4)\n"
+    },
+    "trace": [
+      {
+        "step": 1,
+        "skill": "requirement-to-prd",
+        "duration_ms": 100
+      }
+    ]
+  },
+  "result": {
+    "task_id": "A4",
+    "path": "A",
+    "level": 4,
+    "duration_ms": 0,
+    "scores": {
+      "selection": 1.0,
+      "completeness": 1.0,
+      "groundedness": 0.9,
+      "format": 0.0,
+      "utility": 0.9299999999999999
+    },
+    "total": 3.83,
+    "verdict": "WEAK"
+  }
+}

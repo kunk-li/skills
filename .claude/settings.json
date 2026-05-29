@@ -1,0 +1,32 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "C:\\ProgramData\\miniconda3\\python.exe",
+            "args": ["D:/work/资料/skills/.claude/load_memory.py"],
+            "timeout": 10,
+            "statusMessage": "Loading project memory (CLAUDE.md / STATUS.md / latest session)"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "C:\\ProgramData\\miniconda3\\python.exe",
+            "args": ["D:/work/资料/skills/.claude/stop_check.py"],
+            "timeout": 5,
+            "async": true
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,53 @@
+{
+  "task": {
+    "id": "CINEMA-N180-effort-estimation-assist",
+    "path": "C",
+    "level": 2,
+    "input": "Given the CinemaAI PRD (v0.3/v0.4) describing an AI-driven anime/short-drama production tool (15 modules, 86+ functions, ~268 PD), and any sibling artifacts already produced upstream, produce a N180 effort-estimation-assistant artifact. The ground truth is at: 工时估算.md (full path embedded in expected.ground_truth_path).",
+    "expected": {
+      "atomic_skill": "effort-estimation-assistant",
+      "ground_truth_path": "D:\\projects\\python\\ai_work\\video\\cinemaai\\CinemaAI-PRD\\工作产物\\N180\\工时估算.md",
+      "ground_truth_schema_version": "1.0.0",
+      "required_artifacts": [
+        "工时估算.md"
+      ]
+    },
+    "source_node": "N180",
+    "source_baseline": null,
+    "rev_iteration": "",
+    "known_traps": [
+      "fabricating findings not in PRD",
+      "missing key items the real artifact captured"
+    ]
+  },
+  "response": {
+    "selected_skills": [
+      "requirement-to-prd"
+    ],
+    "artifacts": {
+      "工时估算.md": "# Mock 工时估算.md\n\n(scripted mock output for CINEMA-N180-effort-estimation-assist)\n"
+    },
+    "trace": [
+      {
+        "step": 1,
+        "skill": "requirement-to-prd",
+        "duration_ms": 100
+      }
+    ]
+  },
+  "result": {
+    "task_id": "CINEMA-N180-effort-estimation-assist",
+    "path": "C",
+    "level": 2,
+    "duration_ms": 0,
+    "scores": {
+      "selection": 0.0,
+      "completeness": 1.0,
+      "groundedness": 0.69,
+      "format": 1.0,
+      "gt_similarity": 0.95
+    },
+    "total": 3.6399999999999997,
+    "verdict": "WEAK"
+  }
+}

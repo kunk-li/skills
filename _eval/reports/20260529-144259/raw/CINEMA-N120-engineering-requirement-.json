@@ -1,0 +1,53 @@
+{
+  "task": {
+    "id": "CINEMA-N120-engineering-requirement-",
+    "path": "B",
+    "level": 3,
+    "input": "Given the CinemaAI PRD (v0.3/v0.4) describing an AI-driven anime/short-drama production tool (15 modules, 86+ functions, ~268 PD), and any sibling artifacts already produced upstream, produce a N120 engineering-requirement-parsing artifact. The ground truth is at: 工程需求解析.md (full path embedded in expected.ground_truth_path).",
+    "expected": {
+      "atomic_skill": "engineering-requirement-parsing",
+      "ground_truth_path": "D:\\projects\\python\\ai_work\\video\\cinemaai\\CinemaAI-PRD\\工作产物\\N120\\工程需求解析.md",
+      "ground_truth_schema_version": null,
+      "required_artifacts": [
+        "工程需求解析.md"
+      ]
+    },
+    "source_node": "N120",
+    "source_baseline": null,
+    "rev_iteration": "",
+    "known_traps": [
+      "fabricating findings not in PRD",
+      "missing key items the real artifact captured"
+    ]
+  },
+  "response": {
+    "selected_skills": [
+      "requirement-to-prd"
+    ],
+    "artifacts": {
+      "工程需求解析.md": "# Mock 工程需求解析.md\n\n(scripted mock output for CINEMA-N120-engineering-requirement-)\n"
+    },
+    "trace": [
+      {
+        "step": 1,
+        "skill": "requirement-to-prd",
+        "duration_ms": 100
+      }
+    ]
+  },
+  "result": {
+    "task_id": "CINEMA-N120-engineering-requirement-",
+    "path": "B",
+    "level": 3,
+    "duration_ms": 0,
+    "scores": {
+      "selection": 0.0,
+      "completeness": 1.0,
+      "groundedness": 0.76,
+      "format": 1.0,
+      "gt_similarity": 0.5
+    },
+    "total": 3.26,
+    "verdict": "WEAK"
+  }
+}

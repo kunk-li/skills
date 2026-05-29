@@ -1,0 +1,53 @@
+{
+  "task": {
+    "id": "CINEMA-N070-business-rule-extraction",
+    "path": "A",
+    "level": 3,
+    "input": "Given the CinemaAI PRD (v0.3/v0.4) describing an AI-driven anime/short-drama production tool (15 modules, 86+ functions, ~268 PD), and any sibling artifacts already produced upstream, produce a N070 business-rule-extraction artifact. The ground truth is at: 业务规则清单.csv (full path embedded in expected.ground_truth_path).",
+    "expected": {
+      "atomic_skill": "business-rule-extraction",
+      "ground_truth_path": "D:\\projects\\python\\ai_work\\video\\cinemaai\\CinemaAI-PRD\\工作产物\\N070\\业务规则清单.csv",
+      "ground_truth_schema_version": null,
+      "required_artifacts": [
+        "业务规则清单.csv"
+      ]
+    },
+    "source_node": "N070",
+    "source_baseline": null,
+    "rev_iteration": "",
+    "known_traps": [
+      "fabricating findings not in PRD",
+      "missing key items the real artifact captured"
+    ]
+  },
+  "response": {
+    "selected_skills": [
+      "requirement-to-prd"
+    ],
+    "artifacts": {
+      "业务规则清单.csv": "# Mock 业务规则清单.csv\n\n(scripted mock output for CINEMA-N070-business-rule-extraction)\n"
+    },
+    "trace": [
+      {
+        "step": 1,
+        "skill": "requirement-to-prd",
+        "duration_ms": 100
+      }
+    ]
+  },
+  "result": {
+    "task_id": "CINEMA-N070-business-rule-extraction",
+    "path": "A",
+    "level": 3,
+    "duration_ms": 0,
+    "scores": {
+      "selection": 0.0,
+      "completeness": 1.0,
+      "groundedness": 0.62,
+      "format": 1.0,
+      "gt_similarity": 0.97
+    },
+    "total": 3.59,
+    "verdict": "WEAK"
+  }
+}

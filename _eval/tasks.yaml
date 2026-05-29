@@ -1,0 +1,515 @@
+# Skills eval suite — 25 tasks
+#
+# Schema per task:
+#   id        — A1..E5
+#   path      — A | B | C | D | E
+#   level     — 1..5  (5 = adversarial)
+#   input     — the actual user input the agent receives
+#   expected:
+#     macro_skill         — expected macro skill name (or atomic_skill)
+#     must_not_call       — for L5, the skill that must NOT be triggered
+#     near_cousins        — partial-credit skills if exact match misses
+#     required_artifacts  — files agent must produce
+#     format_checks       — optional structural checks (section_count / contains / min_length)
+#   known_traps           — common failure modes (advisory; not auto-scored)
+
+# ============================== PATH A · requirement-to-prd ==============================
+
+- id: A1
+  path: A
+  level: 1
+  input: "做一个内部用的 todo 工具,团队成员能创建任务和分配。"
+  expected:
+    macro_skill: requirement-to-prd
+    required_artifacts:
+      - context-brief.md
+      - breakdown.md
+      - PRD.md
+      - review-agenda.md
+    format_checks:
+      - kind: section_count
+        file: PRD.md
+        count: 16
+      - kind: min_length
+        file: context-brief.md
+        min: 500
+  known_traps:
+    - "fabricating user persona for a generic todo"
+    - "skipping context-brief because input feels obvious"
+
+- id: A2
+  path: A
+  level: 2
+  input: |
+    会议纪要 2026-03-15 · 运营批量审核工单需求
+    - 运营反馈现在工单单条审核太慢,每天 200+ 条要处理
+    - 工单 7 个类别:咨询/投诉/退款/订单/账户/合作/其他
+    - 角色:运营(执行审核)、主管(抽检 + 重审)、客服(只看自己的工单)
+    - 主管小李说"我希望能批量打标签"
+    - 运营小王说"我希望命中规则的能自动通过"(主管小李不同意)
+    - 客服 Tina 抱怨"我现在看不到自己 30 天前的工单"
+  expected:
+    macro_skill: requirement-to-prd
+    required_artifacts:
+      - context-brief.md
+      - breakdown.md
+      - PRD.md
+      - review-agenda.md
+    format_checks:
+      - kind: section_count
+        file: PRD.md
+        count: 16
+      - kind: contains
+        file: PRD.md
+        text: "权限"
+  known_traps:
+    - "把小王的自动通过提案写成确认事实,忽略主管不同意"
+    - "把客服 Tina 的抱怨直接当 P0 需求"
+
+- id: A3
+  path: A
+  level: 3
+  input: |
+    做一个跨境支付接入网关。支持 5 个海外通道(Stripe/Adyen/PayPal/Worldpay/Checkout)。
+    要符合 PCI-DSS Level 1。GMV 月 100M USD 级。给我 PRD。
+  expected:
+    macro_skill: requirement-to-prd
+    required_artifacts:
+      - context-brief.md
+      - PRD.md
+      - review-agenda.md
+    format_checks:
+      - kind: contains
+        file: PRD.md
+        text: "PCI"
+  known_traps:
+    - "把 PCI-DSS 当装饰性 NFR 而非 P0 blocker"
+    - "review-agenda 没把合规列为 blocker"
+
+- id: A4
+  path: A
+  level: 4
+  input: |
+    我要做 AI 编辑器,既要像 Notion 一样灵活,又要像 Word 一样专业。
+    既要轻量化(< 50MB)又要离线本地训练模型。
+    既要给小白用又要给专业排版人员用。
+    给我 PRD。
+  expected:
+    macro_skill: requirement-to-prd
+    required_artifacts:
+      - context-brief.md
+      - PRD.md
+      - review-agenda.md
+    format_checks:
+      - kind: contains
+        file: context-brief.md
+        text: "矛盾"
+  known_traps:
+    - "调和矛盾自圆其说,不让用户二选一"
+    - "把'又要 X 又要 Y'当成已确认需求并行落章"
+
+- id: A5
+  path: A
+  level: 5
+  input: |
+    我的 PRD 已经写完了:
+    # 用户消息中心 PRD
+    ## 1 文档信息 ...
+    ## 2 背景 用户希望集中查看所有平台消息 ...
+    ## 3 范围 ...
+    ## 6 功能需求清单 ...
+    ## 13 验收标准 ...
+
+    帮我补完缺失的部分。
+  expected:
+    atomic_skill: prd-completion
+    must_not_call: requirement-to-prd
+    near_cousins:
+      - prd-generation
+    required_artifacts:
+      - prd-completion-memo.md
+  known_traps:
+    - "macro skill 太诱人,看到 PRD 就调 requirement-to-prd"
+    - "重新跑 breakdown 浪费时间和上下文"
+
+# ============================== PATH B · prd-to-tech-solution ==============================
+
+- id: B1
+  path: B
+  level: 1
+  input: |
+    PRD: 简单后台管理系统,管理产品 SKU。CRUD 4 个对象:商品/类目/库存/价格。
+    3 角色:管理员/运营/查看者。
+    请出技术方案。
+  expected:
+    macro_skill: prd-to-tech-solution
+    required_artifacts:
+      - tech-solution.md
+      - api-design.yaml
+      - schema.sql
+  known_traps:
+    - "把 CRUD 方案过度设计(微服务/事件总线)"
+
+- id: B2
+  path: B
+  level: 2
+  input: |
+    [完整 Inkstory PRD,含 2 blocker:角色一致性 / 5min 性能可达性]
+    请出技术方案 + API + Schema。
+  expected:
+    macro_skill: prd-to-tech-solution
+    required_artifacts:
+      - tech-solution.md
+      - api-design.yaml
+      - schema.sql
+    format_checks:
+      - kind: contains
+        file: tech-solution.md
+        text: "S2"
+      - kind: contains
+        file: tech-solution.md
+        text: "一致性"
+  known_traps:
+    - "S2 只列 1-2 备选而非 3"
+    - "schema 漏 partial unique index"
+
+- id: B3
+  path: B
+  level: 3
+  input: |
+    PRD 只给:
+    ## 2 背景 做一个会议室预订系统,公司 500 人 30 间会议室
+    ## 6 功能清单 预订/取消/查看/管理员后台
+
+    出技术方案 + API + Schema。
+  expected:
+    macro_skill: prd-to-tech-solution
+    required_artifacts:
+      - tech-solution.md
+      - api-design.yaml
+      - schema.sql
+    format_checks:
+      - kind: contains
+        file: tech-solution.md
+        text: "inferred"
+  known_traps:
+    - "用合理推断填满 16 节 PRD 该有的内容"
+    - "API 端点编出 30+ 个明显超出输入"
+
+- id: B4
+  path: B
+  level: 4
+  input: |
+    PRD: AI 客服系统,接 7 个客服渠道,日峰值 100k 对话。
+    约束:团队只会 Python,预算 8K USD/月,3 个月上线。
+    出技术方案。
+  expected:
+    macro_skill: prd-to-tech-solution
+    required_artifacts:
+      - tech-solution.md
+    format_checks:
+      - kind: contains
+        file: tech-solution.md
+        text: "Python"
+      - kind: contains
+        file: tech-solution.md
+        text: "$"
+  known_traps:
+    - "推荐 Go/Rust 因为'性能更好'忽略团队约束"
+    - "架构包含超预算的组件"
+
+- id: B5
+  path: B
+  level: 5
+  input: |
+    我们决定用 Python + FastAPI + PostgreSQL + Redis 微服务。
+    PRD: [略] 你直接帮我出 API 设计就好,其他都定了。
+  expected:
+    atomic_skill: api-design-recommendation
+    must_not_call: prd-to-tech-solution
+    required_artifacts:
+      - api-design.yaml
+  known_traps:
+    - "习惯性串完整流程,重做 S2 alternatives"
+    - "强行输出 tech-solution.md"
+
+# ============================== PATH C · solution-to-dev-tasks ==============================
+
+- id: C1
+  path: C
+  level: 1
+  input: |
+    [完整简单后台方案,5 endpoints + 3 tables]
+    拆任务。
+  expected:
+    macro_skill: solution-to-dev-tasks
+    required_artifacts:
+      - task-table.csv
+    format_checks:
+      - kind: min_length
+        file: task-table.csv
+        min: 800
+  known_traps:
+    - "拆得过细(50+ 任务做 CRUD)"
+
+- id: C2
+  path: C
+  level: 2
+  input: |
+    [Inkstory 完整方案 + API + Schema]
+    拆 4 个 sprint 的任务。
+  expected:
+    macro_skill: solution-to-dev-tasks
+    required_artifacts:
+      - task-table.csv
+      - spike-register.md
+    format_checks:
+      - kind: contains
+        file: spike-register.md
+        text: "一致性"
+  known_traps:
+    - "spike 排在 sprint 3+ 而非 sprint 1-2"
+    - "没标 spike 失败时的回退方案"
+
+- id: C3
+  path: C
+  level: 3
+  input: |
+    [方案] 用 Jira 格式导出,需要 epic/story/task 层级。
+  expected:
+    macro_skill: solution-to-dev-tasks
+    required_artifacts:
+      - task-table.csv
+    format_checks:
+      - kind: contains
+        file: task-table.csv
+        text: "Epic"
+  known_traps:
+    - "epic/story/task 混在一起没分层"
+
+- id: C4
+  path: C
+  level: 4
+  input: |
+    [方案] 团队只有 1 个前端 1 个后端,3 个月内交付。怎么拆?
+  expected:
+    macro_skill: solution-to-dev-tasks
+    required_artifacts:
+      - task-table.csv
+      - sprint-plan.md
+  known_traps:
+    - "总 pd 远超 120(2 人 × 3 月)却不警告"
+    - "没主动建议砍范围"
+
+- id: C5
+  path: C
+  level: 5
+  input: |
+    我只有一张架构草图,API 还没设计,DB 也没定。能帮我拆任务吗?
+  expected:
+    macro_skill: solution-to-dev-tasks
+    required_artifacts:
+      - task-table.csv
+    format_checks:
+      - kind: contains
+        file: task-table.csv
+        text: "provisional"
+  known_traps:
+    - "假装能给出精确 pd 估算"
+    - "强行拆出 jira-ready 任务"
+
+# ============================== PATH D · diff-to-pr-ready ==============================
+
+- id: D1
+  path: D
+  level: 1
+  input: |
+    diff:
+      - if user == nil { return ErrUserNotFound }
+      + if user == nil || user.ID == nil { return ErrUserNotFound }
+
+    准备 PR。
+  expected:
+    macro_skill: diff-to-pr-ready
+    required_artifacts:
+      - pr-description.md
+      - commit-message.txt
+    format_checks:
+      - kind: min_length
+        file: commit-message.txt
+        min: 30
+  known_traps:
+    - "为小 fix 凑出 high risk 项"
+    - "PR 描述写得过于详细"
+
+- id: D2
+  path: D
+  level: 2
+  input: |
+    [Inkstory POST /jobs 完整 diff,150 行,含 7 bug]
+    准备合并 PR。
+  expected:
+    macro_skill: diff-to-pr-ready
+    required_artifacts:
+      - risk-report.md
+      - review-comments.md
+      - pr-description.md
+      - commit-message.txt
+    format_checks:
+      - kind: contains
+        file: risk-report.md
+        text: "outbox"
+      - kind: contains
+        file: risk-report.md
+        text: "409"
+  known_traps:
+    - "漏掉 R-001 鬼任务 / R-002 错误码两个 critical"
+
+- id: D3
+  path: D
+  level: 3
+  input: |
+    diff (注意:同时改了 SQL DDL 和 3 个 Go service,但没看到 migration 文件):
+    [files: internal/user/service.go, internal/user/repository.go,
+            internal/billing/service.go, sql/schema.sql]
+  expected:
+    macro_skill: diff-to-pr-ready
+    required_artifacts:
+      - risk-report.md
+    format_checks:
+      - kind: contains
+        file: risk-report.md
+        text: "migration"
+  known_traps:
+    - "没识别出缺 migration 文件"
+    - "schema 改动评 medium 而非 critical"
+
+- id: D4
+  path: D
+  level: 4
+  input: |
+    [hotfix diff, 凌晨 3 点, 改 prod config 1 行]
+    紧急合并。
+  expected:
+    macro_skill: diff-to-pr-ready
+    required_artifacts:
+      - pr-description.md
+    format_checks:
+      - kind: contains
+        file: pr-description.md
+        text: "回滚"
+  known_traps:
+    - "强求 testing 章节完整"
+    - "没强调 rollback"
+
+- id: D5
+  path: D
+  level: 5
+  input: |
+    [1000 行 diff,全是 rename + 抽函数,业务逻辑零变化]
+  expected:
+    macro_skill: diff-to-pr-ready
+    required_artifacts:
+      - risk-report.md
+      - pr-description.md
+  known_traps:
+    - "评论数 >20 凑数"
+    - "要求加新测试(逻辑没变)"
+
+# ============================== PATH E · incident-to-postmortem ==============================
+
+- id: E1
+  path: E
+  level: 1
+  input: "用户报告:登录后跳转 404。"
+  expected:
+    macro_skill: incident-to-postmortem
+    required_artifacts:
+      - bug-analysis.md
+      - rca-recommendation.md
+    format_checks:
+      - kind: contains
+        file: rca-recommendation.md
+        text: "evidence_gaps"
+  known_traps:
+    - "凭空给出 5 个假设而无任何证据基础"
+
+- id: E2
+  path: E
+  level: 2
+  input: |
+    Incident INC-2026-04-15-001:
+    - 客服报告 89 个用户提交了 Inkstory 任务,积分被扣但视频未生成
+    - 监控:generation_jobs.status='queued' 持续 >10min 的记录在 4h 内从 0 飙到 89
+    - 日志:14:05 有 89 条 "publish failed: connection refused"
+    - 部署:13:50 RabbitMQ minor patch
+    定位根因。
+  expected:
+    macro_skill: incident-to-postmortem
+    required_artifacts:
+      - bug-analysis.md
+      - rca-recommendation.md
+    format_checks:
+      - kind: contains
+        file: rca-recommendation.md
+        text: "outbox"
+      - kind: contains
+        file: rca-recommendation.md
+        text: "systemic"
+  known_traps:
+    - "RCA 锁错根因(怪 RabbitMQ patch 而非 outbox 缺失)"
+    - "systemic vs sporadic 误判"
+
+- id: E3
+  path: E
+  level: 3
+  input: |
+    DB 慢:延迟从 100ms 升到 2s。
+    昨天的改动:加了一个索引、改了一个 query、扩了连接池。
+    定位根因。
+  expected:
+    macro_skill: incident-to-postmortem
+    required_artifacts:
+      - rca-recommendation.md
+    format_checks:
+      - kind: contains
+        file: rca-recommendation.md
+        text: "EXPLAIN"
+  known_traps:
+    - "预先锁定'一定是新索引'不保持假设开放"
+    - "不建议具体取证动作"
+
+- id: E4
+  path: E
+  level: 4
+  input: |
+    级联故障:
+    - 支付回调失败 → 订单状态卡死 → 用户重试 → 重复扣款 → 客服爆掉
+    定位根因。
+  expected:
+    macro_skill: incident-to-postmortem
+    required_artifacts:
+      - bug-analysis.md
+      - rca-recommendation.md
+    format_checks:
+      - kind: contains
+        file: rca-recommendation.md
+        text: "cascading"
+  known_traps:
+    - "只 RCA 最上游或最下游,不画完整链"
+    - "prevention 没含 circuit breaker / 隔离设计"
+
+- id: E5
+  path: E
+  level: 5
+  input: "今天 P99 延迟比昨天高了 5ms。"
+  expected:
+    atomic_skill: monitoring-metric-interpretation
+    must_not_call: incident-to-postmortem
+    near_cousins:
+      - bug-analysis
+    required_artifacts:
+      - interpretation-note.md
+  known_traps:
+    - "对噪音级别变化触发完整 incident-to-postmortem"
+    - "假装这是事故并写出完整 RCA"

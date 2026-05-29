@@ -1,0 +1,50 @@
+{
+  "task": {
+    "id": "D5",
+    "path": "D",
+    "level": 5,
+    "input": "[1000 行 diff,全是 rename + 抽函数,业务逻辑零变化]\n",
+    "expected": {
+      "macro_skill": "diff-to-pr-ready",
+      "required_artifacts": [
+        "risk-report.md",
+        "pr-description.md"
+      ]
+    },
+    "known_traps": [
+      "评论数 >20 凑数",
+      "要求加新测试(逻辑没变)"
+    ]
+  },
+  "response": {
+    "selected_skills": [
+      "diff-to-pr-ready"
+    ],
+    "artifacts": {
+      "risk-report.md": "# Mock risk-report.md\n\n(scripted mock output for D5)\n",
+      "pr-description.md": "# Mock pr-description.md\n\n(scripted mock output for D5)\n"
+    },
+    "trace": [
+      {
+        "step": 1,
+        "skill": "diff-to-pr-ready",
+        "duration_ms": 100
+      }
+    ]
+  },
+  "result": {
+    "task_id": "D5",
+    "path": "D",
+    "level": 5,
+    "duration_ms": 0,
+    "scores": {
+      "selection": 1.0,
+      "completeness": 1.0,
+      "groundedness": 0.76,
+      "format": 1.0,
+      "utility": 0.8400000000000001
+    },
+    "total": 4.6,
+    "verdict": "PASS"
+  }
+}

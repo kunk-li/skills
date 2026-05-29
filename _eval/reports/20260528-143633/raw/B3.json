@@ -1,0 +1,59 @@
+{
+  "task": {
+    "id": "B3",
+    "path": "B",
+    "level": 3,
+    "input": "PRD 只给:\n## 2 背景 做一个会议室预订系统,公司 500 人 30 间会议室\n## 6 功能清单 预订/取消/查看/管理员后台\n\n出技术方案 + API + Schema。\n",
+    "expected": {
+      "macro_skill": "prd-to-tech-solution",
+      "required_artifacts": [
+        "tech-solution.md",
+        "api-design.yaml",
+        "schema.sql"
+      ],
+      "format_checks": [
+        {
+          "kind": "contains",
+          "file": "tech-solution.md",
+          "text": "inferred"
+        }
+      ]
+    },
+    "known_traps": [
+      "用合理推断填满 16 节 PRD 该有的内容",
+      "API 端点编出 30+ 个明显超出输入"
+    ]
+  },
+  "response": {
+    "selected_skills": [
+      "prd-to-tech-solution"
+    ],
+    "artifacts": {
+      "tech-solution.md": "# Mock tech-solution.md\n\n(scripted mock output for B3)\n",
+      "api-design.yaml": "# Mock api-design.yaml\n\n(scripted mock output for B3)\n",
+      "schema.sql": "# Mock schema.sql\n\n(scripted mock output for B3)\n"
+    },
+    "trace": [
+      {
+        "step": 1,
+        "skill": "prd-to-tech-solution",
+        "duration_ms": 100
+      }
+    ]
+  },
+  "result": {
+    "task_id": "B3",
+    "path": "B",
+    "level": 3,
+    "duration_ms": 0,
+    "scores": {
+      "selection": 1.0,
+      "completeness": 1.0,
+      "groundedness": 0.64,
+      "format": 0.0,
+      "utility": 0.95
+    },
+    "total": 3.59,
+    "verdict": "WEAK"
+  }
+}

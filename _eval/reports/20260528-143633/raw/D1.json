@@ -1,0 +1,57 @@
+{
+  "task": {
+    "id": "D1",
+    "path": "D",
+    "level": 1,
+    "input": "diff:\n  - if user == nil { return ErrUserNotFound }\n  + if user == nil || user.ID == nil { return ErrUserNotFound }\n\n准备 PR。\n",
+    "expected": {
+      "macro_skill": "diff-to-pr-ready",
+      "required_artifacts": [
+        "pr-description.md",
+        "commit-message.txt"
+      ],
+      "format_checks": [
+        {
+          "kind": "min_length",
+          "file": "commit-message.txt",
+          "min": 30
+        }
+      ]
+    },
+    "known_traps": [
+      "为小 fix 凑出 high risk 项",
+      "PR 描述写得过于详细"
+    ]
+  },
+  "response": {
+    "selected_skills": [
+      "diff-to-pr-ready"
+    ],
+    "artifacts": {
+      "pr-description.md": "# Mock pr-description.md\n\n(scripted mock output for D1)\n",
+      "commit-message.txt": "# Mock commit-message.txt\n\n(scripted mock output for D1)\n"
+    },
+    "trace": [
+      {
+        "step": 1,
+        "skill": "diff-to-pr-ready",
+        "duration_ms": 100
+      }
+    ]
+  },
+  "result": {
+    "task_id": "D1",
+    "path": "D",
+    "level": 1,
+    "duration_ms": 0,
+    "scores": {
+      "selection": 1.0,
+      "completeness": 1.0,
+      "groundedness": 0.7,
+      "format": 1.0,
+      "utility": 0.63
+    },
+    "total": 4.33,
+    "verdict": "PASS"
+  }
+}

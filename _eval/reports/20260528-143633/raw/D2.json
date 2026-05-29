@@ -1,0 +1,65 @@
+{
+  "task": {
+    "id": "D2",
+    "path": "D",
+    "level": 2,
+    "input": "[Inkstory POST /jobs 完整 diff,150 行,含 7 bug]\n准备合并 PR。\n",
+    "expected": {
+      "macro_skill": "diff-to-pr-ready",
+      "required_artifacts": [
+        "risk-report.md",
+        "review-comments.md",
+        "pr-description.md",
+        "commit-message.txt"
+      ],
+      "format_checks": [
+        {
+          "kind": "contains",
+          "file": "risk-report.md",
+          "text": "outbox"
+        },
+        {
+          "kind": "contains",
+          "file": "risk-report.md",
+          "text": "409"
+        }
+      ]
+    },
+    "known_traps": [
+      "漏掉 R-001 鬼任务 / R-002 错误码两个 critical"
+    ]
+  },
+  "response": {
+    "selected_skills": [
+      "diff-to-pr-ready"
+    ],
+    "artifacts": {
+      "risk-report.md": "# Mock risk-report.md\n\n(scripted mock output for D2)\n",
+      "review-comments.md": "# Mock review-comments.md\n\n(scripted mock output for D2)\n",
+      "pr-description.md": "# Mock pr-description.md\n\n(scripted mock output for D2)\n",
+      "commit-message.txt": "# Mock commit-message.txt\n\n(scripted mock output for D2)\n"
+    },
+    "trace": [
+      {
+        "step": 1,
+        "skill": "diff-to-pr-ready",
+        "duration_ms": 100
+      }
+    ]
+  },
+  "result": {
+    "task_id": "D2",
+    "path": "D",
+    "level": 2,
+    "duration_ms": 0,
+    "scores": {
+      "selection": 1.0,
+      "completeness": 1.0,
+      "groundedness": 0.64,
+      "format": 0.0,
+      "utility": 0.69
+    },
+    "total": 3.33,
+    "verdict": "WEAK"
+  }
+}

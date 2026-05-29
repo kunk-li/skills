@@ -1,0 +1,55 @@
+{
+  "task": {
+    "id": "D3",
+    "path": "D",
+    "level": 3,
+    "input": "diff (注意:同时改了 SQL DDL 和 3 个 Go service,但没看到 migration 文件):\n[files: internal/user/service.go, internal/user/repository.go,\n        internal/billing/service.go, sql/schema.sql]\n",
+    "expected": {
+      "macro_skill": "diff-to-pr-ready",
+      "required_artifacts": [
+        "risk-report.md"
+      ],
+      "format_checks": [
+        {
+          "kind": "contains",
+          "file": "risk-report.md",
+          "text": "migration"
+        }
+      ]
+    },
+    "known_traps": [
+      "没识别出缺 migration 文件",
+      "schema 改动评 medium 而非 critical"
+    ]
+  },
+  "response": {
+    "selected_skills": [
+      "diff-to-pr-ready"
+    ],
+    "artifacts": {
+      "risk-report.md": "# Mock risk-report.md\n\n(scripted mock output for D3)\n"
+    },
+    "trace": [
+      {
+        "step": 1,
+        "skill": "diff-to-pr-ready",
+        "duration_ms": 100
+      }
+    ]
+  },
+  "result": {
+    "task_id": "D3",
+    "path": "D",
+    "level": 3,
+    "duration_ms": 0,
+    "scores": {
+      "selection": 1.0,
+      "completeness": 1.0,
+      "groundedness": 0.66,
+      "format": 0.0,
+      "utility": 0.8300000000000001
+    },
+    "total": 3.49,
+    "verdict": "WEAK"
+  }
+}
