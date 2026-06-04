@@ -332,6 +332,15 @@
 - **边界/真实价值**:真跑窄但真(`_sample_web` 18.9s 绿 + /health 200);速览是重栈那块的现实价值。RepoProbe 定位 = ① **Pilot 1 已达成的 skill-dogfood 夹具**(真实产出 = 打磨硬的 skills,见 D-023/025 + 一串通用修)② 一个"自包含 repo 的 boot 冒烟 + 任意 repo 的 LLM 速览"小工具,**不是通用真跑器**。
 - **影响**:停止追真跑覆盖率(host-network endpoint 等不再修);web UI tagline 改诚实(说清适用范围);**投入重心回到 skills 本身**(北极星 = skills,RepoProbe 是夹具)。不算推翻 D-020(它仍是"真产品",只是范围收窄到诚实可达的)。
 
+## D-027 · "完整功能" = 4 支柱模型,落进 025(统一 Signal #5+#6 · 用户 06-04 定义)
+
+- **日期**:2026-06-04(session #6)
+- **决定**:一个"完整功能"的判据 = **4 支柱**(用户拍板):① 原始信息来源(provenance)② 完整实现链路(触发→处理→数据副作用→结果状态)③ 完善操作过程(全 CRUD + 动作 + 各自权限/审计)④ 异常处理机制。落地 = **优化现有 `025-requirement-completeness-check`**(加 `## Complete-feature model` per-feature 核 4 支柱 + `feature_completeness` finding + `## Provenance check` + `provenance_gap`),**非新建 skill**(守 D-019)。
+- **理由**:① 用户实战洞「PRD 不可能穷举后端功能」→ 中间产物需"功能→伴生需求自动推导";② 这把搁置已久的 **Signal #5(链路保真)+ Signal #6(完整性推导)统一成一个可执行判据**;③ verify 先确认 025 已有 2/3 轴(create→delete symmetry + D5 异常)→ 只补真缺口(provenance + 全 CRUD),**没重复造**。
+- **支柱②归属(别混层)**:实现链路 = **spec 侧在 025**(核"链路说清没"=纵向可追溯,治 Signal #5 横向散片)/ **运行时在 093+113**(核"链路跑通没")。
+- **实证**:demo 在 hub-oa auth 821 行真 PRD 上跑 4 支柱 → 揪出 **2 真 gap**(组织缺改/归档、用户缺复活),经真 Java file:line 实锤"PRD 漏、代码有"(`SysOrgServiceImpl.edit:125`/`OaReactivationController:43`)= Signal #6;TG 登录判 complete(4/4)= 不逢扫必报。产物 `skill-fork-b/hub-oa-auth-025-complete-feature-demo.md`。commit `f2438fc`。
+- **不复议**:Phase 3 前(同 D-019 优化现有、不增条目)。
+
 ---
 
 ## 已被推翻 / 修正的决策
