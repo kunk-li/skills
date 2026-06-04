@@ -7,3 +7,6 @@ _skilledit/
 .claude/.stop-counters/
 # 指向已弃 Skills Studio 的本机 launch 配置
 .claude/launch.json
+# skill 编辑临时备份
+*.bak
+*.ORIG.bak
