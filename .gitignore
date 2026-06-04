@@ -1,0 +1,9 @@
+# 外部 clone / dogfood 临时拉取的 repo(不进库,体积大)
+hermes-agent/
+# skill re-home / re-zip 的中间 scratch(HANDOFF 已警告勿共用)
+_rehome_work/
+_skilledit/
+# Claude Code hook 的每 session 计数状态(churn,机器专有)
+.claude/.stop-counters/
+# 指向已弃 Skills Studio 的本机 launch 配置
+.claude/launch.json
