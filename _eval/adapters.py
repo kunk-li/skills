@@ -25,6 +25,8 @@ def get_adapter(name: str):
         return MockAdapter()
     if name == "claude":
         return ClaudeAdapter()
+    if name in ("openai", "qwen", "openai-compat", "deepseek"):
+        return OpenAICompatibleAdapter()
     raise ValueError(f"Unknown adapter: {name}")
 
 
@@ -172,3 +174,102 @@ Rules:
             return data
         except json.JSONDecodeError as e:
             return {"selected_skills": [], "artifacts": {}, "raw": text, "parse_error": str(e)}
+
+
+class OpenAICompatibleAdapter:
+    """Calls any OpenAI-compatible chat API (DashScope/Qwen, DeepSeek, GLM...).
+
+    D-012: use a free/owned model, not a paid Anthropic key. Reads
+    SS_LLM_API_KEY / SS_LLM_BASE_URL / SS_LLM_MODEL from env (falls back
+    to OPENAI_* and DashScope qwen-plus). Judge defaults to a cheaper/
+    faster model (qwen-turbo) overridable via SS_LLM_JUDGE_MODEL.
+    Same contract as ClaudeAdapter.
+    """
+
+    def __init__(self, model=None, judge_model=None, skills_index_path=None):
+        try:
+            from openai import OpenAI
+        except ImportError as e:
+            raise RuntimeError("openai SDK not installed. Run: pip install openai") from e
+        api_key = os.environ.get("SS_LLM_API_KEY") or os.environ.get("OPENAI_API_KEY")
+        if not api_key:
+            raise RuntimeError("SS_LLM_API_KEY / OPENAI_API_KEY env var not set")
+        base_url = os.environ.get("SS_LLM_BASE_URL") or "https://dashscope.aliyuncs.com/compatible-mode/v1"
+        self.client = OpenAI(api_key=api_key, base_url=base_url)
+        self.model = model or os.environ.get("SS_LLM_MODEL") or "qwen-plus"
+        self.judge_model = judge_model or os.environ.get("SS_LLM_JUDGE_MODEL") or "qwen-turbo"
+        self.skills_index = ClaudeAdapter._load_skills_index(self, skills_index_path)
+        # SS_EVAL_INJECT_SKILL=1 (default): inject the expected skill's SKILL.md so the
+        # eval measures the SKILL's guidance quality, not the model's raw free-forming.
+        self.inject_skill = os.environ.get("SS_EVAL_INJECT_SKILL", "1") != "0"
+        self._skill_cache = {}
+
+    def _chat(self, messages, model, max_tokens):
+        resp = self.client.chat.completions.create(
+            model=model, messages=messages, max_tokens=max_tokens, temperature=0.3,
+        )
+        return resp.choices[0].message.content or ""
+
+    def _load_skill_md(self, skill_name):
+        """Find <skill_name>'s zip in the library and return its SKILL.md text."""
+        if not skill_name:
+            return None
+        if skill_name in self._skill_cache:
+            return self._skill_cache[skill_name]
+        import glob as _glob
+        import zipfile as _zip
+        root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        hits = _glob.glob(os.path.join(root, "完稿", "**", f"*{skill_name}*.zip"), recursive=True)
+        md = None
+        if hits:
+            zf = _zip.ZipFile(hits[0])
+            sk = [n for n in zf.namelist() if n.endswith("SKILL.md")]
+            if sk:
+                md = zf.read(sk[0]).decode("utf-8", "replace")
+        self._skill_cache[skill_name] = md
+        return md
+
+    def run(self, input_text, task=None):
+        exp = (task or {}).get("expected", {})
+        skill_name = exp.get("atomic_skill") or exp.get("macro_skill")
+        required = exp.get("required_artifacts") or []
+        fname = required[0] if required else "output.md"
+        skill_md = self._load_skill_md(skill_name) if self.inject_skill else None
+
+        if skill_md:
+            # Skill-injected mode: measure the SKILL's instructions, not raw model ability.
+            system = (
+                f"You are applying the skill `{skill_name}`. Follow its instructions exactly "
+                "to produce the required artifact for the user's input.\n\n"
+                f"=== SKILL.md ({skill_name}) ===\n{skill_md}\n=== END SKILL.md ===\n\n"
+                "Output a single valid JSON object — no prose before or after:\n"
+                f'{{"selected_skills": ["{skill_name}"], '
+                f'"artifacts": {{"{fname}": "...full artifact content per the skill..."}}}}\n'
+                "The artifact value must be the full content the skill prescribes."
+            )
+        else:
+            system = (
+                "You are an agent with access to a library of macro and atomic skills.\n\n"
+                f"{self.skills_index}\n\n"
+                "Decide which skill(s) to invoke and produce the artifacts they require.\n"
+                "Output a single valid JSON object — no prose:\n"
+                '{"selected_skills": ["skill-name"], "artifacts": {"filename.md": "...content..."}}'
+            )
+        text = self._chat(
+            [{"role": "system", "content": system}, {"role": "user", "content": input_text}],
+            self.model, 8192,
+        )
+        return ClaudeAdapter._parse(self, text)
+
+    def judge(self, prompt):
+        text = self._chat(
+            [{"role": "user", "content": prompt + "\n\nReturn ONLY a decimal number between 0.0 and 1.0."}],
+            self.judge_model, 20,
+        )
+        m = re.search(r"(\d+(?:\.\d+)?)", text.strip())
+        if not m:
+            return 0.5
+        try:
+            return max(0.0, min(1.0, float(m.group(1))))
+        except ValueError:
+            return 0.5

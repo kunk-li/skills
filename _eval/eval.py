@@ -188,7 +188,7 @@ def build_summary(results, adapter_name):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--tasks", default="tasks.yaml")
-    parser.add_argument("--adapter", default="mock", choices=["mock", "claude"])
+    parser.add_argument("--adapter", default="mock", choices=["mock", "claude", "openai", "qwen", "openai-compat", "deepseek"])
     parser.add_argument("--only", nargs="+", help="Specific task IDs (e.g. A1 D2)")
     parser.add_argument("--paths", nargs="+", help="Filter by path (A B C D E)")
     parser.add_argument("--levels", nargs="+", type=int, help="Filter by level (1-5)")
