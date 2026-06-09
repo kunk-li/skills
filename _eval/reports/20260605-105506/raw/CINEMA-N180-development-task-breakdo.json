@@ -1,0 +1,46 @@
+{
+  "task": {
+    "id": "CINEMA-N180-development-task-breakdo",
+    "path": "C",
+    "level": 3,
+    "input": "Given the CinemaAI PRD (v0.3/v0.4) describing an AI-driven anime/short-drama production tool (15 modules, 86+ functions, ~268 PD), and any sibling artifacts already produced upstream, produce a N180 development-task-breakdown artifact. The ground truth is at: 开发任务清单.csv (full path embedded in expected.ground_truth_path).",
+    "expected": {
+      "atomic_skill": "development-task-breakdown",
+      "ground_truth_path": "D:\\projects\\python\\ai_work\\video\\cinemaai\\CinemaAI-PRD\\工作产物\\N180\\开发任务清单.csv",
+      "ground_truth_schema_version": null,
+      "required_artifacts": [
+        "开发任务清单.csv"
+      ]
+    },
+    "source_node": "N180",
+    "source_baseline": null,
+    "rev_iteration": "",
+    "known_traps": [
+      "fabricating findings not in PRD",
+      "missing key items the real artifact captured"
+    ]
+  },
+  "response": {
+    "selected_skills": [
+      "development-task-breakdown"
+    ],
+    "artifacts": {
+      "开发任务清单.csv": "task_id,task_name,task_kind,task_type,granularity,task_size_tier,size_in_pd,owner_role,definition_of_done,traces_to,depends_on_hint,sprint.target_sprint,sprint.priority_in_sprint,sprint.carry_over_policy,confidence,mode,evidence_profile\nTASK-S1-001,Design core AI story generation pipeline,T1_design,backend,M,M,3.5,Backend Architect,Design document reviewed and approved by PM & AI Lead; includes prompt schema, LLM routing logic, and fallback strategy; decision record signed off; traces to REQ-AI-001, REQ-AI-003, AC-AI-001.1, AC-AI-003.2,MOD-AI-StoryGen,ACS,requirements,S1,must_have,must_finish,0.95,refined_mode,confirmed\nTASK-S1-002,Implement LLM adapter layer for anime script generation,T2_implementation,backend,M,M,4.0,Backend Engineer,Code merged to main; unit tests ≥90% branch coverage; passes integration test with mock LLM service; static analysis clean (no critical/high); no unexplained TODOs; traces to MOD-AI-StoryGen, API-AI-001, NFR-Perf-002,ACS,S1,must_have,must_finish,0.9,refined_mode,confirmed\nTASK-S1-003,Design scene composition & visual prompt synthesis module,T1_design,backend,M,M,2.5,Frontend + AI Designer,Design doc covers visual token mapping, aspect-ratio handling, style control vectors, and safety guardrails; reviewed by UX & Content Safety; traces to REQ-VIS-005, AC-VIS-005.3, MOD-VIS-PromptSynth,requirements,S1,must_have,must_finish,0.85,refined_mode,confirmed\nTASK-S1-004,Implement shot-level storyboard generator (Python backend),T2_implementation,backend,L,L,7.5,Backend Engineer,Code merged; supports 3+ anime styles (shonen/shojo/isekai); generates valid JSON storyboard schema per AC-VIS-007.1; passes E2E test with sample script input; traces to MOD-VIS-Storyboard, API-VIS-007, ACS,S1,must_have,can_carry,0.8,refined_mode,confirmed\nTASK-S1-005,Refactor legacy asset metadata service into domain-driven module,T5_refactoring,backend,S,S,1.5,Backend Engineer,Code merged; domain model (Asset, SceneRef, StyleTag) extracted; DB schema versioned & migration tested; zero runtime regression in asset search; traces to MOD-DATA-AssetMeta, TECH-DEBT-002,inferred,S1,should_have,can_carry,0.75,refined_mode,inferred\nTASK-S1-006,Design secure user session & role-based access control (RBAC),T1_design,security,M,M,3.0,Security Architect,Design doc includes JWT flow, permission matrix (Editor/Producer/Reviewer), audit log spec, and SSO integration plan; approved by InfoSec; traces to REQ-SEC-001, AC-SEC-001.4, NFR-Sec-003,requirements,S1,must_have,must_finish,0.92,refined_mode,confirmed\nTASK-S1-007,Implement RBAC middleware for all protected APIs,T2_implementation,backend,M,M,4.5,Backend Engineer,All /api/v1/* endpoints enforce roles; unit-tested with 5+ role-scenario combos; audit logs emitted for auth failures; traces to API-SEC-001, MOD-SEC-RBAC, NFR-Sec-003,ACS,S1,must_have,must_finish,0.88,refined_mode,confirmed\nTASK-S1-008,Create CI/CD pipeline for frontend (React + Vite),T6_infrastructure,frontend,M,M,3.5,DevOps Engineer,CI runs lint/test/build on PR; CD deploys preview to staging on merge to develop; rollback verified; traces to MOD-FRONT-Studio, INFRA-CI-001,config,S1,should_have,can_carry,0.9,refined_mode,confirmed\nTASK-S1-009,Implement voice synthesis API wrapper (ElevenLabs integration),T2_implementation,backend,S,S,2.0,Backend Engineer,API wrapper merged; handles rate limiting, retry, and fallback to cached audio; passes integration test with real ElevenLabs key; traces to API-AUDIO-002, MOD-AUDIO-VoiceSynth,ACS,S1,should_have,can_carry,0.85,refined_mode,confirmed\nTASK-S1-010,Design data lineage & provenance tracking for AI outputs,T1_design,data,M,M,2.5,Data Architect,Design doc defines lineage graph schema (script → prompt → image → edit → export); includes tracing ID propagation, storage format (Parquet + metadata.json), and query interface spec; traces to REQ-DATA-008, NFR-Obs-005,requirements,S1,could_have,can_carry,0.7,refined_mode,pending\nTASK-S1-011,Write end-to-end test suite for script-to-video workflow,T3_testing,test,M,M,4.0,QA Engineer,All 5 core E2E scenarios pass (incl. error paths); test report published to TestRail; traceable to AC-AI-001.1–AC-AI-001.5, AC-VIS-007.1, ACS,S1,must_have,must_finish,0.87,refined_mode,confirmed\nTASK-S1-012,Document public API reference (OpenAPI 3.1 + Swagger UI),T4_documentation,docs,S,S,1.0,Technical Writer,Docs published at https://api.cinemaai.dev; OpenAPI spec validated; all 12 v1 endpoints documented with examples & error codes; traces to API-AI-001, API-VIS-007, API-SEC-001,apis,S1,should_have,can_carry,0.93,refined_mode,confirmed\nTASK-S1-013,Conduct cross-team alignment on export format compatibility (MP4/WebM/ProRes),T8_review_or_coordination,integration,S,S,0.75,Product Manager,Alignment meeting minutes archived; agreement reached on baseline MP4 + optional ProRes; fallback path defined for unsupported codecs; traces to REQ-EXPORT-002, DECISION-EXPORT-FORMAT-001,coordination,S1,must_have,must_finish,0.97,refined_mode,confirmed\nTASK-S1-014,Spike: Benchmark Stable Diffusion XL vs. AnimeDiffusion for 4K scene gen,T7_spike,infra,XS,XS,0.5,ML Engineer,POC completed; benchmark_data includes latency (p95), VRAM usage, fidelity score (CLIP-I), and artifact rate; decision_record recommends AnimeDiffusion for v1; fallback: SDXL if licensing resolved; timebox: 4h; expected_output: benchmark_data,S1,must_have,must_finish,0.8,refined_mode,confirmed\nTASK-S1-015,Implement idempotent scene rendering job queue (Redis + Celery),T2_implementation,backend,M,M,3.0,Backend Engineer,Job deduplication confirmed under load (100 req/sec); retry + DLQ handling verified; metrics exposed (jobs_queued, jobs_failed); traces to NFR-Idempotency-001, NFR-Perf-004, MOD-JOB-RenderQueue,ACS,S1,must_have,can_carry,0.82,refined_mode,confirmed\nTASK-S1-016,Design observability stack (logs/metrics/traces),T1_design,observability,M,M,2.0,Platform Engineer,Design doc specifies OpenTelemetry instrumentation points, Loki/Grafana stack config, alert thresholds (error rate >1%, p99 latency >2s); traces to NFR-Obs-001, NFR-Obs-002,requirements,S1,should_have,can_carry,0.78,refined_mode,confirmed\nTASK-S1-017,Implement health check endpoint with dependency status (LLM, Storage, Auth),T2_implementation,backend,S,S,1.0,Backend Engineer,GET /health returns structured JSON with status of all 5 core deps; fails fast if any critical dep is down; traces to NFR-Obs-003, API-SYS-001,ACS,S1,should_have,can_carry,0.9,refined_mode,confirmed\nTASK-S1-018,Refine UI wireframes for storyboard editor (Figma),T4_documentation,frontend,S,S,1.5,UX Designer,Wireframes published in Figma; annotated with interaction states & accessibility notes; signoff from PM & Accessibility SME; traces to REQ-FRONT-004, AC-FRONT-004.2,docs,S1,should_have,can_carry,0.94,refined_mode,confirmed\nTASK-S1-019,Integrate accessibility audit (axe-core) into Storyboard Editor React component,T2_implementation,frontend,S,S,1.2,Frontend Engineer,axe-core integrated; automated scan runs in CI; zero critical violations on editor canvas; report published; traces to NFR-A11Y-001, MOD-FRONT-StoryboardEditor,ACS,S1,should_have,can_carry,0.89,refined_mode,confirmed\nTASK-S1-020,Write runbook for production incident response (AI hallucination detection),T4_documentation,docs,S,S,0.75,Site Reliability Engineer,Runbook published in Confluence; includes detection heuristics, escalation path, rollback steps, and postmortem template; traces to NFR-Sec-005, NFR-Obs-004,docs,S1,could_have,can_carry,0.83,refined_mode,confirmed"
+    }
+  },
+  "result": {
+    "task_id": "CINEMA-N180-development-task-breakdo",
+    "path": "C",
+    "level": 3,
+    "duration_ms": 52280,
+    "scores": {
+      "selection": 1.0,
+      "completeness": 1.0,
+      "groundedness": 1.0,
+      "format": 1.0,
+      "gt_similarity": 0.65
+    },
+    "total": 4.65,
+    "verdict": "PASS"
+  }
+}

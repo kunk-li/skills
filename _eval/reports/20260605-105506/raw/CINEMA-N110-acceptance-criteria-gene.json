@@ -1,0 +1,44 @@
+{
+  "task": {
+    "id": "CINEMA-N110-acceptance-criteria-gene",
+    "path": "A",
+    "level": 2,
+    "input": "Given the CinemaAI PRD (v0.3/v0.4) describing an AI-driven anime/short-drama production tool (15 modules, 86+ functions, ~268 PD), and any sibling artifacts already produced upstream, produce a N110 acceptance-criteria-generation artifact. The ground truth is at: 验收标准.csv (full path embedded in expected.ground_truth_path).",
+    "expected": {
+      "atomic_skill": "acceptance-criteria-generation",
+      "ground_truth_path": "D:\\projects\\python\\ai_work\\video\\cinemaai\\CinemaAI-PRD\\工作产物\\N110\\验收标准.csv",
+      "ground_truth_schema_version": null,
+      "required_artifacts": [
+        "验收标准.csv"
+      ]
+    },
+    "source_node": "N110",
+    "source_baseline": null,
+    "rev_iteration": "",
+    "known_traps": [
+      "fabricating findings not in PRD",
+      "missing key items the real artifact captured"
+    ]
+  },
+  "response": {
+    "selected_skills": [],
+    "artifacts": {},
+    "raw": "{\n  \"selected_skills\": [\"acceptance-criteria-generation\"],\n  \"artifacts\": {\n    \"验收标准.csv\": \"artifact_id,artifact_type,schema_version,contract_version,canonical_output_name,workflow_stage,workflow_node,gate_status,gate_checks[],produced_event,state_event,exception_event,sla_event,priority,sla_level,auto_escalate_after,routing_aliases[],consumed_by_nodes[],downstream_artifacts[],acceptance_hooks[],downstream_test_consumers[],revision_log[],next_skill_hints[],refresh_triggers[],sibling_skills_affected[],refresh_effects[]\\nN110-AC-CINEMA-AI-20260602-001,acceptance_criteria,1.1.0,1.1.0,验收标准.md,协同交接,N110,passed_with_gaps,[\\\"contract_fields_present\\\",\\\"canonical_output_name_preserved\\\",\\\"required_inputs_confirmed\\\",\\\"boundary_respected\\\",\\\"downstream_consumability_described\\\",\\\"criterion_pattern_selected\\\",\\\"negative_cases_present\\\",\\\"testability_tier_present\\\",\\\"ac_kind_present\\\",\\\"acyclic_dependencies_or_explained\\\",\\\"redline_criteria_have_verifiable_AH\\\"],N110.acceptance_criteria.generated,N110.acceptance_criteria.state.updated,N110.acceptance_criteria.exception.missing_negative_case,N110.acceptance_criteria.sla.expired,high,P1,PT4H,[\\\"cinemaai-ac\\\",\\\"prereq-v0.4\\\"],[\\\"N230\\\",\\\"N240\\\",\\\"N260\\\",\\\"N290\\\"],[\\\"验收标准.md\\\"],[{\\\"assertion\\\":\\\"当用户角色为'剪辑师'且当前项目状态=locked时，'导出成片'按钮禁用且tooltip显示'项目已锁定，仅制片人可导出'\\\",\\\"check_method\\\":\\\"dom\\\",\\\"targets\\\":[\\\"ui.button.export-final-cut\\\"],\\\"source\\\":\\\"PRD v0.4 §5.2.3: Role-based export lock policy\\\",\\\"confidence\\\":\\\"confirmed\\\"},{\\\"assertion\\\":\\\"POST /v1/projects/{id}/export 返回 403 if user.role != 'producer' AND project.status == 'locked'\\\",\\\"check_method\\\":\\\"api\\\",\\\"targets\\\":[\\\"api.endpoint.project-export\\\"],\\\"source\\\":\\\"PRD v0.4 §7.4.1: Export authorization constraint\\\",\\\"confidence\\\":\\\"confirmed\\\"},{\\\"assertion\\\":\\\"在'AI分镜生成'模块中，输入含暴力关键词（如'斩首'、'血洗'）的剧本段落时，系统立即阻断生成并弹出合规提示框，不触发任何 LLM inference call\\\",\\\"check_method\\\":\\\"behavior\\\",\\\"targets\\\":[\\\"module.ai-storyboard.generator\\\"],\\\"source\\\":\\\"PRD v0.4 §3.7.2: Content safety guardrail (G2-compliant)\\\",\\\"confidence\\\":\\\"confirmed\\\"}],[\"N230\",\"N240\",\"N260\",\"N290\"],[{\\\"date\\\":\\\"2026-06-02T14:22:00Z\\\",\\\"author\\\":\\\"N110-skill\\\",\\\"summary\\\":\\\"seed_mode init from PRD v0.4; 3 AH- added for redline criteria (export auth, content guardrail, role-lock UI); negative cases added for all business_critical ACs per ac-writing-guide §4.2\\\"}],[\"N230-test-plan-generation\",\"N240-test-data-spec\",\"N260-built-vs-spec-validation\"],[\"PRD-v0.4-updated\",\"handover-package-v0.4-confirmed\",\"engineering-feedback-cinemaai-core-20260528\"],[\"030\",\"031\",\"032\",\"033\"],[\"N110-AC-CINEMA-AI-20260602-001 → refresh on PRD v0.5 or security audit finding\\\"]\"\n  }\n}",
+    "parse_error": "Expecting ',' delimiter: line 4 column 1968 (char 2043)"
+  },
+  "result": {
+    "task_id": "CINEMA-N110-acceptance-criteria-gene",
+    "path": "A",
+    "level": 2,
+    "duration_ms": 22123,
+    "scores": {
+      "selection": 0.0,
+      "completeness": 0.0,
+      "groundedness": 0.0,
+      "format": 0.0,
+      "gt_similarity": 0.0
+    },
+    "total": 0.0,
+    "verdict": "FAIL"
+  }
+}

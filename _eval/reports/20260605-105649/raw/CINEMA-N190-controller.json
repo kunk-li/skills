@@ -1,0 +1,46 @@
+{
+  "task": {
+    "id": "CINEMA-N190-controller",
+    "path": "C",
+    "level": 4,
+    "input": "Given the CinemaAI PRD (v0.3/v0.4) describing an AI-driven anime/short-drama production tool (15 modules, 86+ functions, ~268 PD), and any sibling artifacts already produced upstream, produce a N190 controller artifact. The ground truth is at: 核心代码草稿.md (full path embedded in expected.ground_truth_path).",
+    "expected": {
+      "atomic_skill": "controller",
+      "ground_truth_path": "D:\\projects\\python\\ai_work\\video\\cinemaai\\CinemaAI-PRD\\工作产物\\N190\\核心代码草稿.md",
+      "ground_truth_schema_version": "1.0.0",
+      "required_artifacts": [
+        "核心代码草稿.md"
+      ]
+    },
+    "source_node": "N190",
+    "source_baseline": null,
+    "rev_iteration": "",
+    "known_traps": [
+      "fabricating findings not in PRD",
+      "missing key items the real artifact captured"
+    ]
+  },
+  "response": {
+    "selected_skills": [
+      "controller"
+    ],
+    "artifacts": {
+      "核心代码草稿.md": "artifact_contract:\n  schema_version: n190.artifact.v2.3\n  producer_skill: controller-draft-generation\n  producer_node: N190\n  artifact_name: Controller草稿.java\n  artifact_type: code_draft\n  readiness: blocked\n  evidence_profile: heuristic_only\n  source_inputs: []\n  downstream_consumers: [N200, N210, N330]\n  traces_to_tasks: []\n\nself_gate:\n  status: block\n  failed_rules: [R01_artifact_contract_first, R02_readiness_set, R03_no_invented_names, R05_pending_not_silent, R06_tech_stack_declared, R07_traces_to_tasks_set]\n  warnings: []\n  pending: [\"minimum input missing: no interface_design_draft.yaml, no endpoint_intent_list.csv, no OpenAPI spec or endpoint description text\"]\n\nquality_self_score:\n  scale: 0_to_2_per_dimension\n  dimensions:\n    standalone_usability: 0\n    contract_completeness: 0\n    uncertainty_handling: 0\n    downstream_handoff: 0\n  overall_level: C\n\n---\n\n# Controller Draft Generation — Blocked State\n\n## Reason for Block\nNo minimum input is provided:\n- `接口设计草案.yaml` (N150 API contract) — absent\n- `接口意图清单.csv` (N120 endpoint intent list) — absent\n- OpenAPI spec, Swagger snippet, or even plain-text endpoint description — absent\n\nPer degradation rules (Input classification → minimum / core_required), this triggers `readiness: blocked`.\n\n## Required Inputs to Proceed\nPlease supply **at least one** of the following:\n- `接口设计草案.yaml`: YAML contract with request/response schemas, paths, methods, and status codes\n- `接口意图清单.csv`: CSV with columns `endpoint_id`, `http_method`, `path`, `purpose`, `cardinality`\n- OpenAPI 3.0/3.1 YAML/JSON file\n- Plain-text endpoint summary (e.g., \"POST /v1/scripts/generate → accepts ScriptRequest, returns ScriptResponse with 201\")\n\nWithout any of these, no controller signature, validation logic, response envelope, or annotation strategy can be derived — all would be speculative and violate `R03_no_invented_names` and `R05_pending_not_silent`.\n\n## Next Steps\nOnce valid input is received, this skill will:\n- Infer `selected_mode` (e.g., `full_controller` if full OpenAPI; `quick_endpoint` if single path)\n- Derive tech stack from context (e.g., `pom.xml` → Java/Spring; `pyproject.toml` → Python/FastAPI)\n- Populate `traces_to_tasks` from `开发任务拆分表.csv` if present\n- Emit complete `artifact_contract` with zero `null` fields\n\n> ⚠️ Note: The ground truth file `核心代码草稿.md` referenced in `expected.ground_truth_path` is *not accessible* to this skill. This skill operates solely on the inputs explicitly provided in the current request — per Genericity Rule and Boundary clause. It does not read filesystem paths, resolve embedded references, or assume external file availability."
+    }
+  },
+  "result": {
+    "task_id": "CINEMA-N190-controller",
+    "path": "C",
+    "level": 4,
+    "duration_ms": 18095,
+    "scores": {
+      "selection": 1.0,
+      "completeness": 1.0,
+      "groundedness": 1.0,
+      "format": 1.0,
+      "gt_similarity": 0.0
+    },
+    "total": 4.0,
+    "verdict": "PASS"
+  }
+}

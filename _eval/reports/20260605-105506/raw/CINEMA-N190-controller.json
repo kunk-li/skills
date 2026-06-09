@@ -1,0 +1,46 @@
+{
+  "task": {
+    "id": "CINEMA-N190-controller",
+    "path": "C",
+    "level": 4,
+    "input": "Given the CinemaAI PRD (v0.3/v0.4) describing an AI-driven anime/short-drama production tool (15 modules, 86+ functions, ~268 PD), and any sibling artifacts already produced upstream, produce a N190 controller artifact. The ground truth is at: 核心代码草稿.md (full path embedded in expected.ground_truth_path).",
+    "expected": {
+      "atomic_skill": "controller",
+      "ground_truth_path": "D:\\projects\\python\\ai_work\\video\\cinemaai\\CinemaAI-PRD\\工作产物\\N190\\核心代码草稿.md",
+      "ground_truth_schema_version": "1.0.0",
+      "required_artifacts": [
+        "核心代码草稿.md"
+      ]
+    },
+    "source_node": "N190",
+    "source_baseline": null,
+    "rev_iteration": "",
+    "known_traps": [
+      "fabricating findings not in PRD",
+      "missing key items the real artifact captured"
+    ]
+  },
+  "response": {
+    "selected_skills": [
+      "controller"
+    ],
+    "artifacts": {
+      "核心代码草稿.md": "artifact_contract:\n  schema_version: n190.artifact.v2.3\n  producer_skill: controller-draft-generation\n  producer_node: N190\n  artifact_name: Controller草稿.java\n  artifact_type: code_draft\n  readiness: blocked\n  evidence_profile: heuristic_only\n  source_inputs: []\n  downstream_consumers: [N200, N210, N330]\n  traces_to_tasks: []\n\nself_gate:\n  status: block\n  failed_rules: [R01_artifact_contract_first, R02_readiness_set, R03_no_invented_names, R05_pending_not_silent, R06_tech_stack_declared, R07_traces_to_tasks_set]\n  warnings: []\n  pending: []\n\nquality_self_score:\n  scale: 0_to_2_per_dimension\n  dimensions:\n    standalone_usability: 0\n    contract_completeness: 0\n    uncertainty_handling: 0\n    downstream_handoff: 0\n  overall_level: C\n\n---\n\n# Controller Draft Generation — Blocked State\n\n## Reason for Block\nNo minimum input is provided:\n- `接口设计草案.yaml` (N150 API contract) — missing\n- `接口意图清单.csv` (N120 endpoint intent list) — missing\n- OpenAPI spec or structured endpoint description — missing\n\nPer degradation rules (Section Input classification → minimum / core_required), absence of *all* core inputs triggers `readiness: blocked` and requires explicit `request_for_inputs`.\n\n## Request for Inputs\n```yaml\nrequest_for_inputs:\n  - name: 接口设计草案.yaml\n    origin: N150\n    purpose: Defines request/response schemas, status codes, validation constraints, and envelope structure\n  - name: 接口意图清单.csv\n    origin: N120\n    purpose: Lists endpoints by name, HTTP method, path, business purpose, and associated PD ID\n  - name: tech_stack_declaration\n    purpose: Explicit declaration of target stack (e.g., Java/Spring Boot, TypeScript/NestJS, Python/FastAPI) — required to avoid silent invention\n```\n\n## Notes\n- The CinemaAI PRD (v0.3/v0.4) is a high-level product document — it contains *intent*, not *contract*. This skill operates only on API contracts or endpoint lists, not PRDs.\n- Sibling artifacts (if any) were not supplied in this request; per Composition rule, no sibling fields are consumed or referenced without explicit inclusion.\n- No class names, package paths, annotations, or framework constructs are invented — all would violate `R03_no_invented_names`.\n- This output satisfies `R01_artifact_contract_first`, `R02_readiness_set`, `R05_pending_not_silent`, and `R08_sibling_conflict_recorded` (no siblings present → no conflict).\n- `R06_tech_stack_declared` and `R07_traces_to_tasks_set` are violated → status `block`.\n\n## Next Step\nProvide at least one core-required input to unblock. Upon receipt, this skill will recompute `readiness`, populate confirmed layers, and emit a provisional or full controller draft per mode selection logic."
+    }
+  },
+  "result": {
+    "task_id": "CINEMA-N190-controller",
+    "path": "C",
+    "level": 4,
+    "duration_ms": 17829,
+    "scores": {
+      "selection": 1.0,
+      "completeness": 1.0,
+      "groundedness": 1.0,
+      "format": 1.0,
+      "gt_similarity": 0.2
+    },
+    "total": 4.2,
+    "verdict": "PASS"
+  }
+}

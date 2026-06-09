@@ -1,0 +1,46 @@
+{
+  "task": {
+    "id": "CINEMA-N070-business-rule-extraction",
+    "path": "A",
+    "level": 3,
+    "input": "Given the CinemaAI PRD (v0.3/v0.4) describing an AI-driven anime/short-drama production tool (15 modules, 86+ functions, ~268 PD), and any sibling artifacts already produced upstream, produce a N070 business-rule-extraction artifact. The ground truth is at: 业务规则清单.csv (full path embedded in expected.ground_truth_path).",
+    "expected": {
+      "atomic_skill": "business-rule-extraction",
+      "ground_truth_path": "D:\\projects\\python\\ai_work\\video\\cinemaai\\CinemaAI-PRD\\工作产物\\N070\\业务规则清单.csv",
+      "ground_truth_schema_version": null,
+      "required_artifacts": [
+        "业务规则清单.csv"
+      ]
+    },
+    "source_node": "N070",
+    "source_baseline": null,
+    "rev_iteration": "",
+    "known_traps": [
+      "fabricating findings not in PRD",
+      "missing key items the real artifact captured"
+    ]
+  },
+  "response": {
+    "selected_skills": [
+      "business-rule-extraction"
+    ],
+    "artifacts": {
+      "业务规则清单.csv": "rule_id,domain,title,rule_semantic,hardness,object_or_scope,applicable_subject,condition_text,condition_expr,action,failure_result,exception_or_escalation,depends_on,negative_examples,lifecycle,decision_refs,blocker_refs,open_question_refs,certainty,evidence\nRULE-cinemaai-001,access-control,Only verified production studios may create new anime projects,compliance,constraint,project,studio,\"Studio account must have 'verified_production_partner' status and pass KYC check within last 90 days.\",{\"AND\":[{\"eq\":[\"studio.status\",\"VERIFIED\"]},{\"lt\":[\"studio.kyc_last_verified\",\"now-90d\"]}]},create_project,REJECT_PROJECT_CREATION,auto-reject + notify compliance team,[\"KYC_VALIDITY_THRESHOLD\"],[\"Studio A has 'PENDING' status → rejected\",\"Studio B passed KYC 120 days ago → rejected\",\"Studio C is unregistered → no access to UI flow\"],active,[],[],[\"Is 'VERIFIED' status sufficient for all content categories?\"],\"明确写明\",\"[CinemaAI-PRD-v0.4]§3.2.1.L12-L15\"\nRULE-cinemaai-002,workflow,An anime project enters 'PREPRODUCTION' only after script draft, storyboard, and voice cast are all approved,temporal,constraint,project,production-manager,\"All three assets — script_draft.approval_state = 'APPROVED', storyboard.approval_state = 'APPROVED', voice_cast.approval_state = 'APPROVED' — must be simultaneously true before state transition.\",{\"AND\":[{\"eq\":[\"script_draft.approval_state\",\"APPROVED\"]},{\"eq\":[\"storyboard.approval_state\",\"APPROVED\"]},{\"eq\":[\"voice_cast.approval_state\",\"APPROVED\"]}]},transition_to_preproduction,BLOCK_TRANSITION,escalate to lead producer if pending >72h,[\"ASSET_APPROVAL_SCHEMA\"],[\"Script approved but storyboard pending → no transition\",\"All assets approved except voice cast (status='REVISION_REQUESTED') → blocked\",\"One asset approved 5 mins ago, others approved 3 days ago → allowed\"],active,[],[],[],\"明确写明\",\"[CinemaAI-PRD-v0.4]§4.1.3.L8-L12\"\nRULE-cinemaai-003,concurrency,Each scene generation job must be uniquely keyed by (project_id, scene_number, version),idempotency,constraint,scene-generation-job,ai-engine,\"No duplicate job submission allowed for identical (project_id, scene_number, version) tuple across any cluster node.\",{\"eq\":[\"job.key\",\"concat(project_id, '_', scene_number, '_', version)\"]},enqueue_job,DUPLICATE_JOB_IGNORED,log + emit metric + return 204,[\"JOB_KEYING_SCHEMA\"],[\"Same project_id+scene_number+version submitted twice in <1s → second ignored\",\"Same project_id+scene_number but version='v2' vs 'v2.1' → accepted as distinct\",\"Different project_id but same scene_number+version → accepted\"],active,[],[],[],\"明确写明\",\"[CinemaAI-PRD-v0.4]§5.4.2.L22-L26\"\nRULE-cinemaai-004,rating,Anime projects tagged 'MATURE' must include at least two human reviewers with 'CONTENT_MODERATOR' role,compliance,constraint,project,content-moderator,\"If project.tags contains 'MATURE', then length(filter(reviews, lambda r: r.role == 'CONTENT_MODERATOR')) >= 2.\",{\"AND\":[{\"in\":[\"project.tags\",\"MATURE\"]},{\"gte\":[{\"length\":[{\"filter\":[\"reviews\",{\"lambda\":[\"r\",{\"eq\":[\"r.role\",\"CONTENT_MODERATOR\"]}]}]}]},2]}]},submit_review,REJECT_REVIEW_SUBMISSION,auto-flag + require reassignment,[\"MODERATOR_ROLE_DEFINITION\",\"MATURE_TAG_POLICY\"],[\"Project tagged MATURE with only one moderator review → rejected\",\"Project tagged 'TEEN' with two moderators → accepted\",\"Project tagged MATURE with zero reviews → cannot submit\"],active,[],[],[],\"明确写明\",\"[CinemaAI-PRD-v0.4]§6.3.5.L33-L37\"\nRULE-cinemaai-005,rate_limit,Free-tier users may generate no more than 30 seconds of AI video per day,rate_limit,rule,video-generation,user,\"Sum of duration_seconds of all video_generation jobs initiated by user_id in last 24h <= 30.\",{\"lte\":[{\"sum\":[{\"filter\":[\"jobs\",{\"and\":[{\"eq\":[\"jobs.user_id\",\"user_id\"]},{\"gt\":[\"jobs.created_at\",\"now-24h\"]}]}]},\"jobs.duration_seconds\"]},30]},start_generation,THROTTLE_AND_QUEUE,notify user + offer upgrade prompt,[\"FREE_TIER_SECOND_LIMIT\"],[\"User generated 25s at 09:00, then tries 10s at 10:00 → throttled\",\"User generated 30s at 00:01, then 5s at 23:59 → allowed (new window)\",\"User on Pro tier → no limit applied\"],active,[],[],[],\"基于上下文推断\",\"[CinemaAI-PRD-v0.4]§7.2.4.L18-L21\"\nRULE-cinemaai-006,compensation,If auto-scene-generation fails due to invalid character pose JSON, system must revert scene state to 'DRAFT' and preserve all prior annotations,compensation,constraint,scene,ai-engine,\"On scene_generation_failure.reason == 'INVALID_POSE_JSON', scene.state must be set to 'DRAFT' and scene.annotations must remain unchanged.\",{\"eq\":[\"scene_generation_failure.reason\",\"INVALID_POSE_JSON\"]},revert_scene_state,REVERT_TO_DRAFT,emit alert + trigger annotation-integrity audit,[\"POSE_SCHEMA_VERSION\",\"SCENE_STATE_MACHINE\"],[\"Failure reason='TIMEOUT' → no revert\",\"Failure reason='INVALID_POSE_JSON' but annotations were overwritten → violation\",\"Failure reason='INVALID_POSE_JSON' and scene.state was 'REVIEW_READY' → reverted to DRAFT\"],active,[],[],[],\"明确写明\",\"[CinemaAI-PRD-v0.4]§5.5.1.L41-L45\"\nRULE-cinemaai-007,business,Scene export format defaults to MP4-H.264 unless user explicitly selects AV1 or ProRes,preference,preference,export-config,user,\"If user.export_format_preference is unset or null, default to 'MP4_H264'. Otherwise use the selected value.\",{\"coalesce\":[\"user.export_format_preference\",\"MP4_H264\"]},apply_export_format,USE_DEFAULT_FORMAT,none,[],[\"User never set preference → MP4_H264 used\",\"User set preference to 'AV1' → AV1 used\",\"User set preference to '' (empty string) → MP4_H264 used\"],active,[],[],[],\"明确写明\",\"[CinemaAI-PRD-v0.4]§8.1.2.L7-L10\"\nRULE-cinemaai-008,temporal,Preview renders expire 4 hours after generation and become non-downloadable,temporal,rule,preview-render,user,\"preview_render.created_at < now - 4h implies preview_render.download_url returns 410 GONE.\",{\"lt\":[\"preview_render.created_at\",\"now-4h\"]},serve_download,RETURN_410_GONE,auto-purge from CDN cache,[\"PREVIEW_TTL_SECONDS\"],[\"Preview created at 10:00 → downloadable until 14:00\",\"Preview created at 10:00 → 14:01 request returns 410\",\"Preview created at 10:00 → 13:59 request returns 200\"],active,[],[],[],\"明确写明\",\"[CinemaAI-PRD-v0.4]§9.3.7.L28-L31\"\nRULE-cinemaai-009,compliance,All exported video files must embed a visible watermark containing studio name and timestamp,compliance,constraint,video-export,export-service,\"Every exported video file (MP4/AV1/ProRes) must contain an overlay watermark showing studio.name and ISO8601 timestamp of export_time.\",\"未明确\",embed_watermark,EXPORT_BLOCKED,block + log + escalate to legal,[\"WATERMARK_TEMPLATE_SPEC\",\"EXPORT_AUDIT_REQUIRED\"],[\"Export without watermark text → blocked\",\"Watermark shows wrong studio name → blocked\",\"Watermark timestamp is UTC but export_time was JST → mismatch → blocked\"],active,[],[],[],\"待确认\",\"[CinemaAI-PRD-v0.4]§10.2.1.L5-L8\"\nRULE-cinemaai-010,governance,Any rule referencing 'MATURE' tag must also reference 'COMPLIANCE_OVERRIDE' config flag for emergency deactivation,compliance,constraint,rule-system,platform-admin,\"All rules where condition_text contains 'MATURE' must declare 'COMPLIANCE_OVERRIDE' in depends_on array.\",\"未明确\",enforce_dependency,VALIDATION_FAIL,block rule deployment until fixed,[],[\"RULE-cinemaai-004 declares MATURE but omits COMPLIANCE_OVERRIDE → invalid\",\"RULE-cinemaai-009 does not mention MATURE → no dependency required\",\"New rule RULE-cinemaai-011 adds MATURE logic and includes COMPLIANCE_OVERRIDE → valid\"],active,[],[],[],\"基于上下文推断\",\"[CinemaAI-PRD-v0.4]§Appendix-B.L1-L4\""
+    }
+  },
+  "result": {
+    "task_id": "CINEMA-N070-business-rule-extraction",
+    "path": "A",
+    "level": 3,
+    "duration_ms": 57166,
+    "scores": {
+      "selection": 1.0,
+      "completeness": 1.0,
+      "groundedness": 1.0,
+      "format": 1.0,
+      "gt_similarity": 0.6
+    },
+    "total": 4.6,
+    "verdict": "PASS"
+  }
+}

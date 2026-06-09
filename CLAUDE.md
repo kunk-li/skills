@@ -26,7 +26,7 @@
 
 - 一套 155 个 SDLC skill 的 library
   - 路径:`D:/work/资料/skills/完稿/N*/*.zip`
-  - 总览:`skills_workflow_v2.md`
+  - 总览:`docs/skills_workflow_v2.md`
   - 节点:N005(反馈)→ N010-090(需求)→ N100(质量门禁)→ N110(交接)→ N120-180(技术设计)→ N190-220(编码)→ N230-260(测试)→ N270-290(发布)→ N300-320(运行/故障)→ N330-360(文档/协同)→ N370-390(平台)
 - 5 条 macro skill 路径(see DECISIONS.md D-002):
   - **A** `requirement-to-prd`
@@ -60,7 +60,7 @@
 4. `DECISIONS.md` ← 已做决策(勿推翻)
 5. `_sessions/<最近日期>.md` ← 上次 session 总结(增量上下文)
 6. `_eval/README.md` ← eval 框架使用(如存在)
-7. `skills_workflow_v2.md` ← 155 skill 全景
+7. `docs/skills_workflow_v2.md` ← 155 skill 全景
 8. 外部参考:`D:/projects/python/ai_work/video/cinemaai/CLAUDE.md`(CinemaAI 项目自己的 context)
 
 ## 绝对不要做的事
@@ -87,3 +87,4 @@
 - 没有 Anthropic API key 在 env 里——eval 真跑前需要先拿
 - CinemaAI PRD 是**外部 PM 写的**,不是我写的——别把 CinemaAI 当我的 Path A 产物
 - 我对 fluff / 长篇大论 / "你做得很棒"等套话过敏
+- **公司周报/月报固定归档位置**:`D:/work/资料/skills/周报/`(命名 `CD1-2026年第N周周报-Agent板块.md` / `CD1-2026年M月月报.md`)——别落 Downloads 或别处

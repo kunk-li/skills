@@ -165,15 +165,49 @@ Rules:
     def _parse(self, text):
         # Extract first JSON object (greedy on outermost braces)
         m = re.search(r"\{[\s\S]*\}", text)
-        if not m:
-            return {"selected_skills": [], "artifacts": {}, "raw": text, "parse_error": "no_json"}
-        try:
-            data = json.loads(m.group(0))
-            data.setdefault("selected_skills", [])
-            data.setdefault("artifacts", {})
-            return data
-        except json.JSONDecodeError as e:
-            return {"selected_skills": [], "artifacts": {}, "raw": text, "parse_error": str(e)}
+        candidate = m.group(0) if m else text
+
+        def _repair(s):
+            # Best-effort: close an unterminated string + balance open braces/
+            # brackets so a TRUNCATED response (model hit max_tokens mid-string)
+            # still yields its partial artifacts instead of zeroing every
+            # dimension. Returns None when there is nothing to fix.
+            if not s:
+                return None
+            out, in_str, esc, stack = [], False, False, []
+            for ch in s:
+                out.append(ch)
+                if esc:
+                    esc = False
+                elif ch == "\\" and in_str:
+                    esc = True
+                elif ch == '"':
+                    in_str = not in_str
+                elif not in_str and ch in "{[":
+                    stack.append(ch)
+                elif not in_str and ch in "}]" and stack:
+                    stack.pop()
+            if in_str:
+                out.append('"')
+            out.extend("}" if c == "{" else "]" for c in reversed(stack))
+            repaired = "".join(out)
+            return repaired if repaired != s else None
+
+        # strict=False tolerates literal control chars inside string values; the
+        # repair pass rescues truncated JSON. Try as-is, then repaired.
+        for attempt in (candidate, _repair(candidate)):
+            if not attempt:
+                continue
+            try:
+                data = json.loads(attempt, strict=False)
+            except json.JSONDecodeError:
+                continue
+            if isinstance(data, dict):
+                data.setdefault("selected_skills", [])
+                data.setdefault("artifacts", {})
+                return data
+        return {"selected_skills": [], "artifacts": {}, "raw": text,
+                "parse_error": "unparseable"}
 
 
 class OpenAICompatibleAdapter:
@@ -257,7 +291,7 @@ class OpenAICompatibleAdapter:
             )
         text = self._chat(
             [{"role": "system", "content": system}, {"role": "user", "content": input_text}],
-            self.model, 8192,
+            self.model, int(os.environ.get("SS_EVAL_MAX_TOKENS") or 8192),
         )
         return ClaudeAdapter._parse(self, text)
 

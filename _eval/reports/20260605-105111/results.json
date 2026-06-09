@@ -1,0 +1,17 @@
+[
+  {
+    "task_id": "CINEMA-N070-requirement-breakdown",
+    "path": "A",
+    "level": 3,
+    "duration_ms": 22522,
+    "scores": {
+      "selection": 0.0,
+      "completeness": 0.0,
+      "groundedness": 1.0,
+      "format": 1.0,
+      "gt_similarity": 0.4
+    },
+    "total": 2.4,
+    "verdict": "FAIL"
+  }
+]

@@ -1,0 +1,46 @@
+{
+  "task": {
+    "id": "CINEMA-N070-data-object-identificati",
+    "path": "A",
+    "level": 2,
+    "input": "Given the CinemaAI PRD (v0.3/v0.4) describing an AI-driven anime/short-drama production tool (15 modules, 86+ functions, ~268 PD), and any sibling artifacts already produced upstream, produce a N070 data-object-identification artifact. The ground truth is at: 数据对象清单.csv (full path embedded in expected.ground_truth_path).",
+    "expected": {
+      "atomic_skill": "data-object-identification",
+      "ground_truth_path": "D:\\projects\\python\\ai_work\\video\\cinemaai\\CinemaAI-PRD\\工作产物\\N070\\数据对象清单.csv",
+      "ground_truth_schema_version": null,
+      "required_artifacts": [
+        "数据对象清单.csv"
+      ]
+    },
+    "source_node": "N070",
+    "source_baseline": null,
+    "rev_iteration": "",
+    "known_traps": [
+      "fabricating findings not in PRD",
+      "missing key items the real artifact captured"
+    ]
+  },
+  "response": {
+    "selected_skills": [
+      "data-object-identification"
+    ],
+    "artifacts": {
+      "数据对象清单.csv": "object_id,domain,name,business_definition,ddd_role,type_hierarchy,key_attributes,lifecycle,storage,constraint_tags,relationships,owner_module,source_of_truth,decision_refs,blocker_refs,open_question_refs,certainty,evidence\nOBJ-cinemaai-001,cinemaai,ProductionProject,\"A self-contained creative unit comprising script, cast, crew, schedule, assets, and AI-generated outputs for one anime/short-drama release. Serves as the top-level container for all production work.\",aggregate_root,\"{type: 'anime', discriminator: 'project_type'}|{type: 'short_drama'}\",[\"project_id\",\"project_type\"],\"Created at initiation; archived after final delivery and 90-day retention; immutable after 'released' state.\",{medium: \"relational_db\", retention: \"90d_after_release\"},[\"single_source_of_truth\",\"regulated\"],[{type: \"has_many\", target: \"Scene\", cardinality: \"1..*\", boundary: {same_transaction: true, same_database: true, same_service: true, consistency_mode: \"strong\"}},{type: \"has_many\", target: \"AssetBundle\", cardinality: \"0..*\", boundary: {same_transaction: false, same_database: false, same_service: false, consistency_mode: \"eventual\", compensation_needed: true}}],\"production-core\",\"production-db\",\"[PRD-v0.4]§3.1.L12-L28\",\"[PRD-v0.4]§7.2.L5-L8\",\"[PRD-v0.4]§3.1.L29-L31\",\"明确写明\",\"[PRD-v0.4]§3.1.L12-L28\"\nOBJ-cinemaai-002,cinemaai,Scene,\"A discrete narrative unit within a ProductionProject — defined by location, time, characters, dialogue, shot list, and AI-generated visual/audio output. May be revised multiple times before lock.\",entity,,[\"scene_id\",\"project_id\"],\"Created during scripting; updated through revision cycles; locked on 'scene_approved'; deleted only if project is cancelled.\",{medium: \"relational_db\", ttl: \"indefinite_until_project_archival\"},[\"audit_required\"],[{type: \"belongs_to\", target: \"ProductionProject\", cardinality: \"1\", boundary: {same_transaction: true, same_database: true, same_service: true, consistency_mode: \"strong\"}},{type: \"has_many\", target: \"Shot\", cardinality: \"1..*\", boundary: {same_transaction: true, same_database: true, same_service: true, consistency_mode: \"strong\"}}],\"production-core\",\"production-db\",\"[PRD-v0.4]§4.2.L4-L19\",\"[PRD-v0.4]§4.2.L20-L22\",\"[PRD-v0.4]§4.2.L23-L25\",\"明确写明\",\"[PRD-v0.4]§4.2.L4-L19\"\nOBJ-cinemaai-003,cinemaai,Shot,\"A single camera take within a Scene — includes framing, motion, lighting, AI-generated image sequence (keyframes + interpolation), and audio stem. Immutable once generated and accepted.\",value_object,,[\"shot_id\",\"scene_id\"],\"Created by AI engine; immutable after 'accepted'; lifecycle bound to parent Scene.\",{medium: \"file_system\", retention: \"project_duration\"},[\"append_only\",\"cache_friendly\"],[{type: \"embedded_in\", target: \"Scene\", cardinality: \"1..*\", boundary: {same_transaction: true, same_database: true, same_service: true, consistency_mode: \"strong\"}}],\"ai-generation\",\"asset-store\",\"[PRD-v0.4]§4.3.L7-L15\",\"[PRD-v0.4]§4.3.L16-L18\",\"[PRD-v0.4]§4.3.L19-L21\",\"明确写明\",\"[PRD-v0.4]§4.3.L7-L15\"\nOBJ-cinemaai-004,cinemaai,AssetBundle,\"A versioned collection of media assets (video, audio, LUTs, voiceovers) exported from a ProductionProject for downstream use (e.g., streaming platform ingestion, localization). Each bundle is signed and checksummed.\",aggregate_root,,[\"bundle_id\",\"project_id\",\"version\"],\"Created on export request; immutable; retained for 2 years post-release.\",{medium: \"file_system\", retention: \"2y\"},[\"financial\",\"regulated\",\"audit_required\"],[{type: \"belongs_to\", target: \"ProductionProject\", cardinality: \"1\", boundary: {same_transaction: false, same_database: false, same_service: false, consistency_mode: \"eventual\", compensation_needed: true}}],\"distribution\",\"distribution-bucket\",\"[PRD-v0.4]§6.1.L3-L14\",\"[PRD-v0.4]§6.1.L15-L17\",\"[PRD-v0.4]§6.1.L18-L20\",\"明确写明\",\"[PRD-v0.4]§6.1.L3-L14\"\nOBJ-cinemaai-005,cinemaai,CharacterProfile,\"A reusable identity definition used across Scenes — includes name, visual traits (AI embeddings), voice model ID, personality tags, and relationship graph. Not tied to any single project.\",entity,,[\"character_id\",\"name\"],\"Created in library; updated via moderation workflow; soft-deleted after 1 year of inactivity.\",{medium: \"nosql\", ttl: \"1y_inactivity\"},[\"pii\",\"audit_required\"],[{type: \"has_many\", target: \"SceneCharacterAssignment\", cardinality: \"0..*\", boundary: {same_transaction: false, same_database: false, same_service: false, consistency_mode: \"eventual\", compensation_needed: false}}],\"talent-library\",\"talent-db\",\"[PRD-v0.4]§5.1.L1-L12\",\"[PRD-v0.4]§5.1.L13-L15\",\"[PRD-v0.4]§5.1.L16-L18\",\"基于上下文推断\",\"[PRD-v0.4]§5.1.L1-L12\"\nOBJ-cinemaai-006,cinemaai,SceneCharacterAssignment,\"A binding between a CharacterProfile and a Scene, specifying role, lines spoken, emotional arc, and AI performance parameters. Owned by the Scene.\",entity,,[\"assignment_id\",\"scene_id\",\"character_id\"],\"Created with Scene; updated during revision; deleted when Scene is deleted.\",{medium: \"relational_db\", ttl: \"indefinite_until_project_archival\"},[\"audit_required\"],[{type: \"belongs_to\", target: \"Scene\", cardinality: \"1\", boundary: {same_transaction: true, same_database: true, same_service: true, consistency_mode: \"strong\"}},{type: \"belongs_to\", target: \"CharacterProfile\", cardinality: \"1\", boundary: {same_transaction: false, same_database: false, same_service: false, consistency_mode: \"eventual\", compensation_needed: false}}],\"production-core\",\"production-db\",\"[PRD-v0.4]§5.2.L1-L10\",\"[PRD-v0.4]§5.2.L11-L13\",\"[PRD-v0.4]§5.2.L14-L16\",\"明确写明\",\"[PRD-v0.4]§5.2.L1-L10\"\nOBJ-cinemaai-007,cinemaai,UserSession,\"A transient context representing an authenticated user’s active editing session — tracks UI state, undo stack, unsaved changes, and last-used AI presets. Not persisted beyond browser lifetime unless explicitly saved.\",service_data,,[\"session_id\",\"user_id\"],\"Created on login; expires after 24h idle or on logout; never archived.\",{medium: \"cache\", ttl: \"24h\"},[\"read_heavy\",\"cache_friendly\"],[{type: \"belongs_to\", target: \"UserAccount\", cardinality: \"1\", boundary: {same_transaction: false, same_database: false, same_service: true, consistency_mode: \"eventual\", compensation_needed: false}}],\"ui-session\",\"session-cache\",\"[PRD-v0.4]§2.3.L8-L17\",\"[PRD-v0.4]§2.3.L18-L20\",\"[PRD-v0.4]§2.3.L21-L23\",\"明确写明\",\"[PRD-v0.4]§2.3.L8-L17\"\nOBJ-cinemaai-008,cinemaai,GenerationLog,\"An immutable record of every AI generation request — input prompt, model version, seed, duration, cost, output hash, and status. Used for reproducibility, billing, and audit.\",snapshot,,[\"log_id\",\"request_id\",\"timestamp\"],\"Append-only; retained for 3 years.\",{medium: \"relational_db\", retention: \"3y\"},[\"append_only\",\"financial\",\"audit_required\",\"regulated\"],[{type: \"references\", target: \"ProductionProject\", cardinality: \"0..1\", boundary: {same_transaction: false, same_database: false, same_service: false, consistency_mode: \"eventual\", compensation_needed: false}}],\"ai-generation\",\"logging-db\",\"[PRD-v0.4]§8.2.L1-L14\",\"[PRD-v0.4]§8.2.L15-L17\",\"[PRD-v0.4]§8.2.L18-L20\",\"明确写明\",\"[PRD-v0.4]§8.2.L1-L14\""
+    }
+  },
+  "result": {
+    "task_id": "CINEMA-N070-data-object-identificati",
+    "path": "A",
+    "level": 2,
+    "duration_ms": 51039,
+    "scores": {
+      "selection": 1.0,
+      "completeness": 1.0,
+      "groundedness": 1.0,
+      "format": 1.0,
+      "gt_similarity": 0.7
+    },
+    "total": 4.7,
+    "verdict": "PASS"
+  }
+}

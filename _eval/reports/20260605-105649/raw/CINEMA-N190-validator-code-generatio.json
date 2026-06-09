@@ -1,0 +1,46 @@
+{
+  "task": {
+    "id": "CINEMA-N190-validator-code-generatio",
+    "path": "C",
+    "level": 3,
+    "input": "Given the CinemaAI PRD (v0.3/v0.4) describing an AI-driven anime/short-drama production tool (15 modules, 86+ functions, ~268 PD), and any sibling artifacts already produced upstream, produce a N190 validator-code-generation artifact. The ground truth is at: 校验器代码.md (full path embedded in expected.ground_truth_path).",
+    "expected": {
+      "atomic_skill": "validator-code-generation",
+      "ground_truth_path": "D:\\projects\\python\\ai_work\\video\\cinemaai\\CinemaAI-PRD\\工作产物\\N190\\校验器代码.md",
+      "ground_truth_schema_version": "1.0.0",
+      "required_artifacts": [
+        "校验器代码.md"
+      ]
+    },
+    "source_node": "N190",
+    "source_baseline": null,
+    "rev_iteration": "",
+    "known_traps": [
+      "fabricating findings not in PRD",
+      "missing key items the real artifact captured"
+    ]
+  },
+  "response": {
+    "selected_skills": [
+      "validator-code-generation"
+    ],
+    "artifacts": {
+      "校验器代码.md": "```yaml\nartifact_contract:\n  schema_version: n200.artifact.v2\n  producer_skill: validator-code-generation\n  producer_node: N200\n  artifact_name: 校验器代码.java\n  artifact_type: code_draft\n  readiness: blocked\n  evidence_profile: heuristic_only\n  source_inputs: []\n  downstream_consumers: [N210, N330]\n\nself_gate:\n  status: block\n  failed_rules: [\"R01_artifact_contract_first\", \"R02_readiness_set\", \"R04_rule_traceability\"]\n  warnings: []\n  pending_decisions: []\n  drift_watchlist: []\n\nproduced_event:\n  event_type: produced.N200.校验器代码\n  contract_version: n200.artifact.v2\n  artifact_ref: 校验器代码.java\n  emitted_for: [N210, N330, N390]\n\nquality_self_score:\n  rubric_version: n200.skill_quality.v1\n  scale: 0_to_2_per_dimension\n  dimensions:\n    standalone_usability: 0\n    contract_completeness: 0\n    uncertainty_handling: 2\n    downstream_handoff: 0\n  overall_level: C\n  improvement_notes:\n    - \"No core_required input provided: missing business_rules, dto_fields, openapi_schema, or field_constraints\"\n    - \"CinemaAI PRD (v0.3/v0.4) is referenced but not parsed or attached; cannot extract DTO fields or rules without concrete schema or field list\"\n    - \"'ground truth at 校验器代码.md' is circular — no ground truth file was supplied in input payload\"\n\nversioning_status:\n  contract_schema_version: n200.artifact.v2\n  verification_checklist: n200-v4-verification.md\n  artifact_package_version: v8-content-id-decoupling\n  implementation_delta: content_identity_decoupled_from_archive_position\n  external_files_policy: no_external_constraint_files\n  source_of_truth: skill_package_internal_files\n\nstandard_validator_bundle: []\nbusiness_specific_validators: []\nrule_source_mapping: []\ncross_field_constraints: []\nvalidation_groups: []\ni18n_message_keys: []\nerror_code_mapping: []\ntest_skeleton: []\nperformance_hints: []\ntech_stack_adapter: java\n\ndownstream_handoff:\n  expected_grounded_artifact_path: \"校验器代码.md\"\n  required_by_nodes: [N210, N330, N390]\n  handoff_format: \"java_source_with_jakarta_validation_annotations_and_custom_validators\"\n  handoff_contract_version: \"n200.artifact.v2\"\n\nrequest_for_inputs:\n  - \"Please provide one or more of the following core_required inputs:\"\n  - \"  • dto_fields: list of field names with types, nullability, and constraints (e.g., 'title: String, @NotBlank, @Size(max=128)')\"\n  - \"  • business_rules: plain-text or structured list (e.g., CSV/Markdown) of rules like 'R012: Episode duration must be between 3–15 minutes'\"\n  - \"  • openapi_schema: OpenAPI 3.0 YAML/JSON fragment defining request/response schemas\"\n  - \"  • field_constraints: tabular or JSON mapping of field → constraint type → value (e.g., {\\\"scene_id\\\": {\\\"type\\\": \\\"uuid\\\", \\\"required\\\": true}})\"\n  - \"Without any of these, validator generation cannot proceed beyond stubs.\"\n\nassumptions: []\npending_decisions: []\npending_validations: []\ndrift_watchlist: []\n```"
+    }
+  },
+  "result": {
+    "task_id": "CINEMA-N190-validator-code-generatio",
+    "path": "C",
+    "level": 3,
+    "duration_ms": 21150,
+    "scores": {
+      "selection": 1.0,
+      "completeness": 1.0,
+      "groundedness": 1.0,
+      "format": 1.0,
+      "gt_similarity": 0.2
+    },
+    "total": 4.2,
+    "verdict": "PASS"
+  }
+}
