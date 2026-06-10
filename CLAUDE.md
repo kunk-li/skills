@@ -5,7 +5,7 @@
 ## 我是谁
 
 - 角色:**agent 平台 builder**(写代码 + 设计 skill 系统),不是 PM
-- 上周(2026-05 第三周)刚 ship 了一套 155 个 SDLC skill 的 library
+- 上周(2026-05 第三周)刚 ship 了一套 **157** 个 SDLC skill 的 library(早期约数写 155,D-015/D-019 后实数 157;见 D-030)
 - 单兵作战为主,需要时拉 1-2 个工程师陪跑
 - 公司里没现成的外部业务方可以做 Pilot
 
@@ -24,7 +24,7 @@
 
 ## 项目是什么
 
-- 一套 155 个 SDLC skill 的 library
+- 一套 **157** 个 SDLC skill 的 library(真内容强化覆盖只 19/157=12%,demand-pull,见 D-030)
   - 路径:`D:/work/资料/skills/完稿/N*/*.zip`
   - 总览:`docs/skills_workflow_v2.md`
   - 节点:N005(反馈)→ N010-090(需求)→ N100(质量门禁)→ N110(交接)→ N120-180(技术设计)→ N190-220(编码)→ N230-260(测试)→ N270-290(发布)→ N300-320(运行/故障)→ N330-360(文档/协同)→ N370-390(平台)
@@ -60,7 +60,7 @@
 4. `DECISIONS.md` ← 已做决策(勿推翻)
 5. `_sessions/<最近日期>.md` ← 上次 session 总结(增量上下文)
 6. `_eval/README.md` ← eval 框架使用(如存在)
-7. `docs/skills_workflow_v2.md` ← 155 skill 全景
+7. `docs/skills_workflow_v2.md` ← 157 skill 全景
 8. 外部参考:`D:/projects/python/ai_work/video/cinemaai/CLAUDE.md`(CinemaAI 项目自己的 context)
 
 ## 绝对不要做的事
