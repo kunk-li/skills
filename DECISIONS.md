@@ -341,6 +341,31 @@
 - **实证**:demo 在 hub-oa auth 821 行真 PRD 上跑 4 支柱 → 揪出 **2 真 gap**(组织缺改/归档、用户缺复活),经真 Java file:line 实锤"PRD 漏、代码有"(`SysOrgServiceImpl.edit:125`/`OaReactivationController:43`)= Signal #6;TG 登录判 complete(4/4)= 不逢扫必报。产物 `skill-fork-b/hub-oa-auth-025-complete-feature-demo.md`。commit `f2438fc`。
 - **不复议**:Phase 3 前(同 D-019 优化现有、不增条目)。
 
+## D-028 · G2 首个强正信号:dream_true 团队独立核实全部确认 + 进入修复
+
+- **日期**:2026-06-09(session #2,交接包发出后)
+- **事件**:`HANDOFF-to-dream_true-team.md`(skills-pilot)发 dream_true 团队 → 团队**起 4 个子代理独立亲核** → §2 九条 + agent-reported B6/B7 共 **12 findings 全确认**(含 critical 提权标"可直接利用")。仅 **2 处文档定位修正**(非实质反驳):① 幂等中间件文件路径我 handoff 标错(`idempotency_management/api.py`〔44 行 Protocol〕→实为 `inbound/http_api_management/api.py` 的 `_idempotency_gate`;三条结论全对,**093 agent 原路径本就对、我压缩成一页时弄串**)② "record_cost 静默吞失败"过度(写库失败会抛标 FAILED 非静默;真 bug = 非原子 + 按产物文件跳过 → 崩溃窗口永久漏记,他们确认且列最高危)。团队产出**完整修复方案 + 估时 + 建议顺序**,等 builder 定范围 + §3 产品决策即开工(声明每项独立提交 + 回归测试)。
+- **对 G2 判据(远强于 D-017)**:D-017(video_ai)= 6 真 1 误报、novelty 不够、混合偏正;**本次 = 真团队 + 4 代理独立验证 + 12 条全确认 + 已排期执行**。= 北极星 D-016/D-018 一路"待验真团队采纳"的**首个强正答**。
+- **双向可信**:团队 2 处修正我方文档(且抓出我 handoff 把幂等路径标错)= **真核非盖章**,同 D-017 video_ai 团队反向修正我 3 处的健康闭环。
+- **诚实边界**:团队已确认 + 承诺修,但 **fixes 尚未 land**。终局采纳 = fixes shipped + 团队明确"愿在 CI/上线前持续跑这套核对"(同 D-018 G2 显式价值口径)。当前 = **强正信号,非终局铁证**。
+- **后续**:按团队 act 深度更新(修了几条 / 是否沉淀回归测试 / 是否继续用)→ 兑现则升"首个真采纳闭环";9 缺陷拆 dev task(N250/Path C 未在 dream_true dogfood)可顺手补。
+- ✅ **兑现(2026-06-09 同日续)= D-018 完整价值模型首次在真团队真产品闭合**:团队**已 ship 修复**——**P0 提权** `9a8ef59`(is_admin 搬出开放 metadata→User 专用字段〔**采了我 §3 建议**〕+ update_user 剥离 client is_admin + PUT/DELETE 加守卫 + 专用 admin 置位端点 + 旧数据迁移;`test_privilege_escalation_blocked` 把 exploit 钉成回归测试)+ **#31 删整集级联** `2e287b9`(门禁唯一 blocker;enumerate-owned-skip-shared);**13 回归测试沉淀进 CI,后端 1808→1821,mypy/ruff/audit 零 drift**。= 发现器→人裁定→**沉淀确定性测试**(D-018 三层模型)**首次在真团队真产品跑通**;北极星核心假设("团队用 skills ship 得更稳")首个真证据。**诚实边界**:2/9(修的是无产品决策依赖的两条 = critical + 门禁 blocker);#32-#39 pending(部分卡 §3 决策);团队与 builder 有连接(非冷启动外部团队);**"把这套核对变成每次发布前常规"未证**(从"用了一次"到"采纳成习惯"是下一道坎)。团队修 #31 时**自挖出 #39**(render/配音 StorageAPI 同类删集缺口)= 深度 engage,正属今日折进 `015`/`017` 的 `cleanup_coverage` 镜头类。
+- ✅✅ **完整兑现(2026-06-10)= 北极星核心假设完整证实一次**:团队把 **#32-#39 全 8 条 dev-task 包完整 ship + 推送 + 过门禁 + 回归测试进 CI**(2/9 → **9/9**),**照 baked §3 决策逐条 + 钱链顺序守住**(原子 `32a6205` → 对账 `337dad5` `update_cost_amount` 绕幂等 → 预算闸 `5bd8bc9`..`c1bcdb3`;余 #32 `c979a9d` / #35 `fe514a1` / #36 `8d80cd5` / #37 −4400 行 `1ac7494`+ / #38 `2abd754` / #39 `aa19090`)。**关键**:团队落的这个包 = 当天我反验过 `055 defect_remediation_mode` 能自动产的**同形状** → skill 现实价值(不只我手搓)坐实。**operator 亲核 #34 预算闸 4 点全 PASS**:authz `platform.py:649` fail-closed(is_admin 专用字段不可自封 + docstring 标「自抬限额属提权类」= 团队吸收 authz_input 镜头)/ 红线 `ai_jobs.py:407` gate 在入队+provider 前 raise 零副作用 / 闸读已花费依赖 #33 原子落账(我排顺序的意义)/ 边界 strict `>` 取我反验默认。**月度 reset 团队诚实降级为 all-time**(`CostRecord` 无 created_at 实锤,operator 认)+ operator 挑出 **global all-time 总闸 = 全平台终身预算 → 运营久必全平台停摆**(比单用户撞墙急)+ 3 次要近似(estimate 占位 / TOCTOU / 未装 fail-open)。= 发现器→人裁定→可执行修复任务→ship+CI **全链跑通**,修法我建议、决策我 baked、顺序我排、形状 055 反验过。**升级:「首个真采纳闭环」→「完整真采纳闭环(9/9)」**。**诚实(终局仍未到)**:团队与 builder 有连接(非冷外部)、**用了这一轮 ≠ 纳入每次发布前常规**;月度降级是真 v1 折损(global all-time 尖锐面)。另一份交接 R-DOMAIN-BLIND 架构分层团队在跑(Phase 0+B4+B1 done,余 roadmap)。verify-only:亲读 dream_true 真码核 #34,没碰其码/git。
+- **不复议**:G2 首个强正信号 + 首个真采纳闭环(事件事实)。
+
+## D-029 · 缺陷→修复任务能力归 Path C(055 新 mode),不归 N250/092、不新建 skill
+
+- **日期**:2026-06-10
+- **背景**:dream_true G2 win 的核心动作 = 「审计发现 → 可执行修复任务」(团队采的是**修法**:is_admin 搬出 metadata、enumerate-owned-skip-shared)。但昨天手搓 `dev-task-pack-pending.md`(457 行 9 DT)坐实:**`DT-id + fix-approach + file:line + deps + estimate + acceptance=回归测试` 这个对象,落在 N250(止于 triage/repro)与 Path C(只接 greenfield 方案)之间,整库无节点拥有**(dogfood §C)。agent 当时建议**新建** `defect-remediation-task-generation` skill。
+- **决定**:按 D-019(不新建、扩现有)拨回 → 折进 **Path C 核心原子 skill `055-development-task-breakdown` 的新 mode `defect_remediation_mode`**。055 消费缺陷记录(090 分类 / 091 定级 / 092 复现,或审计 / 静态 / 事故发现)→ 产 remediation task,字段:`maps_to_defect`(多对一)/ `remediation_kind`(fix / add_missing_control / delete_dead_code / contract_align,与 task_kind 正交)/ `fix_approach`(方向非从零设计)/ `target_site`(已知 file:line + provenance)/ `priority`(继承严重度 + `priority_override_reason`)/ DoD(回归测试钉死不变量 + 假阳性 guard);+ `R11_remediation_task_grounded` 机读门禁。
+- **为什么 055 不是 092**:① 092 Boundary 明文「reproduce a *failure*」,对 #34(新功能,无可复现失败)/ #37(死码删除)本就 strain(dogfood §445);让它产 fix-approach/estimate/deps 是越界(task planning 非 repro)。② 055 本职 = 产 dev task,defect→fix-task 是它的 **brownfield 输入变体**,复用 task_kind/estimate/deps,不受「failure」约束,原生覆盖 4 种 remediation_kind。③ Path C macro 无实体文件(Grep 证 `solution-to-dev-tasks` 仅在文档)= D-002 概念 path = N180 块,其产 task 核心原子 skill 即 055。
+- **落地**:+26 行 6 处、库仍 **157**(D-019)、零项目字样(D-023)、readback PASS。092 不动(保持产 defect record 上游),055 主动声明消费它 = 最小侵入。log = `skill-strengthening/04-fold-log-defect-remediation.md` + `_repackage4.py` + `recon/055-SKILL.md`。
+- **诚实**:R11 落 SKILL.md 正文(agent 权威面);`references/task-breakdown-self-check.yaml` 仍 R01-R10(reference 辅助,本批不动 references,同昨天三圈 fold 处理)。
+- ✅ **已反验通过(2026-06-10 同日)**:冷上下文 agent 只读强化后 055 + HANDOFF(严格禁读 phase3 手搓版,tool_uses=3)、用 `defect_remediation_mode` 重产 12 task(`phase3/055-cold-reproduce-dt-pack.md`)→ operator 对照手搓 `dev-task-pack`(DT-01..08):**remediation_kind 4 型全对**(#34=add_missing_control / #37=delete_dead_code / #38a=contract_align / cost·锁·渲染=fix)、DoD 范式对(delete 用「不可达+套件绿」不塞回归测试)、priority override 独立复现手搓 DT-07 结论、provenance 诚实(inferred_site / agent_reported)+ 正确应用 HANDOFF 幂等 file:line 勘误、R01-R11 全 pass;**2 处比手搓更优**(幂等按 kind 拆 fix+add_missing_control;B7 用 spike 先判删/补)。反事实证据=agent 指认「没 delete_dead_code『不可达+套件绿』那句会给死码塞回归测试」。**边界**:同模型非完全独立;prompt 喂的「机制待定→to_confirm 不 blocked」恰是 055 一个真空(见下信号①)。
+- ✅ **反验又出 4 个 055 新信号**(下一轮 D-019,元洞察「连验证都在出信号」):① to_confirm vs blocked 中间态(产品决策齐+机制待定→provisional 不 blocked)无判据 ② to_confirm 无 schema(question/why/blocks_code/decide_by)③ spike 承接 × R11 冲突(修复形状待判定用 T7_spike,DoD 走 spike 范式非 R11 回归范式)④ 缺陷无源头 P 级时优先级无指引。连同 089 `audit_intake` / 091 `latent_risk` 进下轮。
+- **同轮 D-019 剩余**(用户本轮只点第 3 条):① 089 `audit_intake` 入口(审计缺陷无失败测试 / 无 signature)② 091 `latent_risk`/`priority_override_reason`(潜伏缺陷低估)。
+- **不复议**:能力归属(Path C 拥有 defect-remediation;N250 止于 triage/repro 的边界清晰)。
+
 ---
 
 ## 已被推翻 / 修正的决策
