@@ -17,12 +17,13 @@ python _eval/defects/defect_eval.py
 ## 两个 detector 臂
 | 臂 | 是什么 | 状态 |
 |---|---|---|
-| `mechanical` | 把已验证镜头编译成纯扫描器（authz_input / cleanup_coverage / contract_drift = 2 gate 判定逻辑 + 1 扩展） | ✅ 跑通，无需 key，产真数 |
+| `mechanical` | 把已验证镜头编译成纯扫描器（authz_input / cleanup_coverage / contract_drift / audit_coverage = 2 gate 判定逻辑 + 054 审计镜头 + 扩展） | ✅ 跑通，无需 key，产真数 |
 | `llm` | 注入 SKILL.md 让模型找缺陷 + 不注入对照（delta=证 SKILL.md 真在提升检出非裸模型本能） | 🔶 接口就绪，接 `_eval/adapters.py` 的 run()，需 model endpoint |
 
 ## 现状 + 诚实读数
-- 当前 6 fixture / 3 类全 recall=1.00 FP=0.00 —— 因为这 3 个 skill（016/017/093）**正是被真用打磨过的「验证脊」**，机械化后本就强。
-- **关键诚实**（呼应 D-030）：harness 只能测**有 ground truth 的地方**，而 ground truth 只在**真用发生过**的地方存在 → 那 138 个 day-1 未碰 skill **没 fixture 可建**（没东西练过它们）。**S3 不逃 demand-pull，它把盲区从「不知道好不好」变成「可见地无信号、不可测」** —— 这本身就是「该不该优化它」的答案：不该,直到真用产出真缺陷。
+- 当前 8 fixture / 4 类全 recall=1.00 FP=0.00 —— 因为这 4 个 skill（016/017/093/054）**正是被真用打磨过的「验证脊」**，机械化后本就强。
+- **OA(Java)第二域扩源**（2026-06-11）：`audit_coverage` 类(054 Audit-coverage 镜头)蒸馏自 OA master-audit operator 核过的 C4(免密复活零审计)/H7(grantRole 等家族零审计)，当天复核于 `origin/master@b31523b9` 再次确认 still_open。配 Python + Java 双形态 fixture，detector 同时认 `def` / 修饰符方法头 + `@AuditLog` 注解 = S3 首个非 Python fixture，缺陷类语言无关。**诚实**：OA 12 条里只有 audit_coverage 能干净机械化；其余 9 条(双签 quorum 死码 / 无锁并发 / 跨服务端点缺失 / 读不存在字段 / 撞唯一键 / 词表错配)需跨文件或 dataflow，留 llm/审计臂（见 `defect_eval.py` 末注释）。
+- **关键诚实**（呼应 D-030）：harness 只能测**有 ground truth 的地方**，而 ground truth 只在**真用发生过**的地方存在 → 那 138 个 day-1 未碰 skill **没 fixture 可建**（没东西练过它们）。**S3 不逃 demand-pull，它把盲区从「不知道好不好」变成「可见地无信号、不可测」** —— 这本身就是「该不该优化它」的答案：不该,直到真用产出真缺陷。**054 现有 fixture = 它被 OA 真用碰过的证据**（沿真用增长,不为覆盖率硬造）。
 
 ## 扩展（按需，不 sweep）
 1. 接 model endpoint 跑 `llm` 臂 → 出「带/不带 SKILL.md」delta（项目 env 现无 key）。

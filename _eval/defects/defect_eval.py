@@ -168,11 +168,66 @@ FIXTURES: list[Fixture] = [
         ),
         provenance="contract_drift 类（093 built_vs_spec / mechanism-substituted）",
     ),
+    # ── audit_coverage（敏感操作路径无审计记录 = 取证盲区）→ 054 ──
+    # 第二域(Java/OA)扩源:缺陷类蒸馏自 OA master-audit operator 核过的 C4/H7,
+    # 2026-06-11 复核于 origin/master@b31523b9 再次确认 still_open。镜头语言无关,
+    # 故配 Python + Java 双形态 fixture,detector 同时认 def / 修饰符方法头 + 注解审计。
+    Fixture(
+        id="audit_cov_01", defect_class="audit_coverage",
+        skill="054 sensitive-operation-audit (Audit-coverage)", severity="high",
+        buggy=(
+            "class AccountService:\n"
+            "    def reactivate_with_totp_rebind(self, uid):\n"
+            "        self._reset_password(uid)\n"
+            "        self._rebind_totp(uid)\n"
+            "        self._set_status(uid, 'ACTIVE')\n"
+        ),
+        marker="def reactivate_with_totp_rebind",
+        summary="免密复活(改密+重绑 TOTP+激活)全程无审计记录 → 取证盲区",
+        clean=(
+            "class AccountService:\n"
+            "    def reactivate_with_totp_rebind(self, uid):\n"
+            "        self._reset_password(uid)\n"
+            "        self._rebind_totp(uid)\n"
+            "        self._set_status(uid, 'ACTIVE')\n"
+            "        self.audit_log('reactivate', uid)\n"
+        ),
+        provenance="OA master-audit C4 免密复活零审计（operator 核;2026-06-11 复核 still_open;054 Audit-coverage 镜头）",
+    ),
+    Fixture(
+        id="audit_cov_02", defect_class="audit_coverage",
+        skill="054 sensitive-operation-audit (Audit-coverage)", severity="high",
+        buggy=(
+            "class UserService {\n"
+            "    public void grantRole(Long uid, String role) {\n"
+            "        this.rel.add(uid, role);\n"
+            "        this.cache.evict(uid);\n"
+            "    }\n"
+            "}\n"
+        ),
+        marker="public void grantRole",
+        summary="授予角色(提权操作)无审计记录 → 提权不可追溯（Java 形态）",
+        clean=(
+            "class UserService {\n"
+            "    @AuditLog(\"grantRole\")\n"
+            "    public void grantRole(Long uid, String role) {\n"
+            "        this.rel.add(uid, role);\n"
+            "        this.cache.evict(uid);\n"
+            "    }\n"
+            "}\n"
+        ),
+        provenance="OA master-audit H7 grantRole/grantPermission+TotpReset 家族零审计（operator 核;2026-06-11 复核 still_open;054 Audit-coverage）",
+    ),
 ]
 
-# 已记录但需 call-graph / dataflow、机械纯扫描抓不准 → 归 LLM/定期审计臂（诚实，同 D-030）：
+# 已记录但需 call-graph / dataflow / 跨文件 schema、机械纯扫描抓不准 → 归 LLM/定期审计臂（诚实，同 D-030）：
 #   money_atomicity(#33,055/093 money_flow)  ·  dead_code/wired_but_unused(#37,093)
-# 这两类不放机械 fixture，留 llm 臂；机械臂只跑能干净机械化的 3 类。
+# OA(Java)第二域扩源诚实读数（2026-06-11 复核 12 条 still_open）：12 条里只有 audit_coverage
+#   (C4/H7 = 敏感操作零审计)能干净机械化、已收为 fixture；其余 9 条需跨文件/语义，留 llm/审计臂——
+#   · C1 双签 quorum 死码 / C2 同人双签塌缩 / H6 无锁并发 → 需 dataflow / 缺失守卫推断
+#   · H1/H2 wflow 端点缺失 → 需跨服务 caller↔server 契约(093 cross_service_contract)
+#   · H3/H5 状态门读不存在字段 → 需实体字段集(跨文件)  · C3 撞唯一键 → 需 schema  · H8 词表错配 → 需配置对照
+# 机械臂只跑能干净机械化的 4 类（authz_input / cleanup_coverage / contract_drift / audit_coverage）。
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -253,10 +308,45 @@ def detect_contract_drift(code: str):
     return out
 
 
+# ── audit_coverage:敏感操作方法缺审计记录(054 Audit-coverage 镜头,语言无关)──
+SENSITIVE_NAME = re.compile(
+    r"(grant|revoke|reset|reactivat|unlock|impersonat|elevat|rebind|"
+    r"set[_]?status|change[_]?password|reset[_]?password|disable[_]?user|enable[_]?user)",
+    re.I,
+)
+PY_DEF = re.compile(r"^(?P<i>\s*)def (?P<name>\w+)\s*\(")
+JAVA_DEF = re.compile(
+    r"^(?P<i>\s*)(?:public|private|protected)[\w\s<>\[\],]*?\s(?P<name>\w+)\s*\([^;]*\)\s*\{?\s*$"
+)
+AUDIT_TOK = re.compile(r"audit_log|record_audit|recordAudit|auditService|@AuditLog|audit\.|writeAudit", re.I)
+
+
+def detect_audit_coverage(code: str):
+    """敏感操作方法体(或紧贴的方法级注解)无审计 token → 取证盲区。认 Python def 与 Java 修饰符方法头。"""
+    lines = code.splitlines()
+    out = []
+    for i, ln in enumerate(lines):
+        m = PY_DEF.match(ln) or JAVA_DEF.match(ln)
+        if not m or not SENSITIVE_NAME.search(m.group("name")):
+            continue
+        ind = len(m.group("i"))
+        body = []
+        for j in range(i + 1, len(lines)):
+            nx = lines[j]
+            if nx.strip() and (len(nx) - len(nx.lstrip())) <= ind:
+                break
+            body.append(nx)
+        prev = lines[i - 1] if i > 0 else ""   # Java @AuditLog 注解常在方法上一行
+        if not AUDIT_TOK.search("\n".join(body)) and not AUDIT_TOK.search(prev):
+            out.append((i + 1, "敏感操作方法无审计记录"))
+    return out
+
+
 MECHANICAL: dict[str, Callable[[str], list]] = {
     "authz_input": detect_authz_input,
     "cleanup_coverage": detect_cleanup,
     "contract_drift": detect_contract_drift,
+    "audit_coverage": detect_audit_coverage,
 }
 
 
