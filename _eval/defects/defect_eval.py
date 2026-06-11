@@ -48,6 +48,7 @@ class Fixture:
     summary: str
     clean: str              # 修好的变体（测 FP）
     provenance: str         # 追到真实缺陷事件
+    lens_status: str = "folded"  # folded=镜头已折进 skill（S3 确认其有效）/ candidate=demand-pull 新类、镜头待折（S3 标缺口）
 
 
 FIXTURES: list[Fixture] = [
@@ -218,6 +219,56 @@ FIXTURES: list[Fixture] = [
         ),
         provenance="OA master-audit H7 grantRole/grantPermission+TotpReset 家族零审计（operator 核;2026-06-11 复核 still_open;054 Audit-coverage）",
     ),
+    # ── disabled_guard（带临时/勿提交标记的守卫被注释却进 release 线）→ 070（fold-candidate）──
+    # demand-pull 自 NEW-1:D-031 循环 2026-06-11 抓到的「他人当日引入的新缺陷」。镜头尚未折进 070
+    # (070 现有「Dead guard」= 结构性死守卫,本类「被注释旁路的活守卫」是其邻类、未覆盖)→ lens_status=candidate,
+    # S3 在此扮演「标缺口」角色(D-030):真缺陷类可测,但 070 还抓不到 = 下轮 D-019 fold 候选。
+    Fixture(
+        id="disabled_guard_01", defect_class="disabled_guard",
+        skill="070 low-quality-code-detection (Disabled-guard)", severity="high",
+        buggy=(
+            "def submit_address_ticket(param):\n"
+            "    # [临时·测试旁路·测完恢复·勿提交] 今天处封板期内，注释以跑通流程\n"
+            "    # if is_in_locked_window(now()):\n"
+            "    #     raise LockedWindowError(param.eid)\n"
+            "    return create_ticket(param)\n"
+        ),
+        marker="勿提交",
+        summary="带勿提交标记的合规守卫被整段注释旁路、却已进 release 线 → 控制在窗口内失效",
+        clean=(
+            "def submit_address_ticket(param):\n"
+            "    if is_in_locked_window(now()):\n"
+            "        raise LockedWindowError(param.eid)\n"
+            "    return create_ticket(param)\n"
+        ),
+        provenance="OA NEW-1 USDT 封板期临时旁路 abb61260（operator 核;commit 注释自带「勿提交」却 merge 进 origin/master;070 Disabled-guard fold-candidate）",
+        lens_status="candidate",
+    ),
+    Fixture(
+        id="disabled_guard_02", defect_class="disabled_guard",
+        skill="070 low-quality-code-detection (Disabled-guard)", severity="high",
+        buggy=(
+            "public void submitAddressTicket(Param param) {\n"
+            "    // [temporary bypass · restore after E2E · do not commit] window check off to run flow\n"
+            "    // if (isInLockedWindow(now())) {\n"
+            "    //     throw LockedWindowException.of(param.getEid());\n"
+            "    // }\n"
+            "    createTicket(param);\n"
+            "}\n"
+        ),
+        marker="do not commit",
+        summary="带 do-not-commit 标记的守卫被注释旁路、却已提交（Java 形态，直接镜像 NEW-1）",
+        clean=(
+            "public void submitAddressTicket(Param param) {\n"
+            "    if (isInLockedWindow(now())) {\n"
+            "        throw LockedWindowException.of(param.getEid());\n"
+            "    }\n"
+            "    createTicket(param);\n"
+            "}\n"
+        ),
+        provenance="OA NEW-1 同类 Java 形态（070 Disabled-guard fold-candidate）",
+        lens_status="candidate",
+    ),
 ]
 
 # 已记录但需 call-graph / dataflow / 跨文件 schema、机械纯扫描抓不准 → 归 LLM/定期审计臂（诚实，同 D-030）：
@@ -227,7 +278,11 @@ FIXTURES: list[Fixture] = [
 #   · C1 双签 quorum 死码 / C2 同人双签塌缩 / H6 无锁并发 → 需 dataflow / 缺失守卫推断
 #   · H1/H2 wflow 端点缺失 → 需跨服务 caller↔server 契约(093 cross_service_contract)
 #   · H3/H5 状态门读不存在字段 → 需实体字段集(跨文件)  · C3 撞唯一键 → 需 schema  · H8 词表错配 → 需配置对照
-# 机械臂只跑能干净机械化的 4 类（authz_input / cleanup_coverage / contract_drift / audit_coverage）。
+# NEW-1(2026-06-11 D-031 第二次复核抓到的「他人当日引入新缺陷」= USDT 封板期守卫被「勿提交」临时旁路却进
+#   release 线)也能干净机械化 → 收为 disabled_guard 类(双信号共现:旁路标记 + 邻近被注释的 throw/raise)。
+#   它的镜头尚未折进 070(070 现有「Dead guard」是结构性死守卫、未覆盖「被注释的活守卫」)→ lens_status=candidate,
+#   S3 在此扮演「标缺口」:真缺陷可机械测、但 070 现状抓不到 = 下轮 D-019 fold 候选(demand-pull,印证 D-030)。
+# 机械臂跑 5 类（authz_input / cleanup_coverage / contract_drift / audit_coverage = 已折;disabled_guard = fold-candidate）。
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -342,11 +397,41 @@ def detect_audit_coverage(code: str):
     return out
 
 
+# ── disabled_guard:临时/勿提交标记 + 邻近被注释的守卫(throw/raise)= 旁路守卫已提交 ──
+# 双信号共现才报(保守、低 FP):光有 marker 或光有注释 throw 都不报,需两者邻近(NEW-1 两者都有)。
+BYPASS_MARKER = re.compile(
+    r"临时|勿提交|测后恢复|测试旁路|temporary|temp\s*bypass|\bbypass\b|restore after|do\s*not\s*commit|don'?t commit|TODO.*restore",
+    re.I,
+)
+COMMENTED_GUARD = re.compile(r"^\s*(#|//)\s*.*\b(throw|raise)\b", re.I)
+
+
+def detect_disabled_guard(code: str):
+    lines = code.splitlines()
+    out = []
+    for i, ln in enumerate(lines):
+        s = ln.strip()
+        if not ((s.startswith("#") or s.startswith("//")) and BYPASS_MARKER.search(ln)):
+            continue
+        seen = 0
+        for j in range(i + 1, len(lines)):       # marker 后邻近窗口内找被注释的守卫
+            if not lines[j].strip():
+                continue
+            seen += 1
+            if COMMENTED_GUARD.match(lines[j]):
+                out.append((i + 1, "临时/勿提交标记 + 被注释的守卫(throw/raise) = 旁路守卫已提交"))
+                break
+            if seen >= 4:
+                break
+    return out
+
+
 MECHANICAL: dict[str, Callable[[str], list]] = {
     "authz_input": detect_authz_input,
     "cleanup_coverage": detect_cleanup,
     "contract_drift": detect_contract_drift,
     "audit_coverage": detect_audit_coverage,
+    "disabled_guard": detect_disabled_guard,
 }
 
 
@@ -403,7 +488,7 @@ def run_mechanical():
             continue
         r = score_fixture(fx, det)
         rows.append((fx, r))
-        ps = per_skill.setdefault(fx.skill, {"recall": [], "fp": [], "loc": []})
+        ps = per_skill.setdefault(fx.skill, {"recall": [], "fp": [], "loc": [], "lens": fx.lens_status})
         ps["recall"].append(1 if r["recall_hit"] else 0)
         ps["fp"].append(1 if r["fp"] else 0)
         ps["loc"].append(1 if r["localized"] else 0)
@@ -433,7 +518,8 @@ def main():
         n = len(m["recall"])
         rec = sum(m["recall"]) / n
         fpr = sum(m["fp"]) / n
-        print(f"  recall={rec:.2f}  FP-rate={fpr:.2f}  n={n}  · {skill}")
+        tag = "  ⟨lens 已折,S3 确认有效⟩" if m["lens"] == "folded" else "  ⟨lens 待折=fold-candidate,S3 标缺口:recall 测的是 detector 可机械化、非 070 现状⟩"
+        print(f"  recall={rec:.2f}  FP-rate={fpr:.2f}  n={n}  · {skill}{tag}")
 
     # ── scorer 自检（无需 key）：用 mock「LLM 输出」证 scorer 端到端可判 ──
     print("\n[scorer 自检] mock 输出验证机械判据（不靠 LLM 相似度，规避 D-012）：")
