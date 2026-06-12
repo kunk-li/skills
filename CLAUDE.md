@@ -63,6 +63,16 @@
 7. `docs/skills_workflow_v2.md` ← 157 skill 全景
 8. 外部参考:`D:/projects/python/ai_work/video/cinemaai/CLAUDE.md`(CinemaAI 项目自己的 context)
 
+## 🔒 强制红线(每会话必守,不可由子任务/agent/workflow 绕过)
+
+> 用户 2026-06-12 拍板的强制项。任何 session、任何子任务都先守这条。
+
+- **其他项目(OA `hub-oa`/`hub-oa-prd`、dream_true,以及任何不属于本 pilot 的仓)的 PRD 与代码:永不修改,只有查看权限。** 只能 `git show`/`git grep`/`Read` 读,绝不 edit/write/commit/rebase/动 git 状态。
+- **写操作只允许落在:本工作目录 `D:/work/资料/skills/` + 我自己的 pilot 产物区 `D:/projects/skills-pilot/`。** 别人的仓一律只读。
+- 这条对**子任务、Agent、Workflow 里的 agent、任何形式的任务**一律生效——不能借子代理或工作流绕过(派 agent 前在 prompt 里写明只读铁律)。
+- 给别人的改动一律以**文档形式提建议**(可按不同收件人分多份文档),绝不直接改他们的资产。
+- **文档编写规则:少符号**(平实叙述,别堆符号/表格/emoji);**问题必须列成「问题点 + 问题出现所在位置(file:line/symbol)」**。
+
 ## 绝对不要做的事
 
 1. ❌ 不要让我在已经决策过的事情上重新选(查 DECISIONS.md 先)
