@@ -71,7 +71,8 @@
 - **写操作只允许落在:本工作目录 `D:/work/资料/skills/` + 我自己的 pilot 产物区 `D:/projects/skills-pilot/`。** 别人的仓一律只读。
 - 这条对**子任务、Agent、Workflow 里的 agent、任何形式的任务**一律生效——不能借子代理或工作流绕过(派 agent 前在 prompt 里写明只读铁律)。
 - 给别人的改动一律以**文档形式提建议**(可按不同收件人分多份文档),绝不直接改他们的资产。
-- **文档编写规则:少符号**(平实叙述,别堆符号/表格/emoji);**问题必须列成「问题点 + 问题出现所在位置(file:line/symbol)」**。
+- **文档编写规则:少符号**(平实叙述,别堆符号/表格/emoji);**问题必须列成「问题点 + 问题出现所在位置」**。
+- **输出文档里的位置必须是详细完整地址**(用户 2026-06-12 第二条红线):完整文件路径(仓库相对或绝对,从仓库根写全,如 `hub-plugin/hub-plugin-sys/src/main/java/com/hub/oa/sys/modular/expense/service/impl/OaReimbursementServiceImpl.java`)+ 行号 + symbol。**不能只写类名/方法名/「约 X 行」/裸文件名**;让收件人能直接定位到。同 [[always-full-file-paths]](回复用完整路径)的文档版延伸。
 
 ## 绝对不要做的事
 
