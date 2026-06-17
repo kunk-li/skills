@@ -395,6 +395,30 @@
 - **真 G2 动作仍是社交动作**(日循环替代不了):master-audit 12 条 + pre-ship 门禁 + 2 detector-gate 打包送 OA release owner,趁他们正改双签时机最佳。
 - **不复议**:OA 循环定位(dogfood/S3,非 G2);reverify 12/12 still_holds(事件事实)。
 
+## D-032 · full-audit 四道闸方法经 OA 团队 triage 验证 = 确认层近零假阳、不认可层 = 团队认同我的下沉判断
+
+- **日期**:2026-06-15(session-3)
+- **事件**:OA 团队对全量审计模块 02/03(31 条)逐条 triage:新提 9 个正式禅道工单(#2970-#2978 带严重度)、已存在复用 5(#2947/#2948/#2949已修/#2954/#2955/#2957)、跨模块归他人 5、不认可 12。
+- **关键数据**:**12 条不认可 100% 落在我自己已分的「潜伏 / 核实正常 / 对抗推翻 / 诚实降级」非确认层,无一条是我确信判的 bug**。我的「确认问题」层(HIGH/MID-HIGH operator 真基线亲核)近乎全被采纳为新提或已存在工单。
+- **四道闸各自被独立验证**:① **基线完整性门救场**——quickLoginEnabled 我用 git show 真基线把 high 纠成 low-mid 潜伏、明指 L55 有服务端守卫,团队拒理由正是 L55 守卫(否则按旧工作树误报会递个 high 假阳给团队)② **对抗复核门**——4 条 workflow 误报(三方同步签 / 清退不清 TOTP / 双 L6 三主体 / 内部 HMAC)团队拒 = 我 workflow 对抗层早已推翻的 N1/N2/N3/N6 ③ **活码 vs 僵尸门**——僵尸/配置门控项(doLoginByForB/C、callback_query、TgSigner、Widget devMode)团队拒「不可达 / 无活攻击面」④ **诚实降级**——jwt_blocklist 我标「非无状态 JWT 危机、sa-token uuid 会话等价」,团队拒理由一字不差。
+- **结论(指北极星)**:38% 不认可不是方法失败,是方法**诚实分层**在起作用——把没把握的下沉标清楚,团队拒就是认同;确认层真实 FP 率 ≈ 0。**= full-audit(PRD-first + 四门 + workflow 对抗 + operator 真基线亲核)产出 triage-clean 交付件的首个团队级证据**,强于 cold-read(5 发现→4 bug),这是 2 模块→9 新 bug 入库带定级。
+- **诚实边界**:测试已确认入库 ≠ 研发已 fix(看后续引用 #2970-#2978 的 fix commit);仍是 N=1 内 detection 侧 G2(团队消费我审计),非团队用 skills 建产品。
+- **对 D-031 全量审计的影响**:方法成熟度证据 +1,但 17 铺开仍守每模块 operator 真基线亲核——本轮正是亲核 + 基线门挡住假阳才换来零假阳确认层;**确认「先亲核再交、四门必走」对,不放宽**。
+
+## D-033 · 「四道门」verify-before-claim 预检 + reality-finding 6 字段格式 折进 093(D-030 demand-pull 又一次兑现)
+
+- **日期**:2026-06-16(session-1)
+- **决定**:把 OA 全量审计(模块 01-04)反复用出的「PRD-first 审计四道硬门」+ 团队钦定的 6 字段 finding 格式,折进 `093-quality-gate-check`(N260),作为 reality-check finding 的**发出纪律**。优化现有、**库仍 157**(D-019)、**通用零项目字样**(D-023)。
+- **折入内容**:
+  - ① **四道门 = verify-before-claim 预检纪律**(独立 H2 段,与既有四轴 built_vs_spec/reverse_coverage/cross_service_contract/money_flow_completeness **正交**——四轴找候选,四道门判候选能否作为 confirmed 发出):Gate1 canonical-first(下「需求未定义/未规定」前先读权威 spec)/ Gate2 跨名反查+端到端可达(交叉引用 §reverse_coverage+§cross_service_contract,加对称陷阱:over-claim missing 与 over-correct implemented 两向都假阳)/ Gate3 活码 vs 僵尸(交叉引用 cross_service 第4型 wired_but_unused + 070 死 guard,加「未证在线前不评质量、不信为真实现」)/ Gate4 基线完整性(把 cross_service 的 release-ref 提醒泛化成横切所有 reality 断言)。任一门未过 → 降级 provisional/unknown/deviation 交人裁。
+  - ② **6 字段格式** = symptom/code_evidence/spec_basis/impact/regression_test/source,**fix-direction 故意省略**(合红线:只报现象证据、修法 owning team 定);code_evidence/spec_basis 精确定位;regression_test = D-018 distill 在 per-finding 粒度;与 blocker_registry.resolution_path 写明分工(它是已确认 blocker 的清障追踪,不是代码修法)防矛盾。
+  - ③ **R10_reality_finding_contract** 契约规则:confirmed reality finding 必带 6 字段 + 过适用四门,否则降级(降级非 reject,与「发现器非 per-PR 硬门禁」+ evidence_confidence 对齐)。
+- **理由**:四门在 OA 模块 01-04 审计**反复用出**且团队 triage **反向验证有效**(D-032:12 条不认可 100% 落在四门下沉的非确认层);6 字段是团队钦定格式、已落官方缺陷管线(#2991-#2997)。= **D-030 demand-pull**(真用→暴露/验证方法→折进库),非库存驱动。
+- **验证**:ultracode workflow(map→design→3 对抗复核 lens〔generic/duplication/coherence 全过〕→synth,8 agents/460k tokens)设计+对抗验证,operator 落地+逐项亲验——baseline 在原 zip 实跑确认 >350 行 strict warning **既有非本次回归**;改后 384 行,validator 非 strict 0 error exit 0、strict 仅那条既有 line-count warning(零新 error);grep 全文零项目字样;rezip round-trip entry list 与原 zip 23 条完全一致;**库 157**。
+- **诚实边界**:`scripts/test_skill.py --strict` 因 SKILL.md >350 行**改前(354)就红、改后(384)仍红**=既有失败、非本次回归、非阻断(非 strict CI 绿);四门折入**未真 dogfood 反验**(下次拿真模块当 ground truth,看新一轮审计是否正确触发四门 + 按 6 字段产出)。
+- **不复议**:折入有效性 + 归属(reality-finding 发出纪律归 093);四门措辞可按真用继续优化(同 D-019/D-023)。
+- ✅ **dogfood 反验有效(2026-06-16 同日,模块 05 I1_bonus)**:把四门 + 6 字段在真模块 05 跑(workflow wgsu7rs1g,75 agents/5.3M tokens,基线 c2c11c8f,每 agent 显式跑四门)+ operator 亲核四条最重 → 确认 24 + 潜伏 1 + 待产品 1 + 推翻/正常 4。**四门 demonstrably 起效**:最硬证据 F-I1-020——初判「I2→I1 主流程整体未实现」的 S2 红线,Gate2 跨名反查发现异名 live+单测通道(OaBonusPlanController.publish→publishWithDualL6→createOrSubmit + I2_PUBLISH_INBOUND 审计,operator git show 实证)整条假阳推翻;另 3 条(F-I1-006/007/R1-02)经 Gate2/3 降为正常,多条 over-severity 经 Gate2 降级,F-I1-014 经 Gate3 判潜伏,R1-01 经 Gate1+TODO 判待产品;6 字段输出全干净;无一门误杀真缺陷。**Gate4 又对我自己救场**:工作树落后 origin/master 329 commits,审计全钉 c2c11c8f。= 从「机制入库」升「dogfood 反验有效」。**诚实**:四门只过滤「缺陷在基线是否真存在」,排不了运行时业务影响优先级(FX 红线单币种被掩盖、F1 僵尸连锁需集成测试);本轮无 operator 抓出过度断言(03/04 各抓到过,本轮零)。落 `D:/projects/skills-pilot/oa-pilot/full-audit/05-bonus.md`。
+
 ---
 
 ## 已被推翻 / 修正的决策
@@ -419,3 +443,26 @@
 - **推翻理由**:<什么数据 / 什么事件让我们改主意>
 - **教训**:<下次怎么避免同类错判>
 ```
+
+
+## D-034 — 三条系统性缺陷类折进 051/052 的 N170 设计硬规则(D-030 demand-pull 又一次兑现,从方法侧扩到设计侧)
+
+- **日期**:2026-06-17(session-2)
+- **背景**:OA 全量审计 01-18 反复撞见、且被团队 triage 反向验证有效的跨模块系统性缺陷,折成通用设计硬规则进 N170 现有 skill(verify-first 确认是真 gap 再加;通用零项目字样 D-023;库仍 157 D-019)。
+- **决策**:
+  - **051-audit-trail-design 加 R08_audit_write_durability(reject)**:审计写的持久性必须相对业务提交定义——emitted-event ≠ durable-record;审计写与业务提交解耦(异步/独立事务/best-effort)时必须有丢失检测 + 对账或重放,禁止业务已提交而审计可静默丢失且无检测。与 R02 append-only(防改写已写入记录)正交。来源=审计 #13 平台审计异步旁路非同事务=04/06/12/14/16 审计缺口总根(并在 06-17 薪酬回归分析里再确认该异步架构)。
+  - **052-authorization-model-design 加 R08_grant_ceiling_enforced(reject)**:授予/改派/角色变更点必须强制授予上限不变式(授出权限集合 ⊆ 授予方自身可授出集合);端点 can-call 鉴权门 ≠ what-can-be-granted 上限,两者都必须有。与 R02 SoD 正交。来源=审计 #14 提权 S1(无角色层级校验,低层级可授高层级)。
+  - **052 加 R09_lifecycle_full_revocation(reject)**:主体终止/暂停态转换必须枚举并原子吊销全部能力面(次要/代理角色、已委托授予、长期令牌/会话、二次验证登记、渠道访问等);部分吊销留终止主体仍可操作。与 R03 delegation TTL 正交。来源=审计 #07 清退不清令牌 / #12 冻结员工仍可考勤。
+  - 每条同步落进四处镜像(v2-contract Hard gate rules 表 + checklist + SKILL.md inline rule_results yaml + common-failure-modes F11/F12)+ Required-output-schema 字段 + CHANGELOG;rule_results 区间 051→R01-R08、052→R01-R09。
+- **方法**:ultracode workflow(run wf_b3089341-6c1,13 agents)草拟 + 每条 3 镜头对抗验证(通用零项目字样 / 非重复 R01-R07 / 设计 altitude + 抓准类);altitude 镜头把规则从机制枚举改成属性锚定(051 耦合模式列举非穷尽;052 授予上限泛化成 ⊆ 自身可授出集合,避免误拒 capability 模型)。operator 精确字符串替换 apply + 写新 zip 验证(frontmatter utf-8 复刻校验 + inline yaml safe_load + 零项目字样 grep + namelist 18 原序保留)后替换原文件;quick_validate.py 的 exit1 是其 Windows gbk 读 UTF-8 的既有 bug(对原始未改 skill 同样崩),非本次问题,已用 utf-8 复刻验证替代。
+- **影响**:demand-pull 从「审计方法折进 093」(D-033)扩到「审计发现的缺陷类折进设计侧 051/052」=库的设计闸现在能在设计期挡掉这三类最严重的系统性缺陷;真团队 triage 是反向验证(#13/#14/#07/#12 都被独立确认)。**✅ 续(06-17 session-2,用户「需要」)= detection 侧两模式也折完**:054 加 R08_control_enforcement_verified(缓解 critical/high 威胁的控制必须核实真生效、占位桩按 missing 计入 residual risk,把 F2 从建议升硬规则)+ 070 扩 dead_guard 检测目录 3 形态(stub_control 触发却空转 / no_producer 有读无写僵尸 / unreachable_state 再入态零入边卡死)+ 3 rule_kind 进 catalog。**5 个系统性模式全折完**,跨 4 skill(051/052/054 设计侧 4 规则 + 070 检测侧 3 形态),库仍 157、通用零项目字样(banned 计数不增法验)。诚实:折入未真 dogfood 反验(下次拿真设计任务看 R08/R09 是否正确触发);改动仅在 skills 库(可写区),零碰他人仓。
+
+
+## D-035 — 折进库的 5 条规则经第二项目(dream_true)跨域 dogfood 坐实通用 + 收 5 条 round-3 精化信号
+
+- **日期**:2026-06-17(session-1)
+- **背景**:D-034 把 OA 审计(Java·HR/财务)反复撞见的系统性缺陷折成 051/052/054/070 的通用规则。需验证这泛化是真通用还是贴 OA。拿 dream_true(Python·AI 视频·完全异域)做第二项目审计 + 跨域 dogfood(用户「用这套验证下 dream_true」)。
+- **决策/结论**:
+  - **规则跨域通用坐实(D-023 验证)**:审 dream_true 5 域@58f9158,折叠规则在异域真找出 PRD 自承的结构缺口,零结构性误报于反例。dogfood_verdict 5 fired_correctly / 5 na(正确判不适用)/ 5 false_positive(多为误归因非凭空报)。**070 系迁移性最强**:no_producer 命中 update_cost_amount 对账回填僵尸(三后端+协议全实现、生产零调用方,operator 亲核坐实)、unreachable_state 命中 WorkflowStatus.PAUSED 等零入边死枚举(operator 亲核全仓零限定使用);051_R08 钉资金落账持久性(spent 恒 0 不回填、script 二次扣费窗口)且监控≠审计边界正确克制;052/054 正确判不适用未强行命中。
+  - **收 5 条 round-3 精化信号(下次折/调措辞)**:① 070_unreachable_state 靶严格限「零入边非终态」,显式排除「入边存在但过窄/仅人工触发」(DEAD_LETTER)与「未接线的文档承诺分支」(style anchor 指向不存在字段)——本次 3 条误报全源于把这两类塞进零入边靶;② 070_no_producer 补「只定位结构 gap、其业务量级影响另判、勿在规则结论量化成本/损失」——build_resume_plan 被 ADR-0015 产物跳过稀释成本,规则 over-claim;③ **052_R08 需锋利区分 (a) 授予上限放大『授出 ⊄ 授予方自身集』(真靶) vs (b) 资源端点缺属主校验致 can-call 门过宽/IDOR**——dream_true AI job 越权(任意用户 cancel/delete 他人 job)是 (b) 被误配到 (a);**要么收窄 052_R08 只管授予上限,要么新增一条「resource owner enforcement」规则承接 (b)= 设计决策,待用户拍**;④ 052_R09 加范围门「仅当终止吊销是已 committed 需求才判缺陷;PRD 明示该协作/多主体能力本期不实现则判 rule_not_applicable 并降底座残留,不当确诊」;⑤ 051_R08 触发逻辑不改,固化排除提示「监控/可观测(best-effort trace、fire-and-forget 告警)非审计落账面、丢点可 by-design、判前先 Gate1 核 PRD 是否把该写持久性相对业务提交定义」。
+- **影响**:① demand-pull 的强证据再加一层——规则不止从 OA 折进来,还在第二个异域真项目找出真问题=真通用(D-023);② full-audit 方法在第二项目第二语言成立(map+verify+operator 亲核);③ dream_true 得 12 条观察件(`D:/projects/skills-pilot/dream_true-prd/AUDIT-2026-06-17-observations.md`);④ round-3 精化是 dogfood 自产的下一轮 demand-pull,其中 052_R08 split 是真设计决策待拍。**✅ 续(用户「1 2」)= round-3 五精化已应用 + 052_R08 走向已决**:051 R08 监控≠审计排除固化 / 052 R08 收窄只管授予量级 / 052 R09 范围门 / **052 新增 R10_resource_owner_enforcement(IDOR/BOLA,收窄 R08 误吸的资源属主校验,入现有 052 库仍 157)** / 070 unreachable_state 排除窄入边+空承诺、no_producer 去量化。apply 验证过(R01-R10 连续、banned 计数挡下 CHANGELOG 误写的项目名)、库仍 157。dream_true 观察件转团队版 HANDOFF-audit-2026-06-17(路径相对其仓根)。诚实:round-3 未再 dogfood 反验;observation 待用户转团队。verify-only:dream_true 全程只读、零碰 git;写只在 skills-pilot + skills 库。

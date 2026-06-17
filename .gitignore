@@ -10,3 +10,8 @@ _skilledit/
 # skill 编辑临时备份
 *.bak
 *.ORIG.bak
+# session 总结(本机记忆 ritual,内含内部状态/链路,不上远端)
+_sessions/
+# 公司周报/月报(内部归档,不上远端)
+周报/
+日报/
