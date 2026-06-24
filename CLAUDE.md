@@ -67,7 +67,8 @@
 
 > 用户 2026-06-12 拍板的强制项。任何 session、任何子任务都先守这条。
 
-- **其他项目(OA `hub-oa`/`hub-oa-prd`、dream_true,以及任何不属于本 pilot 的仓)的 PRD 与代码:永不修改,只有查看权限。** 只能 `git show`/`git grep`/`Read` 读,绝不 edit/write/commit/rebase/动 git 状态。
+- **其他项目(OA `hub-oa`/`hub-oa-prd`、dream_true,以及任何不属于本 pilot 的仓)的 PRD 与代码:永不修改,只有查看权限。** 读用 `git show`/`git grep`/`Read`;**绝不改其代码、不写入其文件、不 commit / push / rebase 其分支、不替其提工单**。
+  - **澄清(用户 2026-06-23 拍板红线本意)**:红线禁的是「改他人代码 / 写入文件 / 提交 / 推送」,**不是「动 git 状态」这个动作本身**。把本机只读 clone 同步到远端(`git fetch`,或干净工作树上 `git pull` / `git merge --ff-only` 纯快进——不改代码内容、不写文件、不 commit、不 push)**不属禁区,owner 要同步就直接同步**,别再当红线走三轮。基线纪律另算:同步后若工作树 ≠ 目标 ref,审计仍用 `git show <ref>` 对准、不信工作树。
 - **写操作只允许落在:本工作目录 `D:/work/资料/skills/` + 我自己的 pilot 产物区 `D:/projects/skills-pilot/`。** 别人的仓一律只读。
 - 这条对**子任务、Agent、Workflow 里的 agent、任何形式的任务**一律生效——不能借子代理或工作流绕过(派 agent 前在 prompt 里写明只读铁律)。
 - 给别人的改动一律以**文档形式提建议**(可按不同收件人分多份文档),绝不直接改他们的资产。
@@ -102,3 +103,4 @@
 - CinemaAI PRD 是**外部 PM 写的**,不是我写的——别把 CinemaAI 当我的 Path A 产物
 - 我对 fluff / 长篇大论 / "你做得很棒"等套话过敏
 - **公司周报/月报固定归档位置**:`D:/work/资料/skills/周报/`(命名 `CD1-2026年第N周周报-Agent板块.md` / `CD1-2026年M月月报.md`)——别落 Downloads 或别处
+- **公司日报固定归档位置**:`D:/work/资料/skills/日报/`(命名 `CD1-YYYY-MM-DD-日报-Agent板块.md`,如 `CD1-2026-06-22-日报-Agent板块.md`)——**日报归日报目录,别塞进周报目录**(周报目录只放周报/月报)。教训:2026-06-22 把日报放进周报目录被用户纠。

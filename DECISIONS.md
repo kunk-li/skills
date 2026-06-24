@@ -466,3 +466,114 @@
   - **规则跨域通用坐实(D-023 验证)**:审 dream_true 5 域@58f9158,折叠规则在异域真找出 PRD 自承的结构缺口,零结构性误报于反例。dogfood_verdict 5 fired_correctly / 5 na(正确判不适用)/ 5 false_positive(多为误归因非凭空报)。**070 系迁移性最强**:no_producer 命中 update_cost_amount 对账回填僵尸(三后端+协议全实现、生产零调用方,operator 亲核坐实)、unreachable_state 命中 WorkflowStatus.PAUSED 等零入边死枚举(operator 亲核全仓零限定使用);051_R08 钉资金落账持久性(spent 恒 0 不回填、script 二次扣费窗口)且监控≠审计边界正确克制;052/054 正确判不适用未强行命中。
   - **收 5 条 round-3 精化信号(下次折/调措辞)**:① 070_unreachable_state 靶严格限「零入边非终态」,显式排除「入边存在但过窄/仅人工触发」(DEAD_LETTER)与「未接线的文档承诺分支」(style anchor 指向不存在字段)——本次 3 条误报全源于把这两类塞进零入边靶;② 070_no_producer 补「只定位结构 gap、其业务量级影响另判、勿在规则结论量化成本/损失」——build_resume_plan 被 ADR-0015 产物跳过稀释成本,规则 over-claim;③ **052_R08 需锋利区分 (a) 授予上限放大『授出 ⊄ 授予方自身集』(真靶) vs (b) 资源端点缺属主校验致 can-call 门过宽/IDOR**——dream_true AI job 越权(任意用户 cancel/delete 他人 job)是 (b) 被误配到 (a);**要么收窄 052_R08 只管授予上限,要么新增一条「resource owner enforcement」规则承接 (b)= 设计决策,待用户拍**;④ 052_R09 加范围门「仅当终止吊销是已 committed 需求才判缺陷;PRD 明示该协作/多主体能力本期不实现则判 rule_not_applicable 并降底座残留,不当确诊」;⑤ 051_R08 触发逻辑不改,固化排除提示「监控/可观测(best-effort trace、fire-and-forget 告警)非审计落账面、丢点可 by-design、判前先 Gate1 核 PRD 是否把该写持久性相对业务提交定义」。
 - **影响**:① demand-pull 的强证据再加一层——规则不止从 OA 折进来,还在第二个异域真项目找出真问题=真通用(D-023);② full-audit 方法在第二项目第二语言成立(map+verify+operator 亲核);③ dream_true 得 12 条观察件(`D:/projects/skills-pilot/dream_true-prd/AUDIT-2026-06-17-observations.md`);④ round-3 精化是 dogfood 自产的下一轮 demand-pull,其中 052_R08 split 是真设计决策待拍。**✅ 续(用户「1 2」)= round-3 五精化已应用 + 052_R08 走向已决**:051 R08 监控≠审计排除固化 / 052 R08 收窄只管授予量级 / 052 R09 范围门 / **052 新增 R10_resource_owner_enforcement(IDOR/BOLA,收窄 R08 误吸的资源属主校验,入现有 052 库仍 157)** / 070 unreachable_state 排除窄入边+空承诺、no_producer 去量化。apply 验证过(R01-R10 连续、banned 计数挡下 CHANGELOG 误写的项目名)、库仍 157。dream_true 观察件转团队版 HANDOFF-audit-2026-06-17(路径相对其仓根)。诚实:round-3 未再 dogfood 反验;observation 待用户转团队。verify-only:dream_true 全程只读、零碰 git;写只在 skills-pilot + skills 库。
+
+
+## D-036 — 北极星正解=「单兵 × skill 干出一个团队的产出」,team-adoption 不是目标(用户 2026-06-17 纠正)
+
+- **日期**:2026-06-17(session-1)
+- **背景**:本 session 我反复把北极星误框成「必须有一个外部团队采纳/跑这套 skill 才算数」,据此把今天一整天的 solo 工作(一个人审 OA 18 模块/折 5 类规则/跨域验证库通用)自贬成「detection 舒适区、没推北极星」。用户纠正:「目标就是一个人解决一个团队的任务。什么都要团队来跑,意义不是太大了。」
+- **决策(北极星正解)**:
+  - 北极星 = **杠杆**:一个 1-3 人单兵单元,用这套 skill 干出过去要一个团队才能干的活(从想法 ship 到生产)。CLAUDE.md「N 个小团队 × 1-3 人」本就是这个意思——单位是单兵/微团队,N 只是规模。
+  - **team-adoption / 别的团队来跑,不是目标、也不是前提**。它顶多是「产出够不够真/够不够团队级」的一个【验证信号】(G2 证明我找的 bug 是真的、设计是可落地的);但「必须有团队采纳才算数」是错的 bar。而且追求别人采纳/marketplace 本就是 CLAUDE.md 明列的 anti-goal。
+  - 判断一个动作推不推北极星,标准是:**它有没有让「一个人 + skill」产出了「团队级」的成果、把任务真的解决?** 不是「有没有团队来跑」。
+- **影响**:
+  - 重判今天 = **强北极星**:我一个人用 skill 做了团队级的活(审一整个项目 18 模块、强化库、跨域验证库通用)。之前「舒适区/没推北极星」的自评是错的,基于错的 bar。
+  - 重判 Path B 跑 OA 模块:对的事,但尺子是「这份技术方案够不够团队级——一个人能不能据它 ship、不需要一个设计团队」,不是「OA 会不会采纳」。
+  - G2/team triage 仍有用(验证产出是真的),但降级为「验证信号」非「北极星本身」。记忆 [[north-star-solo-leverage]] + [[oa-live-n2-candidate]]/[[dream-true-g2-closed-loop]] 的「team adoption」措辞按此理解。
+
+
+## D-037 — skill 系统的价值机制:PRD 必然不完整,流程是下游「问题最小化器」(用户 2026-06-17,D-036 的兑现机制)
+
+- **日期**:2026-06-17(session-1)
+- **背景**:用户经几轮把愿景钉成机制:「实际开发 PRD 不可能面面俱到全描述;需要后续通过 skills 将问题尽量减小化。」配 Path B forward dogfood 实据(skill 链正向把团队 PRD 漏掉的 IDOR/提权/审计三横切洞逼进设计)+ operator 核团队代码(6b3c4e31):团队对这些洞是开发各自隐式拍脑袋填——IDOR 填成 org 数据范围(够用)、#14 同类填成裸奔提权 S1(崩)。
+- **决策(机制正解)**:
+  - PRD 结构性不完整是【常态、不是缺陷】,别追完美 PRD。它是业务需求文档,系统性漏横切/非功能约束(IDOR/审计耦合/授予上限/并发/幂等…),因为那些是"所有模块通用、大家都懂"的隐性约束。
+  - skill 流程 = 下游【问题最小化器】(尽量减小化,非消灭),三阶段补:设计期注入(N170 051/052/054/049/050)→ 静态拦截(N210 070/072/073/074)→ 测试验证(N260 095-099);硬规则触发【不依赖 PRD 写没写】。
+  - 两类分治:① 非功能/横切漏洞 → 规则驱动【系统性注入】,随规则集完整度趋近零;② 业务逻辑歧义(PRD 无法预先拍)→ 早期【显式化为决策点】最小化成本(决策一次、不让 N 个开发各自猜→防走偏/不一致/返工/沟通),决策本身仍归人/产品。
+  - 引擎 = 棘轮:detection(审计找横切类)→ fold(折成硬规则)→ prevention(流程正向自动注入);每折一条,流程对该类永久覆盖、对所有未来 PRD 生效。
+- **影响**:
+  - 这是 D-036(solo 杠杆)的兑现机制;benchmark(skill vs 团队)尺子 = 残余问题最小化程度,不是零缺陷。
+  - 后续折规则优先级 = 把横切漏洞类的规则集补全(缺口:限流/熔断/超时、错误码契约一致性等仍未成硬规则)。
+  - 本 session 一整天 = 在转这台棘轮(7 条新规则 + Path B 正向证生效)。记忆 [[north-star-solo-leverage]] 已补此机制。
+
+
+## D-038 — B3 调岗做成第一个完整三层 benchmark(skill 生成 vs 团队生成,defect-prevention 计分)= D-036/D-037 的首个完整实据
+
+- **日期**:2026-06-22(week-of-06-22 计划执行)
+- **背景**:detection 侧(OA 01-18 审完)是舒适区,北极星增长前沿=正向生成三层 benchmark。之前只做完设计层一层(B3-transfer-tech-solution)。本周按 `D:/projects/skills-pilot/oa-pilot/benchmark-b3/PLAN-week-of-2026-06-22.md` 把 B3 补齐到 PRD/设计/代码三层全对照、全计分。
+- **做了什么**:Gate4 钉基线(hub-oa 4379d56d 工作树落后 408 全程 git show / hub-oa-prd 3e423f9)。Layer1 Path A workflow(6 agents 零限流)从团队需求工程工作区(非成稿 PRD)盲重生成 B3 PRD + 4 设计硬规则族(025/051/052/054)通用应用 35 finding;operator 逐条核团队成稿 canonical PRD。Layer2 复用 Path B + 在 real master 重基线三洞。Layer3 对 3 横切控制点 targeted 生成实现/契约 + 同库对抗 verify,operator 比团队真码 @4379d56d。产物全落 `…/benchmark-b3/{A-prd-skill-vs-team.md, B-design-rebaselined.md, C-code-skill-vs-team.md, B3-three-layer-scorecard.md}` + `_pathA-*/_layer3-*`。
+- **校准结论(future session 别重论)**:
+  - skill 的 defect-prevention **最强在需求/设计层 = 把团队流程结构性盲掉的横切约束逼成显式问题点**;**代码生成是方向对、需硬化的草图**(同库对抗 verify 抓出 CP1 TOCTOU/403-404 泄露、CP2 resolver 留空可恒放行、CP3 旧切面未拆=draft 非成品,但 skill 链内部 discover→verify 闭环跑通)。
+  - **三层收敛是最硬证据**:grant-ceiling(052R08,同 #14)+ 审计耦合(051R08,同 #13)两个核心增量在需求层(团队 PRD grep 零命中 / §4.5.3 同事务 vs §4.5.6 Kafka 异步矛盾)、设计层(skill 逼出闸/耦合分类)、代码层(executeApprovedTransfer:961 无等级闸 / 平台审计 @Order(100) post-commit + DLQ)三处独立可见互相印证=同一洞从需求漏到代码=D-037 实证。
+  - **诚实分层**:① skill 输入是设计感知的需求工作区非纯业务白纸,论点是「给同样输入能否逼出团队盲掉的横切」非「凭空重导设计」;② 「需求缺显式声明」≠「系统有可利用漏洞」(grant-ceiling/实例属主是真代码缺口,审计耦合团队 DLQ 部分兜住);③ benchmark 算残余问题最小化程度(D-037)非零缺陷;④ 三层都对团队已覆盖处如实记功不贪功(052R09/原子事务/工号唯一/撤回本人/DLQ+重放=团队已有)。
+- **意义**:**第一个完整三层 datapoint**,比横向多铺设计层更硬;是 D-036(单兵×skill≈团队产出)经 D-037(流程是下游问题最小化器)机制的首个完整实据。引擎=detection→fold→prevention 棘轮:051/052/054 这批横切规则从 OA 审计 detection 折进库、本次在 generation 三层正向兑现。
+- **下一步选项(待用户定,非本决策锁死)**:① 扩第二模块做三层(验证非 B3 特例)② 代码层从草图推到「生成+团队既有测试跑过」一档 ③ 补横切规则集前沿缺口(限流/熔断/超时、错误码契约一致性)折进库。
+- **不复议**:B3 三层 benchmark 已完成(事件事实)+ 校准结论(skill 强在设计期显式化横切、代码生成是 draft)。记忆 [[north-star-solo-leverage]]。
+- ✅ **续(2026-06-22,用户「1 2 3」三个下一步全做,顺序 3→2→1)**:
+  - **#3 前沿横切规则折进库(库仍 157)**:053 加 `R08_resilience_stance_on_boundary_deps`(warn 级 R06 特化,跨边界 at_risk 依赖 mitigation 须就超时/重试(含刻意不重试)/级联保护/资源隔离四面各表立场 + by-design 豁免)+ 045 加 `R09_published_code_contract_stability`(reject,active 码语义/HTTP 相对上一 contract_fingerprint 无静默漂移,跨协议 transport waiver 豁免)。**对抗 verify 主价值是防膨胀**:两条草稿都被发现与现有内容重叠(053 resilience 已被 B07/R06 覆盖、045 碰撞已被 F3 覆盖+跨层一致是 044 的 altitude),收窄到真正正交残值(053=立场完整性、045=版本稳定)才折入。= discover→verify 闭环防 ADR-0018 自腐(D-030 反库存驱动)。通用零项目字样、namelist 保持、R01-R08/R01-R09 连续。诚实:两规则未真 dogfood(留下次),后被 #1 的 N1 部分兑现(见下)。
+  - **#2 代码层从草图到「硬化+真跑过」**:CP2 grant-ceiling 纯逻辑核硬化成独立可编译 Java + 回归/硬化测试,javac+java 10 passed/0 failed/exit 0(Java 21)。直接堵对抗 verify 的洞:resolver 返 Optional(空=fail-closed DENY 堵恒放行)、signerEid 空不放行不 NPE、退化封套构造期拒。`…/benchmark-b3/_layer3-hardened/`。证明 scorecard 里「代码生成是 draft、需硬化」的 draft 经一轮硬化纯逻辑核可达真跑过;集成仍需团队 build。
+  - **#1 第二模块 N1 费用报销验证 B3 非特例 = 泛化成立**:N1(money-flow+链上+审批)横切画像与 B3(authz/生命周期)鲜明不同。Layer 1 Path A(同规则集换 025/050/051/052/053)盲生成压出 **050 幂等 + 053 韧性为主面(各 5 missing),052 grant-ceiling 弱化成 implicit**(B3 恰相反)= 同一规则集随模块画像自适应触发。Layer 2 operator 亲核团队真码收敛:skill 050 R02 盲逼出的「资金写须 DB UNIQUE 双层」正是 `assertInvoiceNotDuplicated:1135` SELECT-only race 残洞;链上支付是 Phase-1 stub(未来需求,Gate3 判);withdraw 有属主门(团队覆盖)。**#3 刚折的 053 R08 在 N1 外部依赖(G1 汇率/链上 RPC/对象存储/TG Bot/UBO API)正确 fire = 新规则首次 dogfood 验证有效**。`…/benchmark-n1/N1-benchmark-summary.md`。诚实:N1 做 Layer1 全+Layer2 全+Layer3 聚焦一靶点(发票去重双层),非完整三横切点;泛化核心问题 Layer 1+2 已答。
+  - **合并意义**:D-038 从「一个模块三层」扩到「两个画像迥异模块都成立 + 棘轮规则集补前沿 + 代码层 draft 可硬化到真跑过」。北极星(D-036 单兵×skill 团队级产出)证据 +1,机制(D-037 流程是下游问题最小化器)在第二画像兑现。
+- ✅ **续2(2026-06-22,用户第二/三/四轮「1 2 3」)= 三迥异画像泛化 + 折入规则两道关全过 + 第三个控制硬化**:
+  - **前沿规则共折 3 条且全经对抗 verify 把关**:053 R08 韧性立场(warn 级 R06 特化)/ 045 R09 错误码版本稳定(reject)/ 048 R06 值快照一致性(warn 默认+reject 矛盾态+结构化豁免)。对抗 verify 2 条判冗余收窄(053/045)、1 条判真新颖(048 R06);**dogfood 9 盲判 9/9 fire 全对、048 R06 三分支全判对**(验 altitude 修法不 cry-wolf);045 R09 软边(waiver→NA)已微调。库恒 157。
+  - **代码层 draft→硬化到真跑过 = 3 个控制**:CP2 grant-ceiling(authz,10/10)、发票去重(money-flow 并发,11/11)、FxLockResolver(值快照,8/8),javac+java 全绿。draft-needs-hardening 在 authz/money-flow-并发/值快照三类一致;同库对抗 verify 每次抓出真实现 bug(恒放行 resolver / finally-删锁-早于-commit / amount 漂移+一致性自校缺)。
+  - **三迥异画像泛化(最强)**:B3 调岗(authz)主面 052 grant-ceiling、N1 费用报销(money-flow)主面 050 幂等+053 韧性、K1 考勤(并发-控制)主面 049 并发+054 控制强制。**同一套规则集三次自适应压出模块对应横切主面,每次 skill 盲发现↔operator 亲核团队真码收敛**(grant-ceiling↔无闸 / 发票R02↔SELECT-only race / **geo↔GeoVerifyServiceImpl 恒 PASS stub**)。D-034 折入的 054 R08 首次在真模块(K1 geo)命中 present-but-inert 安全控制。= 规则集自适应不是某画像特例,泛化在三画像立住。诚实:N1/K1 是 Layer1 全+Layer2 全(+N1 Layer3 三横切点),非 B3 那样全三层;geo/停登录是团队有意 Phase-1 分期非确诊。
+
+---
+
+## D-039 — 验证靠读当前代码(不靠 commit);并反查「团队改了但我没发现的」= skill 漏检盲区(用户 2026-06-23 拍板)
+
+- **日期**:2026-06-23
+- **纠正背景**:此前 G2 watch 一直靠「commit 引禅道# + 在途/并 master」追团队是否处置我的发现。用户纠正:研发可能自己发现就顺手改了、不提单不引号,盯 commit 会漏掉「静默修复」。
+- **决定(方法论,适用所有外部团队不止 OA)**:
+  1. **验证靠读码,不靠 commit**:对我检测出的**每一个**发现,去当前代码(对准目标 ref、不信工作树)读、看问题实际改了没(已修/未修/部分),给代码证据。不以 commit / 禅道# 为准——有些 bug 研发自己发现就顺手改了、从不引我的号。
+  2. **闭环 = 发现 → 读码验证是否解决 → 优化 skill**(不是发现就完)。
+  3. **反向维度(最有价值)**:扫团队代码的修改,找**团队改了、但我当初没检测出来**的安全/质量问题 →那是 skill 的**漏检盲区**;团队修了说明是真问题、我没发现说明 skill 该补 → 据此优化 skill 补盲区。
+  4. **目的**:skill 越补越完善 → 单兵用 skills 产出越强(北极星 D-036)。这把 G2 从「看团队有没有 commit 引我的号」升级成「看代码实际状态 + 反向学团队修了什么我没抓到」。
+- **守红线(不变)**:验证/反查全程只读(git show/Read 对准 ref、不碰 git 状态);产出是观察(现象+代码证据),不替团队下结论、不代提工单(红线三)。「漏检盲区」是对**我方 skill** 的批评、不是对团队代码的裁定。
+- **关系**:深化 D-018(发现器→裁定→沉淀)+ D-030(demand-pull skill 优化),把优化输入从「我发现的」扩到「团队修了我没发现的」。更新记忆 [[oa-live-n2-candidate]] 的 G2 盯法。
+- **不复议**:验证方式(读码非 commit)+ 反向学盲区维度已立。
+
+
+## D-040 — D-039 第二域(报销)跑通 = 库在「单点缺陷」已成熟,真盲区收敛成「跨站点一致性」家族(demand-pull 指向新前沿)
+
+- **日期**:2026-06-24
+- **事件**:D-039 验证循环推广到第二业务域=报销(workflow wf_f43da20a,34 agents/1.9M tok;基线 85902c6e→当前 master 03a891375,团队报销模块 1480 行重写 / 14 新文件)。读码验证我方 full-audit 01-expense 的 11 发现:**9 FIXED + 2 PARTIAL + 1 UNFIXED**,均当前码行级支撑(非 commit message)。反查盲区 25 候选 → 对抗 verify(默认怀疑+亲核归因+核现有规则覆盖)收成 **15 真盲区 / 10 否决**。
+- **两个校准结论(future session 别重论)**:
+  1. **库在「单点缺陷」类已成熟**:10 条否决多为已被现有规则覆盖(052 R10 资源属主/R11 default-deny、049 lock_decision_tree/S04/S05、050 R02 双层、051 R02/R08),或归因错(我方原始已点中换皮)。= 单点安全/质量缺陷库基本封口,继续在那挖边际递减。
+  2. **真盲区全收敛成一个家族 =「跨站点一致性不变量」**(单点检测物理查不出、须跨站点核全局不变量):聚合一致(当前记录已入聚合又被叠加=重复计入)、多实现一致(同规则两实现谓词方向相反、单边修复致分叉)、跨工件边界一致(同阈值散在应用码/部署脚本/工作流引擎且开闭不一)、单位一致(带单位量未归一化即比固定标量、工作流引擎条件站点常被只看主代码的审计遗漏)、事务边界一致(多表写无事务/事务内非事务副作用回滚不对称/审计写跨入口事务不对称)、枚举语义一致(枚举成员字面量复制漂移、语义重载后排除型过滤误吞)。
+- **折库方向(最高杠杆,待执行 + 带 dogfood 反验)**:070 承接 6 条(enum_member_literal_drift / aggregate_double_count / divergent_duplicate_logic / divergent_duplicated_boundary / unbounded_keyspace_no_ttl / 状态值语义重载回扫)= 主;048×2(跨工件/跨表单一事实源)/ 049×2(非原子限流 check-then-act + SELECT-then-update TOCTOU)/ 050(事务内非事务副作用回滚对称)/ 051(审计写跨入口事务对称,R08 细化)/ 032(带单位量归一化)/ 053(工作流引擎条件站点单位混比)/ 054(失败姿态矩阵,R08 横向扩)。
+- **诚实边界**:① 15 条均 generic+归因+防膨胀三关过,但**尚未真 dogfood 反验**——synth 自点名是「应补方向」非「已验证规则」;折库闭环 = 灌规则进 070/048/049/050/051/032/053/054 → 重跑同一 OA diff → 验新规则机械命中本批现象且不误伤 9 条已 FIXED ② 是否构成缺陷/严重度/立项由 OA 团队判,盲区是对我方 skill 的批评非对团队裁定;现象成立由 OA 测试按回归点确认;不代提工单 ③ 单域单项目信号,跨站点一致性是否真通用还需第三域或第二项目(如 dream_true)再验(同 D-035 跨域坐实纪律)。
+- **关系**:坐实 D-039(读码验证+反查盲区维度在第二域成立)+ D-030(demand-pull)+ D-037(棘轮 detection→fold→prevention)。把库的下一前沿从「补单点横切规则」明确为「补跨站点一致性/全局不变量检测」。文档 `D:/projects/skills-pilot/oa-pilot/verify-loop-expense-2026-06-24.md`。记忆 [[north-star-solo-leverage]]。
+- **不复议**:验证结果(9 FIXED 等)+ 「单点已成熟 / 真盲区=跨站点一致性家族」校准。折库具体规则文本与是否全折,留执行时按对抗 verify 逐条定(防膨胀)。
+- ✅ **续(2026-06-24,用户选「2」先验跨域再折)= 第三域(薪酬)坐实 D-040「跨站点一致性家族跨域通用」**:薪酬域 workflow wf_60930f0c(44 agents/2.66M tok;基线 85902c6e→master 03a891375,团队薪酬模块 132 文件/7933 行重写)。
+  - **读码验证 16 发现:4 FIXED / 9 UNFIXED / 3 PARTIAL**,全当前码行级支撑。**读码非 commit 兑现最强一次**:F8 四闸专属码/F4 哈希链虽 #2993/#2996 曾被 revert 仍以当前码判(已重新在位=FIXED);**F3-D14 不止 UNFIXED 还更糟**——闸口翻 PAY_EXECUTED 还落一条 PAYROLL_PAID 审计而 OA_PAY_ORDER 永停 PENDING=账面背离+审计谎报已付;F2 工资明细 UNFIXED(DB 仍可改,新哈希链是 batch 级非 per-record,单行原地改+批次合计不变检不出)。
+  - **反查盲区:33 候选 → 20 真盲区 / 13 否决**。13 否决多为已被 049/050/051/052/054 现有规则覆盖,或换皮(C2/C7 我方原始已列),或前提被亲核证伪=防膨胀正常工作。
+  - **D-040 坐实(强证据,非部分)**:cross-site-consistency **16/20=80% 主导**,与报销域(15 条)同为头号家族;**三个子型在两域同形复现**(divergent_duplicated_boundary 同概念多站点实现强度/审计不对称、同语义错误码协议状态分叉、同结构跨工件无单一权威源)=「家族跨域通用」最硬证据;同时薪酬独有 4 新子型(派生键双向一致性、control_basis_literal_drift、authoritative_inert_divergence、特权旁路跨等价路径不对称)→ **通用框架 + 域增量,二者不冲突**。
+  - **折库最高杠杆=070**(20 盲区命中 10 条):composite finding_kinds = divergent_duplicated_boundary / authoritative_inert_divergence / rogue_producer / control_basis_literal_drift / dominated_guard_unreachable / exclusion_guard_swallows_terminal_state;次=045(5 条,错误码族协议状态一致性 R10)/ 048(3,跨工件/派生键单一事实源)/ 049(3,链尾 TOCTOU+状态翻转原子)/ 052(2,break-glass 跨等价旁路对称)/ 054(3,present-but-inert 状态域 guard+代理边界覆盖)。
+  - **诚实**:两轮 synth 都自点名【未真 dogfood 反验】——折库闭环须用本批 35 盲区(报销 15+薪酬 20)作 ground truth 重跑升级版 070/045/048/049/052/054,验机械命中且不误伤已 FIXED 项。文档 `D:/projects/skills-pilot/oa-pilot/verify-loop-payroll-2026-06-24.md`(30KB)。
+  - **下一步明确**:D-040 既坐实跨域通用,**折「两域共现子型」进库(最高置信:070 divergent_duplicated_boundary + 045 错误码族一致 + 048 跨工件单一源)= 棘轮 prevention 步**,带对抗 verify 防膨胀 + dogfood 反验;域特定单子型留复现再折(纪律:折跨域已证的、留单域待证的)。
+- ✅ **续2(2026-06-24,用户选「4」)= 三 fold 全 apply 进库 + 首次带 dogfood 反验闭环**(workflow wf_b40b385b,28 agents/1.18M tok)。三阶段:draft+防膨胀 → **dogfood 反验**(把草拟规则机械套到真 OA 代码,正例核 recall、FIXED 项核 precision)→ synth go/no-go。结果 **3 GO**:
+  - **070 加 finding_kind: divergent_duplicated_boundary**(跨 ≥2 实现点的控制发散:谓词极性相反/强制强度不一/姊妹站点锁不对称/冗余双判致死分支/等价旁路审计不对称五形态)。dogfood **recall 5/5、precision 0/5 误伤**;防膨胀核过与 magic_number(单点)/dead_guard/stub_control/registration_fail_open(单控制失效)均正交。落点 SKILL.md finding_kind bullet + v2-schema-catalog 枚举。
+  - **045 加 R10_error_code_family_status_consistency(warn)**:语义同族错误码须映射一致协议状态+命名,码名随控制基数迁移,声明场景=实抛场景。dogfood **recall 4/4、precision 0/3**;与 R02(单码完整)/R09(单码版本冻结)正交。落点 SKILL inline + 解释 bullet + checklist + common-failure F8 + CHANGELOG v4.1.0。
+  - **048 加 R08_cross_artifact_single_source_of_truth(reject)**:同值/schema/派生键复制进 ≥2 不同类型工件须单一权威源。dogfood **recall 2/4(synth 正确判另 2 是错配正例:PAY-critic#4 属 032、PAY-critic#1 是 stale baseline,非规则弱)、precision 0/3**;synth **拒绝** dogfood 提议的扩宽(会让 048 侵入 032 acceptance-mapping 轴破坏正交)。落点 SKILL inline + common-failure F11 + checklist E2 + CHANGELOG v4.1.0。
+  - **operator apply 纪律**:精确 old→new 串替换(每处 assert count==1)、python zipfile 纯内存编辑保 namelist/压缩、库恒 **157**、frontmatter 不动、inline YAML safe_load 过;**genericize 修正**=045 F8 草稿混入 OA 具名码(D5_DATA_NOT_COLLECTED/NODE5_NOT_TRIPLE_SIGNER 等)→ 改占位符(GATE_A_*/`*_NOT_TRIPLE_SIGNER`),generic 扫描 \\bOA\\b+项目名全 0(守 D-023);脚本+备份 `D:/projects/skills-pilot/oa-pilot/_apply-054-070/`(apply_folds.py + fold-decision-2026-06-24.json)。
+  - **意义(还了欠账)**:这是**首次「折库带 dogfood 反验」闭环**——之前 054/052/051 折入都自承「未 dogfood」,本次三条都先在真 OA 代码上验了 recall+precision 才 apply。棘轮 detection→fold→prevention 在「跨站点一致性」这一前沿类上跑通一整圈:OA 两域审计发现 → 反查盲区 → 跨域坐实 → 折库 + dogfood。**诚实**:dogfood 是「规则机械套到已知盲区代码看是否触发」,非「在 _eval 框架重审全模块」;真正的端到端 dogfood(让升级版 skill 重审一遍模块看能否自动捕获)仍可后补,但本次 precision(零误伤 FIXED)已是实质防膨胀验证。
+  - **诚实边界(留账)**:域特定单子型未折(payroll 独有 4 个、expense 若干)——按「折跨域已证、留单域待证」纪律待复现;045 的 R09 当初折入时也无 CHANGELOG 条目(pre-existing,未补)。
+
+
+## D-041 — 真端到端 dogfood(held-out 奖金域)裁定:折入规则 precision 跨域泛化、但 recall 严重不足 = 「判得准、找得太少」;折规则必须带可操作搜索启发式,不能只给定义
+
+- **日期**:2026-06-24(用户选「真端到端 dogfood」)
+- **事件**:对 06-24 折入的 3 条新规则(070 divergent_duplicated_boundary / 045 R10 / 048 R08)做首次真端到端 dogfood(workflow wf_06bff095,32 agents/1.7M tok)。held-out 域=**奖金 bonus**(2846 行团队重写,且明确不在 3 规则的起草样本里——排除「规则记得自己见过的实例」泄漏)。双臂设计:treatment 臂只拿 3 规则盲找、control 臂深推理穷举真值;treatment 每条命中亲核 ref 03a891375 代码裁真伪(precision),control 每条标是否在规则范围+是否被 treatment 逮到(recall)。
+- **核心数据**:
+  - **precision = 100%(16/16)**:treatment 盲找 16 条全部亲核属实、零误报。最硬几条全核实(approval-unlock#4 financeReview `selectByIdForUpdate` vs 姊妹写点裸 `selectById` 无锁=lost-update;package-confirm#1 双 L6 守卫 I1 双查 vs I2 缺 op1 空值守卫;approval-unlock#3 同「包不存在」一处抛 409 一处抛 404;package-confirm#3 签字备注校验挪用「作废原因」码)。
+  - **recall(in-scope)= 8%(2/25)**:control 深推理找 30 条、25 条落在 3 新规则范围内,treatment 只独立逮 2 条;漏抓几乎全 classification=missed-by-rule-formulation(规则范围纸面覆盖、但措辞没把审计员导到那条具体站点)。
+- **裁定(平台级原则,future 别重论)**:
+  1. **precision 跨域泛化成立** = 3 规则不靠「起草记忆」、纯凭措辞就能在陌生域盲找出真实例且裁定准 → 折入的规则是「真规则」非「拟合记忆」。这一半是好消息,坐实折库有效。
+  2. **recall 严重不足 = 折规则的通病**:规则措辞「定义了什么是缺陷」却「没告诉审计员怎么去找」。treatment 逮到的几乎都是注释自承「与 X 同口径/同义」显式自供的;纯结构同构(无注释提示)基本漏。**070-divergent 最弱**(in-scope 漏抓最大来源——「≥2 实现点发散无权威源」太抽象,不知去哪些站点对照);**045-R10 最强**(错误码集中单一 ErrorCode.java、码/状态/命名三轴可枚举,导引力天然高);048-R08 居中(跨工件类型差异逮得到、纯 Java 多副本常量漏得多)。
+  3. **改法 = 折规则必须配「可操作搜索启发式 / 扫描锚」,不能只给定义**。例:070 应补「对同一概念枚举所有 service/impl 同名私有方法/常量逐对比强度」「结构同构整行 RMW 写点核对锁/版本字段是否一致」「注释出现『与 X 同口径/同义』即触发对照 X」——把「识别发散」从依赖审计灵感降为可机械执行;048 应明列「同一 private static final 业务阈值在 ≥2 Java 类各自定义」为强信号;045-R10 无需改。**这条适用于所有已折与将折规则**(054/052/051/070/045/048 都可能 precision 高 recall 低,值得回头补搜索启发式)。
+- **副产出(满足 D-040「折跨域已证」)**:payroll 独有 4 子型在奖金域的复现核查 → **control_basis_literal_drift 复现**(驳回理由 30→20 下调,ErrorCode 留 @deprecated + 5 处 MIN_*_REASON_LEN=20 副本各持字面)、**authoritative_inert_divergence 复现**(BonusPackageSignerRole 权威枚举存在却被 controller @RequireRoleCode / param @Pattern 各自另写成员集)→ **两子型跨域已证 = 折入候选**;privilege-bypass 部分复现(倾向可折、建议再取一域)、derived-key 未复现(仍单域待证)。另有 4 条新盲区候选(out-of-scope)作下一轮 demand-pull 种子。
+- **方法论收获**:**dogfood(treatment/control 双臂 held-out)本身成为平台一个验证工具**——它在零额外人工下抓出「我的折库 precision 高但 recall 低」这个我自己想不到的弱点。= D-018 发现器→裁定→沉淀在「skill 库自身质量」上的自指应用。
+- **诚实边界**:单 held-out 域;treatment/control 都是有噪声的 LLM 审计(control 真值集可能漏/多,recall 8% 含此不确定);所有 OA 条目是现象+代码证据观察件、非缺陷裁定,严重度/立项由团队判、现象由测试确认。文档 `D:/projects/skills-pilot/oa-pilot/dogfood-e2e-bonus-2026-06-24.md`。
+- **不复议**:「折规则 precision 易达、recall 需可操作搜索启发式」+「dogfood 双臂 held-out 是有效的库质量验证法」已立。记忆 [[north-star-solo-leverage]]。
