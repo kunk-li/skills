@@ -10,6 +10,11 @@ from . import catalog, pkglib
 
 _PREFIX = re.compile(r"^\d+-")
 
+# 非原子 skill:聚合/宏包。总表登记原子 skill,这些按设计不进表,单列不算缺口。
+# 判据:归一名以 -aggregator 结尾,或是 Path A 宏包 product-doc-to-requirements。
+_AGGREGATOR_SUFFIX = "-aggregator"
+_MACRO_NAMES = {"product-doc-to-requirements"}
+
 
 def _norm(name: str) -> str:
     """归一 skill 英文名:剥前导数字前缀(如 143-)。
@@ -20,6 +25,10 @@ def _norm(name: str) -> str:
     return _PREFIX.sub("", (name or "").strip())
 
 
+def _is_aggregator(norm_name: str) -> bool:
+    return norm_name.endswith(_AGGREGATOR_SUFFIX) or norm_name in _MACRO_NAMES
+
+
 def run(args) -> int:
     zips = list(catalog.iter_library_zips())
     disk = len(zips)
@@ -27,28 +36,32 @@ def run(args) -> int:
     csv_rows = len(rows)
     expect = args.expect
 
-    print(f"[count] 磁盘 zip 数        = {disk}")
-    print(f"[count] 总表 CSV 数据行数  = {csv_rows}")
-    if expect is not None:
-        print(f"[count] 期望值 --expect    = {expect}")
-
-    # 差集:磁盘上的英文名 vs CSV 里的英文名(先剥数字前缀归一,避免虚报)
-    disk_names = {_norm(pkglib.skill_name_from_zip(z) or _stem(z)) for z in zips}
+    all_disk = {_norm(pkglib.skill_name_from_zip(z) or _stem(z)) for z in zips}
+    aggregators = {n for n in all_disk if _is_aggregator(n)}
+    disk_atomic = all_disk - aggregators
     csv_names = {_norm(r.get("技能名称 英文") or "") for r in rows}
     csv_names.discard("")
 
-    only_disk = disk_names - csv_names
-    only_csv = csv_names - disk_names
+    print(f"[count] 磁盘 zip 总数      = {disk}(原子 {len(disk_atomic)} + 聚合/宏包 {len(aggregators)})")
+    print(f"[count] 总表 CSV 原子行数  = {csv_rows}")
+    if expect is not None:
+        print(f"[count] 期望值 --expect    = {expect}")
+    if aggregators:
+        print(f"[count] 聚合/宏包(按设计不进总表):{', '.join(sorted(aggregators))}")
+
+    # 原子 skill 才和 CSV 对账
+    only_disk = disk_atomic - csv_names
+    only_csv = csv_names - disk_atomic
 
     consistent = True
     if expect is not None and disk != expect:
         consistent = False
-        print(f"[count] ✗ 磁盘 {disk} ≠ 期望 {expect}")
-    if disk != csv_rows:
+        print(f"[count] ✗ 磁盘总数 {disk} ≠ 期望 {expect}")
+    if len(disk_atomic) != csv_rows:
         consistent = False
-        print(f"[count] ✗ 磁盘 {disk} ≠ CSV {csv_rows}(差 {disk - csv_rows})")
+        print(f"[count] ✗ 磁盘原子 {len(disk_atomic)} ≠ CSV {csv_rows}(差 {len(disk_atomic) - csv_rows})")
     if only_disk:
-        print(f"[count] 仅在磁盘、不在 CSV 的 {len(only_disk)} 个:")
+        print(f"[count] 原子 skill 仅在磁盘、不在 CSV 的 {len(only_disk)} 个:")
         for n in sorted(only_disk):
             print(f"    disk-only: {n}")
     if only_csv:
@@ -57,7 +70,7 @@ def run(args) -> int:
             print(f"    csv-only : {n}")
 
     if consistent and not only_disk and not only_csv:
-        print("[count] ✓ 三方一致")
+        print("[count] ✓ 对账一致(原子 skill 与 CSV 逐一对应;聚合包按设计单列)")
         return 0
     return 1
 

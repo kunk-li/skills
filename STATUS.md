@@ -17,7 +17,9 @@
 - **真用起来(用户选 a)= prod 端完整闭合**:`lint --all`(真用才暴露 lint 无全库模式的缺口→已加)全库体检 = 153/157 干净 + 4 warn;4 个非干净(143-146 顶层目录带数字前缀,lint+count 交叉证)用 `skillctl pack` 两阶段安全归一(暂存校验全过才落盘),现 **`lint --all` 157/157 干净、0 error**。git 恰好 4 zip 变、库恒 157、测试全绿。**skillctl 4 命令全在真库真用过、发现问题+解决问题一条龙**——北极星"0 次干净 idea→prod"第一条真闭上。
 - **优化 skills 换系统打法(第4次「优化」·同 07-03)= 用 skillctl 量全库找系统性缺口 + benchmark 验证(D-057)**:头号缺口=description 词数(库标准 ≤25 词,gold 19 全守 14-24,**139/157 超标**均值 70/最长 156;三视角同证过 D-048 门槛)。已做成 skillctl 真门(lint 阈值→25,`lint --all`=18/157 干净、139 warn,补回归测试)。**用户选先 benchmark**:N300 高同族簇路由 benchmark(10 prompt×3run×3条件,judge=Agent 子代理)→ PRE 100% / 裸缩 POST-v1 **90%**(边界回归) / 智能缩 POST-v2(保留区分句)**100%**。**验证出批量配方**:≤25 词 + 高同族簇保留区分最近同族的那句=零路由损失。证据 `_eval/desc-trim-N300/`。
 - **description ≤25 词批量 = 全库达成(用户「跑完所有域」)**:139 个超标全部缩到 ≤25 词,`lint --all` = **157/157 干净、0 超标**、库恒 157、测试全绿。前 4 域(N340/N330/N350/N360,18 skill)逐域 benchmark 100%/100%;其余 31 域 121 skill 用 7 个起草子代理按 D-057 配方 + `apply_all.py` 两阶段机械安全网落盘(条目守恒+testzip+词数门+desc 校验,首跑拦下 4 条超词→缩→全过)。进度 `_eval/desc-trim-N300/BATCH-LOG.md`。
-- **下一步**:① **高同族域路由抽检**(N210/N100/N200/N260——子代理自动缩的,需 benchmark 确认无回归;有回归则 fix-forward)② 其余结构缺口(workflow-position/checklist 等)做 skillctl audit 分域补 ③ CSV 对齐 task_2d0ede99。
+- **description 批已收尾**:高同族抽检 N210 16/16×2、N100 12/12×2 零回归(见 BATCH-LOG)。
+- **CSV 对账已完成(后续任务·真相反转)**:157=154 原子+3 聚合包(planning/scaffold/product-doc-aggregator,按设计不进总表),**CSV 154 本就是对的**;真 bug 是磁盘 146 被误名 `state-transition-mapping`(与 N070/015 撞名)→ 改回 CSV 登记的 `state-machine-driven-orchestration`(解撞名+对齐,两阶段安全)。并教 skillctl count 认聚合包,现 `count` = ✓ 对账一致。lint 157/157、库恒 157。
+- **下一步**:① 结构缺口(workflow-position gold100/plain0 等)——**先判是否 demand-pull 值得补,别堆填充**(倾向不盲补;workflow-position 是可机械生成的事实元数据、低风险,其余是实质内容有填充风险)② 北极星:skillctl 是首个真 idea→prod 闭环,下个真工具 or 借 OA PRD 跑完整链。
 
 ## 在途线程(每条一行:现状 + 下一步 + 细节链接)
 
