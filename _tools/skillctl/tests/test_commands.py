@@ -57,6 +57,13 @@ def test_lint():
         i3 = cmd_lint._lint_one(str(d3))
         check("lint.异常/缺SKILL.md报error", any(l == "error" for l, _ in i3), str(i3))
 
+        # TP3b 边界:description 超 25 词 → warn(库 ≤25 词标准门)
+        long_desc = "word " * 40  # 40 词
+        d3b = _mk_skill_dir(base, "long-desc", f"---\nname: long-desc\ndescription: {long_desc}\n---\n# b\n", None)
+        i3b = cmd_lint._lint_one(str(d3b))
+        check("lint.边界/超25词description报warn",
+              any(l == "warn" and "词数" in m for l, m in i3b), str(i3b))
+
         # TP4 异常:CHANGELOG 存在但格式坏
         d4 = _mk_skill_dir(base, "bad-cl", GOOD_SKILL % "bad-cl", "# CHANGELOG\n\n随便写的没版本条目\n")
         i4 = cmd_lint._lint_one(str(d4))

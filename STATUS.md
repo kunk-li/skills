@@ -15,7 +15,8 @@
   - **demand-pull 头号兑现**:PRD 里我推荐的 reinforced 判据(`### Evidence` 段)被**全库实测当场证伪**(只命中 1/19);真信号 = 含 CHANGELOG.md(恰 19/157)。真数据在我照错假设建实现前把它揪出——这就是 idea→prod 闭环的价值,非空磨 skill。
 - **"优化 skills" = demand-pull 而非空磨(同 07-03 续)**:拿真 skillctl 代码捶 Path D(0/36)两遍。① code review 揪出并修了工具真 bug(count 名字没剥 `^\d+-`→把命名差异虚报成缺口;修后 157vs154 谜团解清=总表 CSV 4 处过时,已挂后台 task_2d0ede99)。② dogfood N230/080 补全 lint/count/coverage 测试=16 断言全绿,skillctl **MVP+测试完整、真可天天用**。**skill 信号(诚实):Path D 虽 0 强化但不弱**——N230/080 三分法首用即扛,两遍无系统性缺口,唯一候选 n=1 且不在其职责内。**本 session 零折(无真 PRE<POST delta),库恒 157。校准=别假设"0 强化=该补"(D-048 复现)。**
 - **真用起来(用户选 a)= prod 端完整闭合**:`lint --all`(真用才暴露 lint 无全库模式的缺口→已加)全库体检 = 153/157 干净 + 4 warn;4 个非干净(143-146 顶层目录带数字前缀,lint+count 交叉证)用 `skillctl pack` 两阶段安全归一(暂存校验全过才落盘),现 **`lint --all` 157/157 干净、0 error**。git 恰好 4 zip 变、库恒 157、测试全绿。**skillctl 4 命令全在真库真用过、发现问题+解决问题一条龙**——北极星"0 次干净 idea→prod"第一条真闭上。
-- **下一步**:① 续压 skill 优化换 A/C/E 段真工件捶(或同段多跑攒系统性再判折,D-048)② CSV 侧对齐 task_2d0ede99 ③ skillctl 可选:normalize 做成子命令、bump 内容 diff(FT-07)。
+- **优化 skills 换系统打法(第4次「优化」·同 07-03)= 用 skillctl 量全库找系统性缺口**:19 gold vs 138 plain 结构对比。**头号缺口=description 词数**:库标准 ≤25 词(041 v4.0.0),gold 全守(14-24),138 plain 均值 70/最长 156。三视角同证过 D-048 门槛。已做成 skillctl 真门(lint 阈值→25,`lint --all` = 18/157 干净、139 超标 warn,补回归测试 17 全绿)。**诚实**:缩到 ≤25 符标准=确证;但"缩了更好触发"对高同族簇(N300 log/metric/trace/anomaly,NOT-for 段是路由信号)未确证,**没盲批 139**。
+- **下一步**:① description 批量对齐——高同族域(N300)先 skill-creator 抽样跑触发 PRE/POST 再批、低同族域可直接对齐;**待用户拍策略** ② 其余结构缺口(workflow-position/checklist/scoring-rubric 等)做成 skillctl audit 项分域补 ③ CSV 对齐 task_2d0ede99。
 
 ## 在途线程(每条一行:现状 + 下一步 + 细节链接)
 

@@ -12,7 +12,9 @@ from pathlib import Path
 
 from . import pkglib
 
-DESC_WORD_WARN = 500  # description 词数软上限(warn)
+# description 词数上限。库自己的标准(041 CHANGELOG v4.0.0「Description trimmed to ≤25 words」);
+# 实测 19 个强化包全守(14-24 词),138 未强化包普遍超标(均值 70、最长 156)。设 25 为 warn 门。
+DESC_WORD_WARN = 25
 
 
 def _read_targets(target: str):
