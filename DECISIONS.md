@@ -781,3 +781,13 @@
 - **工作区** `D:/projects/skills-pilot/skillctl/`(自己 pilot 区,合红线;全程只读 `完稿/` 与 `docs/`)。
 - **Path A 已完成**:idea 种子(`00-idea/idea-seed.md`)→ 按 N090/022 prd-generation 的 16 节 `n090.prd.v2` 契约产出 PRD(`01-prd/PRD-skillctl.md`)。PRD 抛出 1 个 P0 blocker:coverage 的 reinforced 判定标准/数据源——推荐机读 CHANGELOG `### Evidence` 段(零维护、有磁盘依据),待用户拍后走 Path B。
 - **净纪律**:这是 demand-pull 的正解——不再空磨 skill,让真 idea→prod 的 shortfall 反推哪条 skill 要改(D-030)。每完成一个 Path 记录 skill 链「扛住 vs 掉链」的点,作为改进信号。
+
+## D-057 — description ≤25 词标准:benchmark 验证出「智能缩」批量配方(2026-07-03)
+
+- **日期**:2026-07-03。用 skillctl 量全库(19 gold vs 138 plain)砸出系统性缺口:**description 词数**——库自己标准 ≤25 词(041 CHANGELOG v4.0.0),19 个强化包全守(14-24 词),**139/157 超标**(138 plain 均值 70、最长 156;含 security-risk-analysis 38 词的 gold)。三视角同证(库明文标准+19 gold 全守+3.5x 可测差),过 D-048 门槛=非单轶事。
+- **做成 skillctl 真门**:lint 的 `DESC_WORD_WARN` 500→25;`lint --all` = 18/157 干净、139 warn。补回归测试。warn 级(非 error)——高同族簇合理超标。
+- **用户选「先 benchmark 再批」**。搭路由 benchmark(N300 高同族簇 5 skill:log/metric/trace/anomaly/rca,judge=Agent 子代理不依赖 API key,10 边界 prompt × 3 run × 3 条件):
+  - PRE(原长 ~120 词含 NOT-for)= **100%**;POST-v1(裸缩 ≤25 去 NOT-for)= **90%**(边界 #2「无 trace 从日志重建链路」误 route 到 trace);POST-v2(≤25 但**保留区分句**)= **100%**。各 3 run 零方差。
+- **验证出的批量配方(可折)**:description 缩到 ≤25 词;**对高同族簇,保留区分最近同族的那一句关键信号**(如 log-analysis 保留"无 trace 时从日志重建链路")即零路由损失。裸砍会回归、智能缩恢复。log-analysis 156→24 词仍 100%。
+- **诚实边界**:5-way 簇级路由是全 157-way 的代理;judge=子代理非真 available_skills 路由,但捕捉同族区分力的相对 PRE/POST 足够。低同族域(库大多数)裸缩本就无回归风险。
+- **下一步**:按配方分域批量缩——低同族域直接缩(抽一域跑同款 benchmark 兜底)、高同族簇智能缩保留区分句。139 个待批,证据 `_eval/desc-trim-N300/`。
