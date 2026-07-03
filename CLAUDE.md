@@ -17,7 +17,7 @@
 - 🛑 **不要列长 task list**——已经累积太多了,只给我"现在做什么"
 - 🤝 **当我开始迷失方向时,主动指回 north star**(不是顺着我跑偏)
 - ✍️ **session 记忆 ritual(不要忘,人会忘所以全推给你)**:
-  - 每完成一块有意义的工作 → 立即 update STATUS.md(不要等 session 末)
+  - 每完成一块有意义的工作 → 立即 update STATUS.md。**STATUS 是覆盖式现状快照、不是追加日志(D-042)**:写新状态时覆盖旧的、别往下堆;被替换的旧细节**挪**进当日 `_sessions/`(挪不是复制,别两处各留一份)。STATUS 永远 ≤ 一屏(~60 行),超了就清;历史在 `_sessions/`、别在 STATUS 里留 changelog。结构=现在做什么 / 在途线程 / 卡点 / 按需细读指针。
   - session 中如果新决策诞生 → 立即加到 DECISIONS.md
   - 每次 session 结束前 → 在 `_sessions/<date>-<n>.md` 写总结(n = 当天下一个序号)
   - 这些都**不要等用户提醒**——他会忘,你不要忘。Stop hook 会兜底提醒,但被 hook 提醒说明你已经漏了

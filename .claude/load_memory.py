@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """SessionStart hook: load project memory and emit as additionalContext.
 
-Reads CLAUDE.md, ROADMAP.md, STATUS.md, DECISIONS.md, and the most recent
+Reads CLAUDE.md, ROADMAP.md, STATUS.md (full) + a DECISIONS.md index (just
+the ## headers — full text is Read on demand, D-042), and the most recent
 file in _sessions/, then emits a JSON object Claude Code understands to
 inject the combined text into the new session as system context.
 
@@ -23,7 +24,10 @@ except Exception:  # noqa: BLE001
 ROOT = Path(__file__).parent.parent
 
 # Order matters — CLAUDE.md is the canonical first read.
-FILES = ["CLAUDE.md", "ROADMAP.md", "STATUS.md", "DECISIONS.md"]
+# DECISIONS.md is NOT here: it is 100KB and was 24% of every injection. It is
+# now injected as a derived index (## headers only) via decisions_index(), full
+# text Read on demand. See D-042.
+FILES = ["CLAUDE.md", "ROADMAP.md", "STATUS.md"]
 
 
 def read_file(path: Path) -> str | None:
@@ -40,6 +44,22 @@ def latest_session(sessions_dir: Path) -> Path | None:
     return candidates[-1] if candidates else None
 
 
+def decisions_index(path: Path) -> str | None:
+    """Derive a lightweight index of DECISIONS.md = its ## headers only.
+
+    Single-source-of-truth safe (D-042/048-R08): the index is derived from
+    DECISIONS.md at hook time, never a hand-maintained copy that could drift.
+    Full text is Read on demand when a specific D-XXX matters.
+    """
+    content = read_file(path)
+    if content is None:
+        return None
+    heads = [ln.rstrip() for ln in content.splitlines() if ln.startswith("## ")]
+    if not heads:
+        return None
+    return "\n".join(heads)
+
+
 def build_context() -> str:
     parts: list[str] = []
     parts.append(
@@ -54,6 +74,15 @@ def build_context() -> str:
         if content is None:
             continue
         parts.append(f"\n\n---\n\n# 📄 {fname}\n\n{content.rstrip()}")
+
+    didx = decisions_index(ROOT / "DECISIONS.md")
+    if didx:
+        parts.append(
+            "\n\n---\n\n# 📄 DECISIONS.md · 索引(只注入标题,全文按需 Read · D-042)\n\n"
+            "**要决策或发现冲突前,先按 D-号 Read `DECISIONS.md` 全文那一条**——"
+            "别凭标题推翻已决策项(CLAUDE.md 红线:查 DECISIONS 先)。\n\n"
+            f"{didx}"
+        )
 
     latest = latest_session(ROOT / "_sessions")
     if latest:
