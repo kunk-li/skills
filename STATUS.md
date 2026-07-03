@@ -16,8 +16,8 @@
 - **"优化 skills" = demand-pull 而非空磨(同 07-03 续)**:拿真 skillctl 代码捶 Path D(0/36)两遍。① code review 揪出并修了工具真 bug(count 名字没剥 `^\d+-`→把命名差异虚报成缺口;修后 157vs154 谜团解清=总表 CSV 4 处过时,已挂后台 task_2d0ede99)。② dogfood N230/080 补全 lint/count/coverage 测试=16 断言全绿,skillctl **MVP+测试完整、真可天天用**。**skill 信号(诚实):Path D 虽 0 强化但不弱**——N230/080 三分法首用即扛,两遍无系统性缺口,唯一候选 n=1 且不在其职责内。**本 session 零折(无真 PRE<POST delta),库恒 157。校准=别假设"0 强化=该补"(D-048 复现)。**
 - **真用起来(用户选 a)= prod 端完整闭合**:`lint --all`(真用才暴露 lint 无全库模式的缺口→已加)全库体检 = 153/157 干净 + 4 warn;4 个非干净(143-146 顶层目录带数字前缀,lint+count 交叉证)用 `skillctl pack` 两阶段安全归一(暂存校验全过才落盘),现 **`lint --all` 157/157 干净、0 error**。git 恰好 4 zip 变、库恒 157、测试全绿。**skillctl 4 命令全在真库真用过、发现问题+解决问题一条龙**——北极星"0 次干净 idea→prod"第一条真闭上。
 - **优化 skills 换系统打法(第4次「优化」·同 07-03)= 用 skillctl 量全库找系统性缺口 + benchmark 验证(D-057)**:头号缺口=description 词数(库标准 ≤25 词,gold 19 全守 14-24,**139/157 超标**均值 70/最长 156;三视角同证过 D-048 门槛)。已做成 skillctl 真门(lint 阈值→25,`lint --all`=18/157 干净、139 warn,补回归测试)。**用户选先 benchmark**:N300 高同族簇路由 benchmark(10 prompt×3run×3条件,judge=Agent 子代理)→ PRE 100% / 裸缩 POST-v1 **90%**(边界回归) / 智能缩 POST-v2(保留区分句)**100%**。**验证出批量配方**:≤25 词 + 高同族簇保留区分最近同族的那句=零路由损失。证据 `_eval/desc-trim-N300/`。
-- **分域开批(用户「分域推进」)= 已完成 2 域**:N340 协作文档(4:131-134)+ N330 技术运维文档(6:125-130),各兜底 benchmark **PRE 100%/POST 100% 零回归**、两阶段安全落盘(skillctl pack)。**超标 139→129**、库恒 157、测试全绿。流程模板成立(craft 缩版保留近邻区分→benchmark→两阶段落盘→提交)。进度 `_eval/desc-trim-N300/BATCH-LOG.md`。
-- **下一步**:① 续域(129 待缩,低同族 N350/N360/N005/N390 优先;高同族 N100/N200/N270/N310 智能缩)每域兜底 benchmark ② 结构缺口做 skillctl audit 分域补 ③ CSV 对齐 task_2d0ede99。
+- **分域开批(用户「分域推进」)= 已完成 4 域 18 skill**:N340 协作(4)+ N330 文档(6)+ N350 协同 + N360 对齐(8,合并 benchmark 含跨域),各 **PRE 100%/POST 100% 零回归**、两阶段安全落盘(skillctl pack)。**超标 139→121**、库恒 157、测试全绿。流程模板固化(craft 缩版保留近邻区分→兜底 benchmark→两阶段落盘→提交),apply_domain.py 通用化。进度 `_eval/desc-trim-N300/BATCH-LOG.md`。
+- **下一步**:① 续域(121 待缩,低同族 N005/N390/N380/N370 优先;高同族 N100/N200/N270/N310/N240/N250 智能缩)每域兜底 benchmark ② 结构缺口做 skillctl audit 分域补 ③ CSV 对齐 task_2d0ede99。
 
 ## 在途线程(每条一行:现状 + 下一步 + 细节链接)
 
