@@ -577,3 +577,207 @@
 - **方法论收获**:**dogfood(treatment/control 双臂 held-out)本身成为平台一个验证工具**——它在零额外人工下抓出「我的折库 precision 高但 recall 低」这个我自己想不到的弱点。= D-018 发现器→裁定→沉淀在「skill 库自身质量」上的自指应用。
 - **诚实边界**:单 held-out 域;treatment/control 都是有噪声的 LLM 审计(control 真值集可能漏/多,recall 8% 含此不确定);所有 OA 条目是现象+代码证据观察件、非缺陷裁定,严重度/立项由团队判、现象由测试确认。文档 `D:/projects/skills-pilot/oa-pilot/dogfood-e2e-bonus-2026-06-24.md`。
 - **不复议**:「折规则 precision 易达、recall 需可操作搜索启发式」+「dogfood 双臂 held-out 是有效的库质量验证法」已立。记忆 [[north-star-solo-leverage]]。
+- **✅续(2026-06-25 apply)**:D-041 prescription 落地 —— 070 `divergent_duplicated_boundary` 加 5 条可 grep 搜索锚(①注释自供锚『与 X 同口径/同义/一致』召回最高优先 ②同名符号锚 ③结构同构 RMW 锚 ④权威源成员锚 ⑤阈值字面量锚)+ 形态 (f) authoritative_inert_divergence;048 `R08` 放宽到 ≥2 同类型多副本(同一 private static final 阈值在 ≥2 Java 类)+ control_basis_literal_drift 形态 + 扫描锚(CHANGELOG v4.2.0)。**设计裁定**:两条跨域已证 payroll 子型(control_basis_literal_drift / authoritative_inert_divergence)折成『带搜索锚的形态』而非新 finding_kind —— 因 D-041 已证 recall 洞在『怎么找』非『定义什么』,只加裸定义会再造低 recall 规则。校验全过(070/048 namelist 不变、frontmatter 不动、所有 YAML safe_load、generic 零 banned、库恒 157),脚本 `D:/projects/skills-pilot/oa-pilot/_apply-recall-fix/apply_recall_fix.py` + 备份。**待验(未还的诚实欠账)**:recall 是否真从 8% 升——须拿同一 held-out 奖金域用更新后规则**重 dogfood**(workflow,待发);折后若仍 recall 低则措辞还需再迭代。
+- **✅续2(2026-06-25 受控 A/B re-dogfood,wf_ee664662 / 22 agents)**:D-041 prescription **证实有效**。同一 held-out 奖金域、同一 42 条独立真值集,只换规则文本:**recall old(抽象)19% → new(锚)26%,+3 条净增;precision 两臂均 100%、零 cry-wolf**(锚不掉精度)。承重锚=④权威源成员锚(+3,最强)、⑤阈值字面量锚(+1)、③RMW 结构同构(+1);①注释自供/②同名符号本轮作确认工具非首逮(净 0)。**诚实**:老臂 19% ≠ 原轮 8%(分母 42 vs 25 不同),干净信号是受控同分母 old→new;两臂绝对 recall 都远低 ceiling = 覆盖广度洞 + 措辞洞双因。**dogfood 自指吐下一轮 3 个措辞靶**:(1)045-R10 加同族错误码 HTTP 状态一致性子锚(直击 G-02)(2)070 form b 守卫不对称扩成显式清单 lock/frozen/blank/missing-record/exemption(直击 G-07/13/19)(3)④锚补反向「权威族在位但站点用裸字面量不声明常量」(直击 G-03/05/29);估同 5 区可再净增 3~4。文档 `D:/projects/skills-pilot/oa-pilot/redogfood-ab-bonus-2026-06-25.md`。棘轮「折→验」首次带受控对比跑通整圈。
+- **✅续3(2026-06-25 fold3 + 隔离式 v2 re-dogfood,wf_9c09791b / 16 agents)**:迭代闭环第 2 轮。折 3 措辞靶(045-R10 HTTP 状态扫描锚 / 070 ⑥守卫种类清单锚 / 070 ④裸字面量旁路)→ 隔离式 A/B(同 42 G、两臂都拿全 3 规则、唯一差异=折前 vs 折后):**recall before 38%(16/42)→ after 48%(20/42),净 +4 distinct gid 干净归因 3 靶;precision 100%、零 cry-wolf**。3 靶兑现 5/7(G-07/G-13/G-05/G-29 净新增、G-02 两臂都逮;漏 G-03/G-19)。诚实:本轮 before 带全 3 规则故 ≠ 原 v1 口径,唯一干净是 after−before delta;单域 n=1、after 多条行号偏(file:symbol 准)。又吐下一轮 2 靶(④补 inline event_type 旁路常量族 / ⑥加同守卫空输入放行强度对比,与 ④ 区分)。**裁定:棘轮 detection→fold→verify 连证两轮自我改进、零 cry-wolf;但下一最高杠杆=跨域泛化(锚在非奖金 held-out 域是否同样抬 recall),不是再榨奖金域 2 个 gid(n=1 过拟合风险)**。脚本+备份 `D:/projects/skills-pilot/oa-pilot/_apply-fold3/`,文档 redogfood-ab-bonus-2026-06-25.md 第七节。
+- **✅续4(2026-06-25 跨域泛化验,wf_841c674a / 限流加固版)——修正 ✅续2/✅续3 的乐观**:把 bonus 上起草的全锚搬到全新 held-out 域 performance(绩效,不在任何起草样本),同 A/B 结构、3 完整覆盖区(review-flow/score-engine/role-promotion)、25 in-scope 真值。**结果:recall old 32% → new 32% = +0pp**(对照 bonus +7pp),方向与量级双双不复现;perf 上 new vs old 是命中置换(得 G11/13/14/21、丢 G02/05/09/15)非累加;precision 双臂 100%、零 cry-wolf。**裁定:锚的 recall 增益不干净外推 = 部分过拟合 bonus。** 诚实校正(不读过头):④权威源/⑥守卫清单/①注释自供三锚跨域仍各净增 1~2=真实小幅迁移;GT ceiling 压低 new(new 在 25 真值外抓了真实 RMW/僵尸码缺陷,分子吃不到);⑤阈值/R10 状态锚跨域太噪;n=2 域、±1~2 噪声。**处置:保留全锚(两域零 cry-wolf、不伤),但把『通用抬 recall』主张降级为『域内有效、跨域部分迁移、未证通用』;跨域高迁移子集=④/⑥/①。** 后续(非今日):GT 扩容含 RMW/僵尸码重测 ceiling、取第 3 域 n=2→n=3。方法论第三次抓出库自己的过度乐观(recall 洞→限流伪产物→非泛化)=D-018/D-041 诚实纪律。文档第八节。
+- **✅续5(2026-06-25 多域根因调查,wf_7afda2a4 / 19 agents)——修正 ✅续4「不泛化」的过早结论(用户指示:不理想要挖为什么 + 多测几个场景)**:再测审批/生命周期两新域 + 横看四域根因。**四域 lift:bonus +7pp、approval +26pp(最大)、lifecycle +12pp、perf +0pp —— 3/4 域明显抬 recall,只 perf 例外。** ✅续4 只凭 perf 一域判「部分过拟合 bonus」是以偏概全;实情是**提示泛化得不错**。**根因(头号):提示的边际价值取决于域里有没有『被多处硬编码裸字面量旁路的权威枚举/集中阈值多副本/结构同构姊妹写路径守卫不对称』这种结构——有则提示精确指路抬 recall(approval/lifecycle 这种结构密、bonus 也有),无则空转(perf 结构稀疏,提示命中宽却落 GT 外)。能不能传 = 域的『缺陷可被锚点指认的结构密度』,不由提示本身通用性决定。** 提示迁移图:④权威源成员锚=universal(四域全产净增,主力);⑤阈值/⑥守卫/②同名/045状态=partial(各需对应结构);③RMW=抓真缺陷但 GT 没收(ceiling 吞掉);①注释自供=OA 注释文化特有(保持同步/PAT-006/Bug#),换团队不灵。**两个真问题:① 提示①/②贴域命名/注释、需改写成域无关骨架(先列权威清单+阈值清单,再反查旁路/多副本/守卫不对称;①②降级为可选辅助);② GT ceiling 掩盖真值(③ RMW/僵尸码抓的真 bug 不在真值集、不算分,perf +0pp 部分是天花板假阴)。** 处置:(1)按域无关两步法重写提示;(2)GT 扩容含 RMW 锁/死代码重测;(3)新域先做结构密度体检,稀疏域(perf)改 few-shot 不硬套通用提示。诚实:仍单仓 OA、LLM 判、±几条噪声、GT ceiling。文档第九节。**教训:单一新域的负面结论不可外推——用户坚持多测场景才纠出 ✅续4 的以偏概全,这是 D-039『验证靠多点不靠单点』在 skill 评测上的应用。**
+
+- **✅续6(2026-06-26 提示去 OA 味 + 受控复验,design wf_3cadc60c / verify wf_7c339636)——落地 ✅续5 处置①(把贴团队习惯的锚改成域无关骨架)**:
+  - **改了什么**:070 `divergent_duplicated_boundary` 检测法从「①注释自供锚=召回最高优先扫」重构成**域无关两步骨架**——Step1 机械建 权威源/阈值/写点 三张清单 → Step2 对每张反查发散(2-A 权威源成员锚=跨域主力,含裸字面量旁路 + 无源兜底,必跑满;2-B 阈值副本,048 R08 互参;2-C 守卫种类清单 + RMW 锁一致)。①注释自供 / ②同名符号**降级为「若代码库有此约定则加用、无则跳过」的可选辅助锚**;②措辞从 OA 命名前缀泛化;加 recall 不变量桥句(辅助锚指向的姊妹站点已被 Step1 写点清单 + Step2 反查独立覆盖、降级不丢 recall);同步修 form(b) 悬挂引用「见检测法⑥」→「见 2-C」。设计=workflow 3 稿 + 对抗合成 + 2 审计;审计抓出合成稿把内部代号 D-041/四域/universal 误嵌进 SKILL 正文(违 D-023 通用红线)→ operator 修后零项目字样。校验全过(23 entries / frontmatter / yaml safe_load / banned 扫描 NONE / 库恒 157),备份 `D:/projects/skills-pilot/oa-pilot/_apply-recall-fix2/`。
+  - **受控复验(wf_7c339636,7 agents/698K tok)**:held-out=bonus_i1 两区(approval-unlock + package-confirm),自建 10 条真值 G,OLD 070 文本 vs NEW 070 文本同区盲找、逐条回 ref `03a891375` 亲核。**recall OLD 2/10(20%)→ NEW 3/10(30%),净升;precision 双臂 100%、cry-wolf 0**。verdict 机械判 `regression` 仅因严格 per-gid 规则:NEW **置换**了一个命中点——漏 T-PC-02(package-confirm 取包 selectById vs 姊妹 selectByIdForUpdate 锁不对称)但新逮 T-AU-02(J1 哈希链不对称)+ T-PC-01(状态守卫缺失)两条 OLD 漏的;**非净漏、净 recall 实升**(judge 自陈,且含 n=1 单采样 ±1 gid 噪声)。
+  - **真残留(复验自指吐的下一靶,已折)**:NEW 把「锁不对称」锚只在一个区命中、没跨两区扫满 = 降辅助锚后跨区逐写点覆盖变稀。**已补 2-C「务必扫满」句**(同一实体写点常分散多区,须每个写点跨所有位置核到底、不得某处命中即停)——add-only 纯加覆盖、recall-safe、零删,校验全过、库恒 157。**未对此 add 做全量重验**(纯加覆盖指令结构上不减 recall;n=1 噪声下重跑多为重排,边际低)。
+  - **再证 GT ceiling(✅续5 处置② / Task B 仍欠)**:两臂各报约 5 条真缺陷落在 10 条 G 之外(理由阈值 20 跨 5 副本 / APPROVE-REJECT 裸字面量 / 角色集无单一源等),名义 recall 20-30% 偏低主因是火力落在 G 未收录的副本·枚举源类。**真实 recall 被 GT 压低 → Task B(GT 扩容含 RMW 锁/裸字面量/枚举源类重测真天花板)是下一个真测量,未做。**
+  - **裁定**:✅续5 处置① 落地完成,070 主路径现已域无关(= 北极星「换团队也能用」的可移植性);OA 域内 recall 不净退、precision 不掉、零 cry-wolf。诚实:单仓 OA、LLM 判、n=1、GT ceiling 未拆。apply 记录 `D:/projects/skills-pilot/oa-pilot/_apply-recall-fix2/APPLY-NOTE.md`。
+
+- **✅续7(2026-06-26 Task B:扩容标准答案重测真天花板,wf_a69505de / 13 agents / 1.48M tok)——修正 ✅续5/✅续6 的「GT ceiling 压低真值」假设**:
+  - **背景**:✅续5/✅续6 推断低 recall(20-30%)主因是标准答案太小(规则真抓到的缺陷不在真值集、不算分)。Task B 直接测:多镜头(权威源旁路/裸字面量·锁守卫不对称·谓词审计死码 3 类 × 2 区)穷举重建 bonus_i1 两区标准答案 → 逐条亲核去重成 **G+ = 27 条**(原 10 条的 2.7 倍),再用 OLD/NEW 070 在同一 G+ 上重测。
+  - **结果(推翻假设)**:**OLD 在扩容后 G+ 下 recall = 7/27 = 25.9%,仍落上轮 20-30% 同带——扩容没把 recall 抬上去**。⇒ **低 recall 不是小真值集天花板压低的,是规则本身有整类覆盖洞**:predicate-audit-dead 类近乎零覆盖(OLD 0/8、NEW 1/8)。NEW = 10/27 = 37%,比 OLD 高约 11pp(真实增益,集中在 auth 5 vs 3 + predicate +1);**precision 双臂 100%、cry-wolf 0(更大更公平分母下 NEW 优势复现、零误报)**。by_class:auth-bypass-literal 12(OLD 3/NEW 5)、lock-guard-asymmetry 7(4/4)、predicate-audit-dead 8(0/1)。
+  - **真天花板 ≈ 37%,被两类系统盲区压住(下一轮折库主靶)**:① predicate-audit-dead:特权自动签短路只写本地 log 不写 J1 哈希链(审计可区分性不等 form c/e)、AUTO vs FORCE 守卫发散(forceLock 私有前置旁路集中 assertCanTransit)、wflow 短路与真双签不可区分;② authoritative-bypass-literal 批:权威源(SequenceTypeEnum/AuditEventType/角色码/决策动词)在位却被 controller 注解白名单/入参正则/service 私有常量裸字面量旁路,NEW 只逮 5/12。
+  - **诚实边界**:(1)predicate-audit-dead 的 8 条里数条(isAnyRejected 僵尸谓词 / StatusGuard 僵尸守卫 / 不可达态)其实是 070 **别的 finding_kind**(dead_guard/unconsumed_control/no_producer/unreachable_state)、不属 divergent;两臂被限定只找 divergent,故这部分 0/8 含**口径外扣分**——真正的 divergent 漏抓是 G-AU-09 审计不等 / G-PC-13 守卫发散 / G-PC-14 不可区分 / G-PC-09·11 锁不对称 / G-AU-05 + auth 批。(2)单域 n=1、LLM 判真值与 finding 都有噪、G+ 仍可能漏、归并口径 ±1-2。(3)两臂 G+ 外另各约 5 条真现象(mustGet 错误码不对称/EID resolver 三副本等)按只读铁律只是观察件非结论。
+  - **裁定**:✅续6 的「复验三证 GT ceiling 压低真值」**部分纠回**——ceiling 确让 perf+0 类有假阴,但 bonus 两区 recall 低主因是**规则覆盖洞(整类没覆盖)而非天花板**;扩容证实 **NEW>OLD 是真改进(37% vs 26%、零 cry-wolf)**,但绝对 recall 下一步**不是再补现有形态的搜索锚、是补 predicate-audit-dead 审计不等/守卫发散形态 + auth-bypass 反查**。方法论第四次抓出库自己的过度乐观(D-018/D-041 诚实纪律)。全量 G+ 与逐条 → `D:/projects/skills-pilot/oa-pilot/_apply-recall-fix2/TASKB-gplus-remeasure-2026-06-26.md`。
+
+- **✅续8(2026-06-26 折两盲区锚 + 折前/折后复验,design wf_53b60a54 / verify wf_ef4c5e0b)——✅续7 吐的下一靶折库,recall 几乎翻倍**:
+  - **折了什么**(3 处插入 070 divergent,全泛化零项目字样、refine 不新增 finding_kind):① **2-A 加「五类旁路站点清单」**——对每个权威源逐类全扫(权限/路由注解参数白名单 / 入参校验注解正则取值集 / 各服务语义命名私有常量 / 内联 equals·switch·三元裸字面量 / DTO·前端镜像常量),不凭印象只扫一两类;② **form (e) 加「等价路径核法」**——逐目标态枚举所有到达路径,逐路径对账(审计链:某路径只写普通日志/不写合规审计链 = 审计可区分性不等;区分字段:某路径置成与强路径相同状态却不留区分标记致下游不可区分);③ **2-C 加「集中守卫旁路核法」**——若有集中状态机/前置校验入口,把「集中入口调用点集合」与「清单(3)全部写点集合」做差集,差集里用私有内联前置取代集中断言的写点 = 守卫发散归 (b)/(c)。设计=workflow 2 稿 + 对抗合成 + 2 审计(**双审计均 clean**,零项目字样/locator 真实唯一)。校验全过(23 entries/frontmatter/yaml/banned NONE 含 RequireRoleCode·assertCanTransit·J1 全 0/库 157)。
+  - **折前/折后复验(wf_ef4c5e0b,5 agents,固定 G+=27 当分母,只读 OA)**:**recall BEFORE 7/27=25.9% → AFTER 13/27=48.1%,precision 双臂 100%、cry-wolf 0**。两靶类双双抬:**auth-bypass-literal 2→7**(五类站点清单逮注解白名单/正则/私有常量旁路)、**predicate-audit-dead 1→3**(等价路径审计对账 + 集中守卫旁路;但只覆盖该类「审计不等/守卫发散」子口径,「死谓词/僵尸守卫/不可区分」4 条仍 0,**那 4 条本就属 dead_guard/no_producer 别的 finding_kind、非 divergent 口径**)。newly_caught 8(G-AU-01/03/05/09 + G-PC-02/04/12/13)。verdict=fold_lifted。
+  - **诚实(2 条真回退 = 下一靶)**:AFTER 漏了 BEFORE 逮到的 **G-PC-10**(confirmAny/rejectAny 缺主态/终态守卫,2-C guard 类)+ **G-PC-15**(unlock 验签锚 vs 去重锚异源,form-a 身份键发散)——新锚把 unlock/confirm 笔墨吸去审计链 + 守卫旁路,丢了这两条 = **加锚的注意力稀释风险**(070 检测法越来越长)。lost(2) << newly(8) 故净强升,但这两类是 AFTER 盲点、值回归。其余诚实:单域 n=1、单采样 LLM 噪、严苛「一 finding 配一 gid」口径下 after ≈40.7%(方向不变幅度收窄)、G+ 本身可能漏(分母偏小、真实 recall 更低)。
+  - **裁定**:棘轮 detect→fold→verify 又跑通一整圈、真实 recall 增益(25.9→48.1%,零 cry-wolf);两靶类成功,坐实「补 predicate-audit-dead 审计不等/守卫发散 + auth-bypass 反查」是对的下一步(✅续7 的处方)。下一轮真靶:① 回归 G-PC-10/G-PC-15(2-C guard 缺类 + form-a 身份键异源,防注意力稀释)② 余 dead-code 子类归 070 别的 finding_kind 另测。产物 `_apply-recall-fix2/FOLD-verify-2026-06-26.md`。
+
+- **✅续9(2026-06-30 跨技能泛化首测:070→045,wf_93f4f39e-845 / 7 agents / 940K tok)——把棘轮搬到第二个技能,结果是「弱正向 + 度量法 bug」**:
+  - **问题**:070 上跑通的 detect→fold→verify 找全率棘轮,换到 045(api-error-code-design)还成立吗?045 的 R10(跨同族错误码一致性)规则 06-24 折进、仅 dogfood 自评(4/4),从未盲验。A/B 唯一变量=045 SKILL.md(OLD=折前 foldbak 无 R10 / NEW=折后工作树 R10+扫描锚);G+ 建在 OA `ErrorCode.java`(4257 行)+ 4 模块表,ref `03a891375` 只读;3 镜头建 G+(A 族状态分叉/B 命名基数残留/C 声明vs实抛)→ 盲 OLD/NEW 两臂 → 打分。
+  - **机械结果**:**verdict=flat,两臂 recall 都 0/17(held-out 0/13)、precision 双臂 100%、cry-wolf 0**。G+=18 全复核 verified=true。
+  - **但 flat 是假信号(度量缺陷)**:G+ 和两臂在同一个 4257 行平表里**找了不重叠的区域**——G+ 穷举的是「前置未就绪/状态非法/窗口过期/声明vs实抛」族,两臂(连 NEW)实际扫出的是另一批(线码撞名/自由文本长度码分叉/not-found 异类/TOTP 签名人数残留/onboarding 业务码塞状态位)。各找各的角落 → 对着 G+ 都打 0。**根因 = 棘轮度量法在大平表上的 bug:070 复验能判别是因 held-out 区域小而聚焦(bonus_i1 两区)、G+ 与两臂自然重叠;045 单个 4257 行平表 + 每臂仅 ~6 finding,撞同一缺陷概率太低。学习:大平表复验必须把 G+ 建设与两臂搜索钉死在同一有界子区域(同组族/同行段),否则 recall 测不出差异。**
+  - **撇开坏数字能读的(全 ref 复核、两臂零误报)**:NEW 比 OLD **多挖 4 条真缺陷**(自由文本 400/422 族分叉 / SALARY_ADJUST not-found 404vs500 / **DUAL_TOTP 名说双签实则三签 TripleTotpAspect.java:92=held-out GP-B01/B02 同类** / ONBOARDING 40019 塞状态位)、OLD 多挖 1 条(*_ERROR 命名纪律,非 R10),净 NEW +3;但 NEW 两条头部命中(HC_LIMIT/SSC_REROUTE 线码撞名)与 OLD 既有 R09 **逐字重复 = R10 在此冗余非增量**。
+  - **裁定**:**不能盖「R10 已在 045 泛化」章(找全率 delta 测量失效);能说「R10 是干净的温和增量、非死重」**(开火、+3 真缺陷集中 R10 目标类含一条 held-out 同类、零 cry-wolf,代价是部分重叠 R09)。**最值钱产物 = 度量法 bug**(070→045 迁移才暴露,070 小聚焦区域掩盖了它)。诚实:单域 n=1、单仓单 ref、LLM 单采样噪(NEW 6 vs OLD 3 跑跑会变)、G+ 已证不完整(两臂挖到 6 条真缺陷不在 G+)。
+  - **下一步二选一(未自动执行)**:① 聚焦重测——G+ 与两臂钉同一 ~8 族有界子区域取干净 delta(OLD 无任何族一致性规则→结构上族状态分叉应近 0、NEW 应 >0、大概率 fold_lifted),~900K tok 仍 n=1,可顺带纳入 048;② **收下弱正向 + 度量学习,承认棘轮近边际递减(070 八轮+045 一轮),杠杆移回北极星(被堵的 G2 / 真 ship 一个产品)——倾向此**。全量 → `D:/projects/skills-pilot/oa-pilot/generalize-045-R10-2026-06-30.md`。
+
+- **✅续10(2026-06-30 修复重测:钉死同 6 族,wf_a088edb1-f62 / 6 agents / 700K tok)——证伪 ✅续9 的 flat、R10 在 045 泛化为真**:用户选「①聚焦重测」。修复 = 把 G+ 和两臂都钉死在同 6 个中性「拒绝原因」语义族(全表横扫,因 R10 的族是语义的非行号空间的)。
+  - **修复生效(本轮首要验证)**:coverage_overlap 从 ✅续9 的 ≈0 → **0.70**(G+ 70% 落在至少一臂出过 finding 的族)。⇒ **✅续9 的「两臂 recall 双 0」确系找错区域的度量 bug,非 R10 失效**。坐实学习:大平表复验 G+ 与两臂须共享同一**语义有界区域**(对 R10 是族、不是行段),否则 recall 测不出。
+  - **判别后结果 = fold_lifted**:**held-out 找全率 NEW 6/17=35.3% vs OLD 3/17=17.6%,delta +17.6pp(NEW 翻倍),precision 双臂 100%、cry-wolf 0**。增量结构归因 R10「按拒绝原因聚族再比对协议状态」扫描锚:NEW 独有 GP-01(族3 自由文本全族 12 码 400/422/403)+ GP-03/04/07(族2 前置六向 403/409/423/422/400/200)= **整族级 finding,OLD 逐码 R02/R09 视角产不出**;OLD 只逮单点分叉(GP-02/05/08)。
+  - **诚实(强 caveat)**:单域 n=1 单文件;G+ 仅 20/held-out 17、NEW-OLD 只差 3 条绝对命中、单命中拉动约 6pp、噪声大;LLM 单采样;族4 permission(4 gid)族5 duplicate(2 gid)两臂都没碰、这两族 recall 不可判 + R10 触发覆盖没做满;G+ 不完备(3 条 verified 真缺陷 O4 MAKEUP 补卡重复码 400/409 / N4 族6 对象已锁定 409/423 / N5 入职码 40019 塞状态位 漏收 → 真实分母更大、recall 被低估)。
+  - **裁定**:棘轮 detect→fold→verify **首次在「第二个技能 + 干净测量」上成立(070→045)**——R10 域内泛化为真,但强度=温和正向、n=1、非强证据。✅续9 的 flat 结论被本轮证伪(是度量 bug)。**下一步**:048(R08 跨工件单一源,结构不同的规则)若也 fold_lifted = 跨「不同种类规则」泛化更强证据;先 scout 其可测性。全量 → `D:/projects/skills-pilot/oa-pilot/generalize-045-R10-REFOCUS-2026-06-30.md`。
+
+- **✅续11(2026-06-30 第二技能 048 R08 泛化,wf_0aaf494c-5e5 / 6 agents / 703K tok)——结构不同的规则也 fold_lifted,但是「从零到有」+ 未饱和**:R08(同一业务值跨不同工件类型复制无单一源)与 R10(错误码注册表聚族)轴完全不同 = 棘轮跨「不同种类规则」泛化的更强测试。沿用 ✅续10 验证过的「钉死同 scope」修复(5 概念类 × 工件类型)。
+  - **结果 fold_lifted**:**OLD(无 R08)在 5 概念类里零 finding**(048 折前压根没这条规则、能力完全缺席);**NEW(有 R08)产出 8 条、逐条 git 核实全真、零误报(precision 1.0、cry-wolf 0)**;held-out 找全率 0→2/12=16.7%,delta +16.7pp。2 条命中 G+(拆单 20000 双源 / 报销频控 5 双源),另 6 条是 G+ 没枚举到的真缺陷(请假窗 180/30/24、工单 SLA 4320/240/1440 双 Java 类、USDT 死锁 10/13/15 config+三写死、绩效 S 上限 0.20 且实漂成 0.1、采购档位表双 DDL、区域绑定上限 2 三处)。
+  - **关键诚实**:(1)**OLD 零产出 → 对比本质 NEW-vs-空基线**,R08 是把「不产出」变「产出」的填空(比 045 OLD 有 R09 部分覆盖更彻底,但 delta 不是「谁更强」是「有没有这条规则」);(2)**NEW 漏掉唯一训练正例 GP-01**(采购档位金额 Router-vs-ReimbursementService 静默漂移)→ recall_overall 仅 0.154、**折被拉起但远未饱和**;(3)G+ 不完备(8 产出 6 条 G+ 漏收→真实分母更大);(4)R08 跨工件判定带主观(已逐条 git 核 file:line)。单域 n=1、G+ held-out 仅 12、LLM 单跑。
+  - **跨技能大图裁定(D-041 线收口)**:棘轮 detect→fold→verify **泛化成立**——在 070(8 轮深炼)+ 045 R10(同类规则,held-out 17.6→35.3%)+ 048 R08(异类规则,0→16.7%)三处,折规则都抬找全率、**零 cry-wolf**。但一致地:**温和、n=1 单仓、绝对 recall 低/未饱和**(R08 连训练正例都漏)。= 方法论已被刻画清楚:「能迁移、不掉精度,但增益小且未饱和」。**够两点干净泛化数据,无需再炼第 3 个技能**;北极星瓶颈在外部(OA G2 被堵)、不在 skill 质量。全量 → `D:/projects/skills-pilot/oa-pilot/generalize-048-R08-2026-06-30.md`。
+
+## D-042 — STATUS.md 重构:覆盖式现状快照(非追加日志)+ _sessions 当历史 + ritual 改「覆盖不追加」+ Stop hook 行数检查(用户 2026-06-25 拍板)
+
+- **日期**:2026-06-25
+- **背景**:STATUS.md 涨到 291KB / 378 行,line5 单行 changelog 独占 131KB(45%);SessionStart hook(`.claude/load_memory.py`)每个新 session **整体注入** STATUS(285KB)+ DECISIONS(100KB)= ~414KB,加载慢。用户提两版方案,锁定「第二招」=STATUS 是覆盖式快照、不是追加日志(白板 vs 笔记本)。
+- **根因(workflow wf_9fc0fd83,8 agents/455K tok 验证)**:不是缺日历桶(`_sessions/` 已是健康的逐会话日志,51 文件),是**缺修剪/归档纪律**——CLAUDE.md ritual 只命令 update STATUS、从不命令 trim,每次 append、单调增长。`HANDOFF-*.md` 是铁证(上次把现状拉出去单独成文,2 天废、内容回流 STATUS 顶部)。
+- **决定**:
+  1. **STATUS = 覆盖式现状快照**,固定区块 = 现在做什么 / 在途线程(每条一行 + 细节链接)/ 卡点 / 按需细读指针;永远 ≤ 一屏(~60 行);做完即删或挪进 `_sessions/`。
+  2. **`_sessions/` = append-only 历史日志**(已存在,认领之;**不新建第四层日历文件**)。周报/日报 = 输出(生成时读 thread 汇总,不被日推送)。
+  3. **进度单一事实源**:**不**向「日→周→月」三处 rollup —— 那正违反本项目自家 048-R08(cross_artifact_single_source_of_truth,reject)= 拿自家平台规则 dogfood 自己的文档系统。
+  4. **ritual 改 replace-not-append**(CLAUDE.md L20 已改)+ **Stop hook 加行数/单行大小检查**(机器兜底,因「纪律靠记性」已自证会腐烂)。
+- **执行落地**:STATUS 291693B/378 行 → **2346B/30 行(减 99.2%)**,hook 注入每 session 自动少 ~289KB。全量备份 `D:/work/资料/skills/_archive/STATUS-pre-restructure-2026-06-25.md`;line5 changelog 单独归档 `D:/work/资料/skills/_archive/STATUS-changelog-2026H1.md`(**归档非删**,防个别条目未进 _sessions)。`stop_check.py` 提示词已改对新区块名(去掉旧 已完成/待做/最后更新);**行数检查执行逻辑**先被 self-modification 权限守卫拦下、向用户说明后获授权「需要」→ 已接并实测(新 STATUS 放行 / 旧 284KB 触发 BLOAT;>20KB 或 >8KB 单行即提醒)。
+- **DECISIONS 注入优化(同 D-042 一并做掉)**:`load_memory.py` 去掉 DECISIONS.md 全注入,改 `decisions_index()` 实时抽 `## ` 标题(45 决策 + 3 段)注入、全文按需 Read(派生、零漂移、守 048-R08)。**合并效果:SessionStart 注入 ~414KB → ~27KB(减 93%)**——STATUS 瘦身 + DECISIONS 索引各承一半。红线「查 DECISIONS 先」靠索引提示 + 按需 Read 守住。
+- **不复议**:STATUS 覆盖不追加、`_sessions` 当日志、不做三级 rollup 已立。记忆 [[always-full-file-paths]]。
+
+
+## D-043 — Head-to-head 首测「skill 产出 vs 人类代码」:方向对、首跑踩过期 PRD 坑(2026-06-30)
+
+- **背景/转向**:用户 2026-06-30 拍板「打磨工具不是目的,要的是工具能实现更好的产出」([[tool-is-means-output-is-end]])。停止磨 recall,改用 head-to-head 直测北极星命题「单兵×skill ≥ 团队产出」:拿 OA 真 PRD 盲生成代码 → 比人类实现。靶=BUG1334 入职 Node2 GM 3 级兜底(设计稿 §1-2 当 PRD,人类基准 `DefaultWflowOrgIntegration`)。workflow `wf_89df8af9-9ff`(6 agents/427K):盲生成(只喂 §1-2、禁访问 OA)→ 设计→实现→045/048/070 自审 → 3 桶对比 → 裁决。
+- **机械裁决 `better`,但已作废**:核实发现人类**现在真接线的是 `resolveGmByTargetOrg`(v2)**(`AssignUserParser.java:1195` 调用、配 10+ 用例测试),而我当 PRD 用的设计稿对应 `resolveGmWithFallback` **零调用=死方法**。⇒ **skill 忠实实现了团队已弃用的旧规范**,「skill 9/9 比人类 7/9 完整」是跟死规范比、不成立;人类「2 条 PRD 外」恰是 v2 现行设计(我 PRD 没跟上)。
+- **站得住的(spec-无关,可断言)**:① **硬化 skill 自审当场抓修生成阶段自造的真 bug** = 用户命题微观验证:generate 阶段自加 `excludeSelf()` 把 HM 本人剔出 L1(违 §2.1 明写规则 + 错心智模型「本人审本人」,实际入职主体是新人)→ 070 自审识别并删;另含两套 tie-break 收敛成一套(048)、空集 fail-closed(070);5 处自审修复。**= 不是 LLM 蒙对,是质量 skill 当流程纪律挡下已写进代码的 spec 违背。** ② 生成代码工程卫生确实好(单一常量源/一套排序+环防护/fail-closed 不返空审批人),已落 `D:/projects/skills-pilot/oa-pilot/headtohead-bug1334/GmFallbackResolver-generated.java`。
+- **守红线打折的**:「人类有 fail-soft 返空坑」是对比 agent 说的,但 v2 是活的带测试代码、我**未独立确认**,按发现器非裁判**不断言人类有 bug**。盲测相似度(生成 vs §3.4 参考实现)大部分可由「§2 本含审计格式/三级规则」解释、倾向收敛非抄,但不能 100% 排除。
+- **真正教训(本测最值钱产出)**:**head-to-head 必须先核 PRD 是 current —— 它对应的方法是不是现在真接线那版**(`resolveGmWithFallback` 零调用就是过期信号)。= [[reqclar-check-canonical-first]] 第①门(判现状先核 canonical)在 head-to-head 同款应用,也是 045 第一轮「度量 bug」同类:**测量设计自身的坑又一次靠核实抓出(D-018 诚实纪律)**。
+- **裁定**:转向正确(直测产出而非内部指标),但北极星命题「skill ≥ 团队」**本轮未干净回答**(过期 PRD)。下一步二选一:① 用 v2 现行规范(反推自其 10+ 用例测试 / 禅道单)重测、比 v2 活代码;② 换「设计稿方法仍有调用者」的同版 slice 重测。诚实:只静态比、n=1、LLM 单次方差。产物 `D:/projects/skills-pilot/oa-pilot/headtohead-bug1334/RESULT-2026-06-30.md`。
+
+## D-044 — Head-to-head 修正版:skill 比裸 LLM 强在下行卫生、缺上行判断力(2026-06-30)
+
+- **背景**:D-043 首测踩过期 PRD 坑 + 我两次单视角下结论。用户连给三条方法定论(判维度=代码质量+工程判断非 PRD 保真度 [[tool-is-means-output-is-end]];确认问题要多方验证 [[problem-needs-multi-angle-confirmation]];处理真问题 fan out 整条 skill 链)→ 修正重跑 `wf_c71232d2-5c2`:SKILL 臂(skill 方法+045/048/070 自审)vs PLAIN 臂(裸 LLM)双盲生成自 §1-2,judge 代码质量+判断,比人类 v2(判断力标尺),纪律=只有违背明文当场判其余 ≥2 视角。
+- **结果(干净、可信)**:**skill_vs_plain=better,skill_vs_human=mixed,排序 人类 v2 > SKILL > PLAIN**。零 explicit_violation(两臂都正确实现 §1-2 锁死语义、无明文违背),2 条 confirmed 全 two_angle_agreement,7 候选守纪律不当结论。
+- **两条确认问题**:① **两臂都死抄 §1-2 的 hmEid 驱动链、没识别 #1334 真根因**(hmEid 在入职表单常解不出→L1+L2 同失效→静默降级顶层 L6;人类 v2 改锚 targetOrgId 绕开)= 设计判断缺口、N120-180;② PLAIN 组织上溯缺 visited 去环(只跳数上限)= 健壮性缺口、N190-220。
+- **核心发现(下一靶)**:**skill 加持全落「spec→干净实现」的下行卫生,没落「质疑脆弱 spec」的上行判断**。045/048/070 都是结构/格式/防御层,skill 体系**缺一类「输入 spec 单点失败/根因质疑」的设计审视 skill**(该挂 N120-180)——这正是人类 v2 拉开身位那一步,SKILL 只是把脆弱 spec 抄得更工整。
+- **诚实**:纯静态、n=1、LLM 单次方差;**SKILL 自称「27/27 验证通过」却零测试源码、PLAIN 反而实交六类路径单测 → 测试证据 PLAIN 反超 SKILL**(skill 臂自审过度乐观苗头)。
+- **裁定**:① skill 对裸 LLM 的增量是**真的但窄**(代码卫生/防御),不是凭空打磨——回答了用户「打磨到底有没有用」=有、但只在下行;② 北极星命题「skill ≥ 团队」**当前 mixed**:质量追平、判断力差一截;③ **demand-pull 下一步明确**:补「spec 批判/根因质疑」设计 skill,先用链分析(fan out 整条链定位真缺口、通用优化、排序)处理这个 confirmed 问题。产物 `D:/projects/skills-pilot/oa-pilot/headtohead-bug1334/RESULT-v2-2026-06-30.md` + 两臂代码 `v2-SKILL-arm.java` / `v2-PLAIN-arm.java`。
+
+## D-045 — 链分析引擎首跑:把 D-044 缺口变成「微调两个已有 skill」的通用优化草案(2026-06-30)
+
+- **背景**:D-044 confirmed「skill 缺『识别输入 spec 单点失败 + 根因质疑』能力」。按用户定的方法(给一个问题 fan out 上下游整条 skill 链、读真实内容、确认真缺口别瞎改、起草通用优化、排序)跑链分析 `wf_0049357e-de8`(9 agents/339K):读 7 候选(005/036/038/040/041/053/054)真实 SKILL.md。
+- **结果(方法兑现)**:**不是缺一类 skill,是缺两个具体探针;微调两个已有 skill 非造新**。owner=**N130-040 方案评审提问(主)+ N130-038 方案分析/FMEA(协同)**。链分析的价值:朴素答案会只改 040,但它发现 **040 单独改没用——要问的失败模式得 038 先生成(038→040 有 handoff)**,所以两个一起 = 「查整条链别只修正对的那一个」兑现。守纪律没瞎改 3 个非 owner(005 在设计上游禁设计 / 041 纯耦合拓扑 / 053 是负载降级另一轴)。
+- **草案(零项目字样、已验证)**:040 加探针 `P11_chain_hangs_on_single_input_key` + 问法映射 + 新小节(a 真实输入分布下单输入 SPOF:该 key 真实解析率多少/缺失时是否全层垮静默落最弱默认/有没有必有字段可改驱动,显式区别 P03 组件宕机;b 根因契合非表面 spec 照抄)。`generic_check_passed=true`、`validation.catches=true`(走泛化反例:P11 触发→生成正是目标三问 + Q2_CHALLENGE,不被 P03 吞)。038 协同补同名 FMEA 失败模式使检测生成式。
+- **诚实**:P11 靠评审者识别「整链由一个 key 驱动」,设计藏起来则可能漏触发;根因质疑刻意窄触发防 cry-wolf。
+- **裁定**:**demand-pull 闭环跑通一半**——真实问题(head-to-head 抓出)→ 链分析定位 → 通用可入库优化草案。**这是「打磨让产出更好」的实际产出形态**(不是 recall 数字)。下一步二选一待用户拍:① 折进库(040 主 + 038 协同)② 折完**重跑 head-to-head SKILL 臂**验证优化后是否真逮住单点 = 闭环全证。产物 `D:/projects/skills-pilot/oa-pilot/headtohead-bug1334/CHAIN-ANALYSIS-2026-06-30.md`。
+
+## D-046 — P11 折上库 + 闭环验证:弱闭环,折未被干净证明(2026-06-30,ultracode)
+
+- **执行 D-045 的②(折进库 + 闭环验证)**:① 3 视角对抗审计 P11 折(通用性 clean / 完整性 pass / 反臃肿 additive),采纳两处收窄(根因质疑 b 须依附已触发的 a、防满天飞;038 occurrence 取高后仍走 RPN 公式);② **查出 040 的 references(review-consistency-check.md + exact-contract.md)有 probe 封闭枚举**,只改 SKILL.md 会被自己一致性检查拒 → 同步补 P11(= 用本项目自家 048-R08 跨工件一致性修自己的库);③ 应用(备份 `_apply-spec-critique/backup/` + python zipfile,040 改 SKILL.md+2 refs、038 改 SKILL.md,namelist 不变/零项目字样/frontmatter 完好/库恒 157)。
+- **闭环重测 `wf_b8472057-e5b`(PRE vs POST 各 2 seed,唯一差异 P11;POST-a 跑挂只剩 3 臂)**:**verdict=closed_weak、loop_closed=false**。
+  - **核心判据未成立**:PRE 两臂(无 P11)靠 040 既有 P03 组件 SPOF + Q2_CHALLENGE **也问出了**单输入 SPOF。⇒ P11 在「探针是否触发」维度边际增量小、不能干净归因。pre_fired=2 / post_fired=1。
+  - **P11 真增益在「问出后怎么改」**:仅 POST-b 把脆弱驱动键换掉(新增层用入职必有的「目标部门→公司」字段驱动 + 可观测指标 + rejected-alternatives)= 教科书 re-anchor;PRE 只「检测+去静默+升级」没换驱动。但这是工程判断、单 seed、POST-a 挂故 n 实为 1。
+- **更深发现(纠链分析原诊断)**:链分析说「040 不问单输入问题」是错的——040 既有 P03/Q2 已会问。**v2 head-to-head SKILL 臂漏 SPOF 的真根因 = 那臂压根没跑设计评审步骤(只有代码卫生自审)**;一旦跑 040/038(连 PRE 都行)就问出来了。⇒ 更高杠杆在 ① 流程把设计评审接进实现流程 ② 实现/设计 skill 要 act-on-surfaced-risk(把风险落成重构而非只升级)。
+- **裁定**:**demand-pull 全闭环跑通了形式(问题→链分析→折→上库→闭环复测),但 P11 的价值未被干净证明**(弱闭环 + POST-a flake + 增益是单 seed 工程判断)。又一次靠闭环测试抓出过度乐观(这次纠的是链分析定位)= D-018/[[problem-needs-multi-angle-confirmation]] 诚实纪律第 N 次兑现。**折暂留(clean/无害/可回退),待用户拍**:① 再跑干净的(多 seed+修 flake,聚焦 redesign-delta)拿真判据 ② 保留+转攻「流程接评审 + act-on-risk」更高杠杆 ③ 回退守精简库。产物 `D:/projects/skills-pilot/oa-pilot/headtohead-bug1334/LOOP-CLOSURE-2026-06-30.md`。
+
+## D-047 — 两缺口 demand-pull 前半段:GAP-2(强制改锚)折 as-is / GAP-1(实现接评审)修 2 缺陷再折,待用户拍折/验(2026-07-01,ultracode)
+
+- **执行 D-046 的②(转攻更高杠杆缺口)**:用同一 demand-pull 闭环打 D-046 揭出的两真缺口。这次前置一个「其实早覆盖吗」怀疑者 agent,逐轴对源码证真后再起草,专防 D-045→D-046 那种错诊。workflow `wf_7f890002-6d8`(13 agents / 868K tok / 12min)。**两缺口都活过怀疑者(2/2)。**
+- **GAP-2(单点风险强制产出改锚设计)· owner=039 唯一产设计者(协同 040、源头 038)**:真缺口=链会侦测/问/升级/加固,就差「产出改过的 S3/S4」这条约束规则无人认领。D-046 陷阱已排除——改锚提问早在 `040:182` 逐字存在(草案不重加它),grep「re-anchor/swap driver/demote」全库 0 命中,新增只是绑定规则。**三视角全 pass**;catches 通过(照抄脆弱 spec 在 R11=reject 挂掉,route_back 重跑 S2/S3/S4;§5b 靠 039 自检、上游评审跳过也触发)。= **折 as-is**(1 可选校准:收窄 §5b「未声明」分支;2 非阻塞核对:标注 040 的 P03、核 038 mitigation 枚举位置)。
+- **GAP-1(评审「消费+门禁+前送」)· owner=058 主 + 040/039 协同**:真缺口=3 根断线(058 输入无评审槽位只落可选层被降级 / 无自检+就绪规则查评审状态 / 040 订阅=[N330,N340] 结论从不到实现)。逐轴对源码证真(058 只从 N130 取 name/layers/modules/stack、不读 FMEA/评审)。**cry-wolf 揪出 2 必修缺陷**:① 058 就绪词表分裂——权威枚举 `shared-codegen-enums.yaml` 无 constrained/pass,草案全程用它 = 非法、POST 会 StructuredOutput flake;修法用 `contract_aligned` 表达压级。② 嫁接进 R09/READY-000 的 GAP-2 改锚附加款只在问题被打标「确认单点」时触发,但**无 skill 自动产出该标签**(040 发 probe id+criticality 不发布尔)→ 照抄臂上退化成侦测即上报 = 判不足;修法摘掉附加款、GAP-1 保持纯消费+门禁+前送,GAP-2 强制归 039 侧。= **修完 2 处再折**。
+- **诚实**:n=1 单 spec/单案例,泛化框架成立+占位符干净但校准未证;可核项(3 断线/040:182/规则号空位)与工程判断项(插入点/cry-wolf 平衡)已分开标。两缺口无一 reject。
+- **裁定 · 待用户拍(3 选 1)**:①(荐)先把两草案(GAP-2 as-is + GAP-1 修完)注入 head-to-head SKILL 臂**干跑验证**(PRE vs POST ≥3 seed,主判据 redesign-delta=POST 是否真改锚到必有字段而 PRE 只加固,+ cry-wolf 控制跑干净设计不误触),赢了再折——先证后折、避免又一个 closed_weak;② 直接折(GAP-2 干净 + GAP-1 修 2 处)后跑闭环复测;③ 只折 GAP-2、GAP-1 放。顺序=GAP-2 先(自触发)、GAP-1 后(先解枚举分裂)。**折仍由用户扣扳机(沿用历轮纪律,库恒 157)。** 交付 `D:/projects/skills-pilot/oa-pilot/headtohead-bug1334/FOLD-DECISION-actonrisk-gaps-2026-07-01.md`。
+
+## D-048 — GAP-2 干跑验证(用户选①先证后折):closed_partial,窄而真——delta 仅 1/3、专治时序型脆弱(2026-07-01,ultracode)
+
+- **用户选①**:折前先干跑验证。做法=把草案当规则注入设计臂,PRE(现方法)vs POST(带新规则)×2 样本,3 脆弱 seed + 2 干净对照,2 独立评委(中立分类 + 对抗反驳)判 redesign-delta + cry-wolf。臂走自由文本、只评委用小 schema → 避开 D-046 那次 POST-a 的 StructuredOutput flake。
+- **v1(wf_3fabba80,26 agents)= 我 seed 设计漏底、作废**:spec 里写了「X 常空、Y 必有」的 NOTE = 把脆弱键+改锚目标直接喂给臂,删掉了真正要测的「**发现**隐藏脆弱性」难点 → PRE 和 POST 一起满分、delta=0。教训:验证 seed 不能把答案 telegraphed,否则测的是「已知后会不会动手」(基线已会)而非「能不能发现」。
+- **v2(wf_13e4676b,去泄底、改中性 CONTEXT 逼发现)= 有效**:**loop_closed=false / closed_partial**。POST 5/5 行为正确(3 脆弱全改锚、2 干净零误触=cry-wolf 干净、机制不滥杀),**但改进 vs PRE 只在 1/3 拉开**:
+  - **F1(时序型脆弱:字段在库里有、触发那刻还没填=入职表报到前填、此刻无经理)= PRE 真栽(only_hardened,只加固没换驱动)、POST 改锚**。这正是真 bug #1334 的形状(hmEid 入职时点解不出)。
+  - **F2/F3(粗脆弱:这类单/告警本来就没这字段)= PRE 自己就靠需求覆盖缺口分析改锚了**,新规则无增量。
+  - ⇒ **gap 真但窄:专治时序型脆弱,非 head-to-head 初判的宽**。两评委 30 格判定零分歧(结论稳,但对抗评委没提供额外区分力;纯静态+单样本,别当铁证)。
+- **净结论 = 又一次靠验证抓出「增量比初看小」**(接 D-046 P11 closed_weak、v1 PRE 满分,连三轮同一信号)。**这是强信号非坏消息:157 库在设计评审/act-on-risk 轴已近强基线,边际 skill 打磨回报递减** → 按北极星([[tool-is-means-output-is-end]]/[[north-star-solo-leverage]])杠杆该转向真实使用(往 N=3)或别的瓶颈,别再磨这轴。
+- **裁定 · 待用户拍(3 选 1)**:①(荐)折 GAP-2 但 folder 诚实标注「delta 仅 1/3、专治时序型」+ GAP-1 先放(本轮未测、别搭便车)→ 转轴;② 造更多 F1 型难 seed 再跑站稳再折;③ 都不折守精简库直接转轴。**GAP-1 无本轮证据,不得以 GAP-2 名义折(否则重犯 fold-and-claim-verified)。** 数据 `.../scratchpad/judge_data.json`(临时件);脚本 `.../workflows/scripts/verify-actonrisk-drafts-pre-vs-post-wf_3fabba80-148.js`。
+- **round-3 终裁(用户选②:造全时序型难 seed + PRE×2/POST×2 + 对抗评委再跑,wf_7aa0aa62,43 agents/1.55M tok)= DO-NOT-FOLD GAP-2**:**strict delta 0/5**(判据=两 PRE 都没发现+两 POST 都改锚+两评委都同意,无一 seed 达到)。原因一致:T1/T2/T4 PRE 基线**自己就改锚了**(读 CONTEXT、看穿字段触发时点未填、换驱动键),POST 产同一份设计;F1 中立判 PRE「只加固」但对抗评委看 coalesce 代码认定 PRE 也改锚(同码反标)、F1 塌;T3 PRE 1/2、POST 2/2(真但薄)。**cry-wolf 零**(POST 在 C1+C3「时序缺失但兜底本正确」都正确不动手;唯一误触是 PRE 臂 C3-preB→规则反而压住误报)。**越加严越缩水**:v2 的 1/3 在加样本+对抗评委后变 0/5 = 信号被证伪非确认。规则残值顶多「已改锚设计上的完整性/可靠性微调(F1 终端去静默、T3 1/2→2/2)且零误报」= 太薄,不进库,**库保持 157**。
+- **正面净结论(北极星相关)**:round-3 真正证明的是**现方法上游判断力已达人类那步**——4-5/5 时序型脆弱它自己就看穿并换驱动键。D-044「skill 死抄脆弱 spec、缺上游判断」**更像该次单样本方差,非系统缺口**。诚实边界:纯静态(无编译/运行)、合成 seed 是我按「时序型」假设自造(可能比真 spec 易)、LLM 有方差——不吹「人类级」,但「无 delta 可折」的决定稳。**连四轮(P11 D-046 / v1 / v2 / v3)增量零到负 → 设计评审/act-on-risk 轴已强基线,边际打磨回报递减 → 杠杆转真实使用(N=1→N=3),别再磨这轴**([[tool-is-means-output-is-end]]/[[north-star-solo-leverage]])。**方法教训**:验证 seed 不能 telegraph 答案(v1 栽在此)+ 折前先证救回一次低价值折(=verify-before-fold 纪律第 N 次兑现)。产物 `.../scratchpad`(临时);脚本 `.../workflows/scripts/verify-actonrisk-temporal-round3-wf_7aa0aa62-01c.js`。**GAP-1 全程未测,若将来要动须独立起证。**
+
+## D-049 — 三连事实纠错 + 新主线「充分利用 OA 全流水线 head-to-head」(2026-07-01,用户连纠)
+
+- **背景**:D-048 后我提议"转轴去 dream_true 起玩具 idea→prod 闭环"。用户连三纠把方向拨正:
+  - **① OA 不是"推不动"**(我盯裸 master 指针没动就断冻结,却没 grep 其内容里的 bug 号,还矛盾自己记忆 [[oa-live-n2-candidate]])。live 复验:#2946/#2947/#2949 三条我审计触发的 fix 已在发布 master(#2947 commit 显式「外部审计」);#2972-2978 在途 `feature/master-0625`(领先 master 309 commits、天天推)。教训:叙述真团队"停滞"前先读项目记忆 + grep 目标 ref **内容**而非只看 ref 指针(gate④)。
+  - **② dream_true 没 PRD**=你自己单作者仓、只用下游 skills(审计→dev-task→发现器 gate)跑已有代码,非完整 idea→prod、非外部团队。
+  - **③ CinemaAI 已废弃**(功能同 dream_true),我唯一的上游切片证据也死了。
+  - ⇒ 收回"N=2 已达成"overclaim:活的真实使用只剩 2 切片(OA 检测/外部 + dream_true 下游/自有),**完整 idea→prod 干净实例 0 个**。
+- **新主线(用户拍板)= 充分利用 OA,别老依赖别的项目**:用 skill **全流水线 head-to-head** 证「单兵×skill 产出能否**全面超过**一个真 7 人团队的真实产出」——逐阶段问:规避了 OA 的问题没?吸收了 OA 的优点没?PRD/架构/代码/完整性/测试逐项更优没?这是 [[tool-is-means-output-is-end]] 的终极检验,且在**真系统**上(非玩具),红线内(读 OA、产物落 skills-pilot)。之前一直只用 OA 做"检测/审计"1 片 + 1 次 tech-solution slice(B3),远没用满。
+- **首靶 = 认证/双签(用户选)**:TOTP 重置 + L6 同级双签(RequireDualL6Totp/RequireTripleTotp)。真 PRD(APR-A1-003 v2.5·跨 7 ADR 硬化·防共谋三链会签/签署独立性/降级状态机)+ 真代码(TotpServiceImpl 等)+ 真测试 + 真 bug(#2948/2972/2973/2974/2977/2978)俱全,"问题规避了吗"能直接验。**Stage 1 = Path A 需求→PRD head-to-head 在跑(wf_20899a20)**:非泄底种子 + 4 独立对抗评委三轴(完整性/问题规避/优点吸收)+ 魔鬼代言人替 OA。产物 `D:/projects/skills-pilot/oa-pilot/oa-h2h-auth/`。后续 stage:Path B 架构 / Path C-D 代码 / 测试。
+
+## D-050 — OA head-to-head 前两阶段:结论分化 = skill 在代码安全逻辑赢、在硬化 PRD 输;杠杆按"组织知识密度"分层(2026-07-01)
+
+- **两阶段实测(认证/双签模块,均盲测 + 4 对抗评委 + 魔鬼代言人)**:
+  - **Stage 1 Path A(需求→PRD,wf_a5fcfbeb v2 盲)= skill 不能超过 OA**:魔鬼裁 oa_clearly_better。skill 盲版能独立推出整条承重安全架构且诚实标开放问题不瞎编,但组织拓扑绑定(会签角色码/序列落点)+已定政策值(SLA/年限)+ADR 溯源是护城河、结构性(接触不到活体迭代史)、非磨 skill 能补。**方法坑**:v1 REDLINE 把 OA PRD 喂 skill-arm=污染作废(同 D-048 seed 泄底类)——对比/验证输入绝不能带答案。B2 禁 dev 后门 skill 盲版漏=demand-pull 候选(单样本别急折)。
+  - **Stage 3 组件1 Path C-D(双 L6 互签守卫代码,wf_bda80d50)= skill 超过 OA 生产代码**:三正向轴(正确性/安全/质量)一致 skill_better、魔鬼 genuine_parity。**决定性:skill 从"两个真正独立当事人"需求自主推出 OA 生产代码缺失的自然人级独立性**——OA 只比 eid(DualL6TotpInterceptor L137)、解析了 userId 却不互比(L153-154),同一自然人持两 L6 工号可两边都签、双人管控被架空;skill 比 userId 拒同人 + 写专测。+ 审计/禁用两处更硬 fail-closed。
+- **裁定(北极星精化)**:**skill 杠杆按"组织知识密度"分层**——安全逻辑密集/组织知识轻的代码组件 skill 能超人类真实产出(还找出真漏洞);组织拓扑绑定的 spec(PRD)skill 输、且非磨 skill 能补。杠杆模型 = skill 出安全逻辑+代码骨架+找隐藏弱点,人补组织接线+运营权衡+上线整合。**这是首个"skill 产出 > 人类真实生产产出"在真系统上的证据**(接 D-044 单 slice 打平之后)。
+- **诚实边界**:单样本单组件、纯静态未接线、skill 交付的是不能上线纯片段(做 20% 分支逻辑甩 80% 整合)、审计硬门是单方面可用性权衡非严格改进。要成结论须复现(下一步 B3 恢复码/B5 失败告警)。
+- **衍生真实 OA 观察件**:双签独立性只到工号级 = 走红线(D-018/verify-only):现象+代码证据(L137/L153-154)、非结论、标审计参考、回归点=同一自然人持两 L6 EID 走双签期望被拒、团队判;攒完代码阶段几组件一起交 HANDOFF(同 #2946-2949)。产物 `.../oa-h2h-auth/STAGE1-*.md` + `STAGE3-c1-*.md`。
+
+## D-050 更正(2026-07-01·用户两条反馈 + 活线核对推翻代码阶段"大胜")
+
+- **⚠️ 上面 D-050 说的"skill 在代码安全逻辑超过 OA 生产代码 / 首个 skill 产出>人类真产出证据"= 高估,更正。** 全流水线跑完(+Stage2 架构 parity + C4 HMAC 压测 + Path B)后,两条更正把代码阶段从"3/3 大胜"拨回"大致打平+几条窄小胜":
+  - **① 对决基线是陈旧 origin/master(落后活线 feature/master-0625 309 commits)。** 交 HANDOFF 逐条核活线才发现 C1/C2/C3 判 skill 赢的几个 bug OA 已修:B2 dev 后门(加固)/B3 恢复码 TTL 72h→15min(#2973)/B5 冻结无告警→已补 notifyL6Peer(#2977)。那几个"skill 赢"赢在已修旧码上=对当前真码平手。**教训:对决基线必须先对齐活线/canonical,gate④ 也适用于 head-to-head 基线(我漏了)。**
+  - **② C1 决定性胜撤销**:用户确认**工号唯一(一人一工号)**→ OA 的 `eid1≠eid2` 本就等价自然人独立,skill 的 userId 检查非优势、C1 该轴回打平。**教训:判"这是漏洞"前先核对方身份模型/canonical(gate①);我压在"一人可多工号"这个未验证假设上。**
+- **更正后总答(总记分卡 `.../oa-h2h-auth/TOTAL-scorecard-CORRECTED-2026-07-01.md`)**:全流水线梯度 = **PRD 输(oa_clearly_better)/ 架构打平(parity 偏 code,skill 反超 OA PRD 两维:防重放 nonce+原子密钥轮换)/ 代码大致打平 + 2-3 条窄小胜(失败计数非原子[开发已确认]/恢复码消费非原子/C4 HMAC 全行签名+nonce,均带不能上线片段+可用性权衡折扣)。「单兵×skill 全面超过真团队」不成立、也不接近。** 杠杆模型(温和版)=skill 追平安全逻辑+偶挖窄改进,人补拓扑接线+运营权衡+上线整合=协作分工,非替代/超越。
+- **净教训**:两次高估叠加(陈旧基线 + 未验证组织假设)把"追平+窄点改进"吹成"三连大胜";用户"只是部分模块不能算总体"+ 工号唯一 + 核 PRD 三条反馈拨回真相。守 [[reqclar-check-canonical-first]](gate①先核 canonical/对方模型、gate④先对齐活线)+ [[tool-is-means-output-is-end]](诚实报产出、别吹)。**HANDOFF 观察二撤(工号唯一)、观察三开发确认、观察一 PRD 核恢复码未取消(ADR-580)仍活。**
+
+## D-051 — 最硬测试:工具交付「完整功能」的 shortfall 集中在集成+数据流两处(2026-07-02)
+
+- **日期**:2026-07-02
+- **背景**:承 07-01 用户拨正——head-to-head 目的是找 skill 优化方向不是给工具打分。选①不跳:给工具一个有界但完整功能(TOTP 重置普通路:申请→HR核验→系统重置→恢复码→重绑),从零做到能编译/功能点齐/接进 hub-oa,逐条 shortfall→skill 方向。基线先对齐活线(fetch 到 `origin/feature/master-0625` `c80a52167`,hub-oa 零改动)。
+- **方法**:派子代理当"工具"(严禁读答案模块 `modular/totpreset/`、OA 只读、写只落 skills-pilot),给两份 canonical PRD。产出 32 java/2437 行,对着封存标尺(真模块普通路切片 ~24 文件/~2400 行)独立核。
+- **结论(修正上一轮 20/80 悲观说法)**:
+  - **工具插件内业务逻辑基本真且对**:五节点状态机+乐观锁、Redis 配额/冻结、SLA 扫描、恢复码 AES+过期、精确错误码、审计、HMAC 回调,还自修 2 个真事务 bug;代码量与真切片持平(非空壳)。**业务逻辑轴已不弱(呼应 D-048)。**
+  - **短板集中在跨边界集成**:5/5 集成全桩,含**功能核心动作「真正重置密钥」被桩**(走完流程却没重置)。
+  - **两桶分开(防再高估)**:桶A=真缺口(可达却桩)——(1) HR 序列解析整条桩成永远 Y-L4C1,根因是数据模型漏建 `applicantRoleCode` 输入(真模块该分支仅 15 行纯前缀、Y/Z 根本不跨域;J→编制单位真开发用 getBean+反射接上);(2) 真重置/TG 通知桩掉,但 `TotpService`(auth-api)/`UserTotpService`(同插件 login)/`TgMessageSender`(auth-api)全是既有可注入契约,工具却另造门面桩。桶B=实验限制(wflow 发起契约/PC Web 降级归别域 owner,桩得合理,不记缺口)。
+- **产出 = 4 条优先级方向(非分数)**:①(最高)集成前先盘目标库已发布契约面(`*-api`/同插件服务/反射逃生口)再决定接还是桩 → Path B + N150;②(高)数据流建模从业务规则反推派生输入字段、不止照抄表单 → N160 + skill 048 data-flow-mapping(棘轮家族内);③(中)交付即产测试脚手架设为完整功能门 → N230-260 + Path D;④(低)安全收尾清单 → N210。
+- **纪律**:样本 n=1、单模块单轮单切片,方向是候选清单不是改库指令;真折进 skill 前按 D-048 须先跑出真实 PRE<POST delta。文档 `D:/projects/skills-pilot/oa-pilot/oa-h2h-auth/SHORTFALL-to-skill-directions-2026-07-02.md`。
+
+## D-052 — 方向1(集成契约面盘点)A/B 验证:强 PRE<POST delta,fold-worthy(2026-07-02)
+
+- **日期**:2026-07-02(承 D-051,用户选①先证后折)
+- **干预(通用零项目词)**:落任何 integration 桩之前先盘目标库「已发布跨边界契约面」——① `*-api`/契约模块 ② 同模块/同进程可注入服务 ③ 既有跨边界调用范式(DI/门面/getBean+反射/事件);三条都确认拿不到才允许桩。反模式=未盘就默认「跨域=接不上=造门面桩」。拟加进 Path B `prd-to-tech-solution`/N150 集成映射环节。
+- **A/B(除干预外全同:同任务/同 PRD/同只读红线/同型子代理)**:PRE=`tool-run-2026-07-02/OUTPUT`(无干预,5/5 集成全桩);POST=`tool-run-2026-07-02-POST/OUTPUT`(仅加干预)。
+- **预登记(看 POST 前写死口径)**:主指标=3 个可达集成(HR解析/真重置/TG通知)接实真契约几项,PRE=0/3;阈值 ≥2/3=强 delta 可折。`DIR1-preregister-2026-07-02.md`。
+- **结果(独立核,非信自评)**:**PRE 0/3 → POST 3/3**。(a) HR:就地实现 Y/Z/J 前缀分支+注入真 `OaEmployeeRecordApi`,仅持有人反查留桩(真模块此步也交 wflow);(b) 真重置:注入真 `TotpService`+`UserTotpService.bindGoogleAuth`;(c) 通知:注入真 `OaTgPushLogService.recordSingle` 发催办。**4/4 点名契约已回 hub-oa 核实真存在**、全来自 api/兄弟模块非答案目录。护栏全过:红线干净、桶B(wflow/降级)留桩不计负分、业务逻辑无回退(配额/冻结/乐观锁/恢复码全在;少 570 行=复用真契约+不堆门面桩)。次指标(捕获派生输入)POST 亦 ✅。
+- **判定**:方向1 **fold-worthy**——真实、非边际(0→3)、机制可归因(干预直接让工具 grep api 模块找到并注入 5 个真契约而非造 5 门面桩)。
+- **诚实边界**:n=1 每臂/单模块/一对 A/B;delta 大且机制明确,严格说折前值得再跑一对压方差。折=改已有 skill 加一步,库恒 157 不新增。方向2(数据流反推派生输入)被顺带带出但未单独 A/B,不算已验。
+- **文档**:`D:/projects/skills-pilot/oa-pilot/oa-h2h-auth/DIR1-RESULT-delta-2026-07-02.md`。
+
+## D-053 — 方向1 压方差(第二对 A/B):效应真但比第一对小、基线方差大,第一对高估(2026-07-02)
+
+- **日期**:2026-07-02(承 D-052,用户要求折库前再跑一对压方差)
+- **做法**:全新独立一对 PRE2(无干预)/POST2(带干预),同任务同红线,与第一对同口径独立核。
+- **四次跑合并(3 可达集成接实真契约数)**:PRE1=0/3、POST1=3/3、**PRE2≈2/3、POST2≈2/3**。→ PRE 臂 {0,2} 均值≈1/3 方差大(全距 0→2);POST 臂 {3,2} 均值≈2.5/3 方差小。所有点名契约(含 resetAllChannels/getUserByEid/revokeGoogleAuth)逐个回 hub-oa 核实真存在、无编造、红线四次全干净。
+- **关键真相(压方差压出来)**:① 基线**不是**可靠 0/3——PRE2 无干预时自己就用 getBean+反射接实了重置密钥(2/3);「工具总甩集成」是假的、逐次随机。② 第一对 0/3→3/3 **高估效应**,因抽到最差基线 PRE1。③ 干预真实作用=**抬地板到 ≥2/3 + 加深契约发现**(POST2 还挖出 SM4国密≠PRD写的AES、错误码枚举冲突、ADR-580 只revoke GA),效应≈+1.5 点,非质变;四次里带干预从没帮倒忙。
+- **判定**:方向1 **directionally fold-worthy 但效应中等**;干预本身是普适良性零风险工程纪律(桩前先盘契约)。**证据 = 方向明确+效应中等+样本仍小(n=2/臂),非铁证。** 待用户拍:A 现在折(推荐·低风险,fold 条目如实记「效应中等/基线方差大/第一对高估」不吹质变)/ B 再压 2-3 对到 n=4-5 钉实效应量。
+- **教训**:单对 A/B 会被基线方差骗(第一对抽到 PRE1 最差基线→看着像 0→3 质变);压方差是对的,救回了一次高估。守 [[problem-needs-multi-angle-confirmation]] + [[tool-is-means-output-is-end]]。
+- **文档**:`D:/projects/skills-pilot/oa-pilot/oa-h2h-auth/DIR1-VARIANCE-2026-07-02.md`。
+
+## D-054 — 方向1 扩样 n=5:干净分离,效应稳,前两轮判断都被样本量骗过(2026-07-02)
+
+- **日期**:2026-07-02(承 D-053,用户选 B 再压 3 对到 n≈5)
+- **做法**:PRE3/4/5 + POST3/4/5 六个并行跑,合前两对。逐个独立核(不信自评),契约逐个回 hub-oa 核实,红线九次全干净。评分:3 可达集成(HR解析/真重置/TG通知),部分接实计 0.5。
+- **每次分**:PRE={0,1.5,1.5,0,0.5} POST={3,2.5,3,2}(POST4 被会话额度截断在服务层前=作废,非做得差)。
+- **结果**:**PRE 臂 n=5 均值 0.7/3(全距 0–1.5) vs POST 臂 n=4 均值 2.6/3(全距 2–3)= 干净分离,max(PRE)=1.5 < min(POST)=2,九次零重叠。**
+- **修正前两轮**:D-052「0→3」= 单点抽到最差 PRE1 过高;D-053「效应中等/基线不可靠」= n=2 噪声(PRE2/PRE3 偏高各被抽中一次)。**n=5 真相居中偏强:+1.9 点且完全分离**;带干预九次没一次退回门面桩、无干预五次没一次达 POST 水平。
+- **判定**:方向1 **fold-worthy 置信度较高**。干预(落集成桩前先盘已发布契约面)普适零风险。**下一步 = 折进 Path B/N150**,fold 条目如实记(n=5 PRE 0.7/POST 2.6/干净分离/POST4 额度截断/单模块单维度),不吹 0→3。
+- **教训**:**单/双跑都会被样本量骗**——n=1 看着质变、n=2 看着中等噪声,n=5 才见干净分离。压方差(用户坚持的)两次救回误判(一次高估一次低估)。守 [[problem-needs-multi-angle-confirmation]](多跑才算确认)。
+- **文档**:`D:/projects/skills-pilot/oa-pilot/oa-h2h-auth/DIR1-VARIANCE-n5-2026-07-02.md`。
+
+## D-055 — 方向1 已折入 041 module-boundary-identification(2026-07-02·用户拍板折)
+
+- **日期**:2026-07-02(承 D-054 干净分离结论,用户「折」)
+- **折点**:N140/041 `module-boundary-identification`(跨边界契约识别 skill;coupling inventory 的 `contract_status` 字段是天然桥接点)。**改已有 skill,库恒 157 不新增。**
+- **三处通用改动(零项目词,守 [[skills-must-be-generic]])**:① common-failure-modes.md 加 **F9**「integration marked contract-less without a contract-surface inventory」(桩前必盘三源:导出 api/契约模块 / 同进程可注入服务 / 既有跨边界调用范式;推论:手上数据能算的是边界内逻辑不是外部桩);② checklist.md C 加一条(标 contract-less/stub 的跨边界 coupling 须附盘点证据);③ SKILL.md 步骤7 加句(记 contract-less 或桩前先盘已发布契约面并引 F9)。④ CHANGELOG v4.1.0 记证据来源。
+- **打包**:zip 无 `zip` 命令 → 用 Python zipfile 从完整解压树重打包;核对 19 文件条目与原始一一对应、零丢零多、testzip OK,仅 4 文件内容变更。
+- **诚实标注**:CHANGELOG 的 Evidence 段如实写「single-module, single-dimension」「n=5 PRE 0.7 → n=4 POST 2.6 干净分离」,不吹 0→3。
+- **下一步**:方向 2(数据流反推派生输入)/3(测试脚手架)/4(安全收尾)未验,排队;或转真实使用(北极星卡点仍是 idea→prod 完整闭环,非 skill 质量)。
+
+## D-056 — 转向:停排方向2/3/4,开 N=1 完整闭环(自起真内部小工具 skillctl)(2026-07-03·用户拍板)
+
+- **日期**:2026-07-03。承 D-048/D-051 结论(设计评审/skill-质量轴已饱和,边际打磨回报零到负;真正卡北极星的是「0 次干净 idea→prod 完整闭环」),我主动指回 north star,用户拍板**不再在饱和轴排方向 2/3/4**,转开 N=1 闭环。
+- **路径选择**:用户在「①自起真内部小工具(单兵全程、零红线摩擦)/ ②借 OA 真 PRD 跑 Path B/C(受只读红线,ship 不由我控)」中选 **①**。这是最纯的完整闭环:单兵 idea→设计→编码→测试→ship,全程走 skill 链,产物本身即「skill 链能否扛真 idea→prod」的证据。
+- **题面 = `skillctl`**(库维护 CLI,用户在 pack-only / pack+lint+count / +coverage 三档中选**最富的 +coverage**,以压满 skill 链)。选题面全凭实痛,非编造:本机无 `zip`、D-055 重打包差点丢文件靠肉眼核、CHANGELOG bump 靠记、库恒 157 靠眼、总表 CSV 154≠库 157 三方从未对账、19/157 覆盖无机器可读记录。
+- **工作区** `D:/projects/skills-pilot/skillctl/`(自己 pilot 区,合红线;全程只读 `完稿/` 与 `docs/`)。
+- **Path A 已完成**:idea 种子(`00-idea/idea-seed.md`)→ 按 N090/022 prd-generation 的 16 节 `n090.prd.v2` 契约产出 PRD(`01-prd/PRD-skillctl.md`)。PRD 抛出 1 个 P0 blocker:coverage 的 reinforced 判定标准/数据源——推荐机读 CHANGELOG `### Evidence` 段(零维护、有磁盘依据),待用户拍后走 Path B。
+- **净纪律**:这是 demand-pull 的正解——不再空磨 skill,让真 idea→prod 的 shortfall 反推哪条 skill 要改(D-030)。每完成一个 Path 记录 skill 链「扛住 vs 掉链」的点,作为改进信号。
