@@ -8,9 +8,9 @@
 
 **主线转向 = 开 N=1 完整闭环,直攻北极星头号缺口(至今 0 次干净 idea→prod)。** 用户 07-03 拍板:停在饱和的 skill-质量轴上排方向2/3/4(D-048 证边际回报零到负),转**单兵自起一个真内部小工具、全程走 skill 链**。方向1 已折入库封存(D-055,见 07-02 session)。
 
-- **题面 = `skillctl`**:本项目 skill 库打包/校验/覆盖 CLI。选它因全是实痛(本机无 `zip`、D-055 重打包差点丢文件靠肉眼核、CHANGELOG bump 靠记、库恒 157 靠眼、CSV 154≠库157、19/157 覆盖无机器记录)。MVP=**pack + lint + count + coverage**(用户选最富版)。工作区 `D:/projects/skills-pilot/skillctl/`。
+- **题面 = `skillctl`**:本项目 skill 库打包/校验/覆盖 CLI。选它因全是实痛(本机无 `zip`、D-055 重打包差点丢文件靠肉眼核、CHANGELOG bump 靠记、库恒 157 靠眼、CSV 154≠库157、19/157 覆盖无机器记录)。MVP=**pack + lint + count + coverage**(用户选最富版)。**已搬入本仓 `_tools/skillctl/`(随主项目版本控制、catalog 自定位仓根),已提交。**
 - **今天 07-03 全链跑完 Path A→B→实现,MVP 功能完整、4 命令全在真库验过**:
-  - Path A → PRD `01-prd/PRD-skillctl.md`(N090/022 的 16 节 n090.prd.v2 契约)。Path B → 技术方案 `02-tech-solution/SOLUTION-skillctl.md`(N130/039 exact-contract S1-S7)。代码 `src/skillctl/`(pkglib/catalog/cmd_pack/lint/count/coverage/__main__),测试 `tests/test_pack_ac1.py`。
+  - 全在 `_tools/skillctl/`:Path A → `01-prd/PRD-skillctl.md`(N090/022 的 16 节 n090.prd.v2)。Path B → `02-tech-solution/SOLUTION-skillctl.md`(N130/039 exact-contract)。代码 `src/skillctl/`(pkglib/catalog/cmd_pack/lint/count/coverage/__main__),测试 `tests/`(18 断言全绿)。运行:`cd _tools/skillctl/src && python -m skillctl <cmd>`。
   - **闭环兑现的真价值**:① AC-1 正反例过——重打真 041 = 19 文件条目守恒+testzip OK;删 checklist.md 则精确报「丢失1条」+退码1+删半成品,**D-055 那类打包丢文件被自动拦死**。② count 名字级 diff 揪出真数据问题(4 个 zip 顶层目录带数字前缀、CSV 不带;`state-machine-driven-orchestration` 错配)。③ coverage=19/157=12.1% 且**全 19 个挤在 B 桶(prd→技术方案 036-054),A/C/D/E 全 0**。
   - **demand-pull 头号兑现**:PRD 里我推荐的 reinforced 判据(`### Evidence` 段)被**全库实测当场证伪**(只命中 1/19);真信号 = 含 CHANGELOG.md(恰 19/157)。真数据在我照错假设建实现前把它揪出——这就是 idea→prod 闭环的价值,非空磨 skill。
 - **"优化 skills" = demand-pull 而非空磨(同 07-03 续)**:拿真 skillctl 代码捶 Path D(0/36)两遍。① code review 揪出并修了工具真 bug(count 名字没剥 `^\d+-`→把命名差异虚报成缺口;修后 157vs154 谜团解清=总表 CSV 4 处过时,已挂后台 task_2d0ede99)。② dogfood N230/080 补全 lint/count/coverage 测试=16 断言全绿,skillctl **MVP+测试完整、真可天天用**。**skill 信号(诚实):Path D 虽 0 强化但不弱**——N230/080 三分法首用即扛,两遍无系统性缺口,唯一候选 n=1 且不在其职责内。**本 session 零折(无真 PRE<POST delta),库恒 157。校准=别假设"0 强化=该补"(D-048 复现)。**
