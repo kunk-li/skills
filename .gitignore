@@ -15,3 +15,17 @@ _sessions/
 # 公司周报/月报(内部归档,不上远端)
 周报/
 日报/
+# 内部治理/上下文文档(仅本机干活用,不上远端,避免对外部使用者构成干扰+泄露内部信息)
+CLAUDE.md
+STATUS.md
+DECISIONS.md
+ROADMAP.md
+TOOL-HARDENING-PLAN.md
+HANDOFF-*.md
+inspect_mongo.py
+_archive/
+_eval/
+_exec/
+_tools/
+# Claude Code 内部配置与 hook(机器专有,不上远端)
+.claude/
