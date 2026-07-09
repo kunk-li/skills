@@ -6,7 +6,7 @@
 
 > 想直接上手、边做边学?看 **[GETTING-STARTED.md](GETTING-STARTED.md)** —— 用一个小功能(用户提现)半天走完整条链 A→D 的实操指南。
 >
-> 想把 Claude Code 本身用得更顺(自动注入上下文、收尾自动检验等)?看 **[CLAUDE-CODE-TIPS.md](CLAUDE-CODE-TIPS.md)** —— 我们维护这套库时攒的实战方法,持续更新。
+> 想把 Claude Code 本身用得更顺(自动注入上下文、收尾自动检验等)?看 **[CLAUDE-CODE-TIPS.md](CLAUDE-CODE-TIPS.md)** —— 一批通用的 Claude Code 实战方法(适用任何项目,非只本仓),持续更新。
 
 ---
 
