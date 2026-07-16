@@ -21,6 +21,7 @@ STATUS.md
 DECISIONS.md
 ROADMAP.md
 TOOL-HARDENING-PLAN.md
+OA-VALIDATION-PLAN.md
 HANDOFF-*.md
 inspect_mongo.py
 _archive/
