@@ -836,9 +836,9 @@ flowchart TD
 **📤 输出产物 (Outputs)**
 
   - `工程骨架.zip`
-  - `Controller草稿.java`
-  - `Service草稿.java`
-  - `Repository草稿.java`
+  - `Controller草稿.zip`
+  - `Service草稿.zip`
+  - `Repository草稿.zip`
 
 **→ 下游节点**:`N200`, `N210`
 
@@ -865,10 +865,10 @@ flowchart TD
 **📤 输出产物 (Outputs)**
 
   - `DTO_VO草稿.zip`
-  - `枚举定义.java`
-  - `校验器代码.java`
-  - `异常类.java`
-  - `SQL草稿.sql`
+  - `枚举定义.zip`
+  - `校验器代码.zip`
+  - `异常类.zip`
+  - `SQL草稿.zip`
   - `查询优化建议.md`
 
 **→ 下游节点**:`N210`, `N330`
@@ -883,7 +883,7 @@ flowchart TD
 **📥 输入产物 (Inputs)**
 
   - `工程骨架.zip`
-  - `Service草稿.java`
+  - `Service草稿.zip`
   - `并发控制建议.md`
   - `技术方案分析.md`
 
