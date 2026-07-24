@@ -98,6 +98,7 @@
 5. ✅ **session 结束前主动写 `_sessions/<date>-<n>.md`**(主动,别等)
 6. ✅ 新决策诞生时立即加到 DECISIONS.md
 7. ✅ 如果 Stop hook 给你提醒了 ritual,**说明你已经漏了**——立即补做,并在 _sessions 里 reflect 为什么漏了
+8. ✅ **Codex 项目缺 `.codex/` 不是理由**:`.codex/` 是 Codex 专属项目本地面,新建它本身不影响 Claude 或其他工具使用。在允许写区内,如果当前 Codex 项目缺少必要 `.codex` hook/config/wrapper/checker,就主动创建最小落地面并验证;不要把“没有 `.codex/` / 没自动跑”当成跳过执行纪律的理由。真正要谨慎的是覆盖已有 `.codex` 内容、强跑通用 init、或改通用规则;已有 `.claude` 专用 ritual 时优先用 `.codex` wrapper 转发。
 
 ## 一些上下文细节
 
