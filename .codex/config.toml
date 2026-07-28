@@ -1,0 +1,5 @@
+# Project-local Codex config.
+# This project uses Codex-native hooks for context, project guards, A3 gates, and memory ritual.
+
+[features]
+hooks = true

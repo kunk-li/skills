@@ -1,0 +1,84 @@
+{
+  "schema_version": "codex.oa_bar_rules.v1",
+  "source": "D-060 in D:/work/资料/skills/DECISIONS.md and §5 in D:/work/资料/skills/TOOL-HARDENING-PLAN.md",
+  "total_pass_rule": "All 11 bars must be PASS before any OA module or the tooling can be called complete.",
+  "bars": [
+    {
+      "id": "bar1",
+      "number": 1,
+      "label": "PRD→代码完整覆盖",
+      "criterion": "Every PRD-stated requirement and logically necessary counterpart survives from design through code and tests.",
+      "required_evidence": ["prd_trace", "code_trace", "necessary_counterpart_trace", "test_trace"]
+    },
+    {
+      "id": "bar2",
+      "number": 2,
+      "label": "功能完整度",
+      "criterion": "The generated implementation covers the full in-scope functional surface, not only a happy-path slice.",
+      "required_evidence": ["feature_matrix", "scope_boundary", "gap_list"]
+    },
+    {
+      "id": "bar3",
+      "number": 3,
+      "label": "无漏洞",
+      "criterion": "Generation plus folded multi-dimensional detection reaches the accepted no-crit/high and correctness-clean threshold.",
+      "required_evidence": ["security_scan", "correctness_scan", "detect_fix_regression"]
+    },
+    {
+      "id": "bar4",
+      "number": 4,
+      "label": "测试全业务覆盖",
+      "criterion": "Tests cover new business behavior and regression coverage for changed existing behavior.",
+      "required_evidence": ["test_matrix", "regression_matrix", "coverage_probe"]
+    },
+    {
+      "id": "bar5",
+      "number": 5,
+      "label": "PRD 缺陷有替代实现",
+      "criterion": "PRD gaps or contradictions are handled by explicit inferred or deferred implementation decisions, not silent guesses.",
+      "required_evidence": ["prd_gap_ledger", "decision_ledger", "fallback_implementation_trace"]
+    },
+    {
+      "id": "bar6",
+      "number": 6,
+      "label": "识别 PRD 不合理",
+      "criterion": "The chain identifies unreasonable or contradictory PRD content and routes it to decision evidence instead of blindly coding it.",
+      "required_evidence": ["prd_contradiction_report", "decision_required_items"]
+    },
+    {
+      "id": "bar7",
+      "number": 7,
+      "label": "跨模块冲突识别+方案",
+      "criterion": "Cross-module conflicts and dependencies are identified, false positives are excluded, and unresolved conflicts have a proposed resolution path.",
+      "required_evidence": ["cross_module_conflict_report", "excluded_resolved_items", "resolution_plan"]
+    },
+    {
+      "id": "bar8",
+      "number": 8,
+      "label": "迭代次数最低",
+      "criterion": "The first-pass generation and subsequent corrections converge with minimal logical rework.",
+      "required_evidence": ["iteration_log", "compile_test_history", "rework_summary"]
+    },
+    {
+      "id": "bar9",
+      "number": 9,
+      "label": "质量审查全面",
+      "criterion": "Quality review catches real defects across relevant dimensions and produces an honest gate result.",
+      "required_evidence": ["quality_review_report", "finding_verification", "release_gate_result"]
+    },
+    {
+      "id": "bar10",
+      "number": 10,
+      "label": "架构优化",
+      "criterion": "The chain proposes architecture improvements that survive ground verification, not PRD-only guesses about already-solved problems.",
+      "required_evidence": ["architecture_optimization_report", "ground_verification"]
+    },
+    {
+      "id": "bar11",
+      "number": 11,
+      "label": "代码量减少更好实现",
+      "criterion": "At project scale and equal functionality, the implementation reduces duplication or code volume while preserving a better design.",
+      "required_evidence": ["function_equivalence_check", "loc_measurement", "duplication_measurement", "reuse_trace"]
+    }
+  ]
+}

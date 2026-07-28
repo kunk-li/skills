@@ -1,0 +1,55 @@
+{
+  "description": "Skills project Codex-native hooks for context loading, project guard, OA module gate, and memory ritual.",
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "startup|resume|clear|compact",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python -c \"import pathlib,runpy; p=pathlib.Path.cwd().resolve(); q=next(x/'.codex/hooks/session_start_context.py' for x in [p,*p.parents] if (x/'.codex/hooks/session_start_context.py').exists()); runpy.run_path(str(q), run_name='__main__')\"",
+            "timeout": 30,
+            "statusMessage": "Loading project context"
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python -c \"import pathlib,runpy,sys; p=pathlib.Path.cwd().resolve(); q=next(x/'.codex/hooks/codex_project_guard.py' for x in [p,*p.parents] if (x/'.codex/hooks/codex_project_guard.py').exists()); sys.argv=[str(q),'--hook','UserPromptSubmit']; runpy.run_path(str(q), run_name='__main__')\"",
+            "timeout": 30,
+            "statusMessage": "Checking Codex project guard"
+          },
+          {
+            "type": "command",
+            "command": "python -c \"import pathlib,runpy; p=pathlib.Path.cwd().resolve(); q=next(x/'.codex/hooks/skill_chain_gate.py' for x in [p,*p.parents] if (x/'.codex/hooks/skill_chain_gate.py').exists()); runpy.run_path(str(q), run_name='__main__')\"",
+            "timeout": 30,
+            "statusMessage": "Checking skill-chain gate"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python -c \"import pathlib,runpy,sys; p=pathlib.Path.cwd().resolve(); q=next(x/'.codex/hooks/codex_project_guard.py' for x in [p,*p.parents] if (x/'.codex/hooks/codex_project_guard.py').exists()); sys.argv=[str(q),'--hook','Stop']; runpy.run_path(str(q), run_name='__main__')\"",
+            "timeout": 30,
+            "statusMessage": "Checking Codex project guard"
+          },
+          {
+            "type": "command",
+            "command": "python -c \"import pathlib,runpy; p=pathlib.Path.cwd().resolve(); q=next(x/'.codex/hooks/stop_ritual_check.py' for x in [p,*p.parents] if (x/'.codex/hooks/stop_ritual_check.py').exists()); runpy.run_path(str(q), run_name='__main__')\"",
+            "timeout": 30,
+            "statusMessage": "Checking project memory ritual"
+          }
+        ]
+      }
+    ]
+  }
+}
