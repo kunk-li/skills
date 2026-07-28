@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""Guard daily Agent report style against drifting into delivery checklists."""
+"""Guard daily Agent report style against drifting into vague narrative."""
 
 from __future__ import annotations
 
@@ -50,15 +50,85 @@ def bullet_density(text: str) -> tuple[int, int, float]:
     return len(bullets), len(lines), density
 
 
-def check_report(path: Path) -> dict[str, Any]:
-    checks: list[Check] = [Check("file-exists", path.is_file(), as_posix(path))]
-    if not path.exists():
-        return {"status": "fail", "path": as_posix(path), "checks": [item.to_dict() for item in checks]}
+def is_fact_report_day(day: str) -> bool:
+    return day >= "2026-07-28"
 
-    text = path.read_text(encoding="utf-8")
-    headings = heading_lines(text)
+
+def long_paragraph_count(text: str) -> int:
+    count = 0
+    for block in text.split("\n\n"):
+        stripped = block.lstrip()
+        if stripped.startswith(("-", "#")):
+            continue
+        if len(" ".join(block.split())) >= 220:
+            count += 1
+    return count
+
+
+def check_fact_report(text: str, headings: list[str], checks: list[Check]) -> None:
+    required_exact = [
+        "# CD1 日报 Agent 板块",
+        "## 今日事实",
+        "## 跑了哪些模块",
+        "## 修了哪些问题",
+        "## 做了哪些优化",
+        "## 验证结果",
+        "## 边界状态",
+        "## 归档指针",
+    ]
+    for token in required_exact:
+        checks.append(Check(f"heading-token:{token}", token in text, token))
+
+    positions = [text.find(marker) for marker in required_exact[1:]]
+    checks.append(
+        Check(
+            "fact-heading-order",
+            all(pos >= 0 for pos in positions) and positions == sorted(positions),
+            " | ".join(f"{marker}:{pos}" for marker, pos in zip(required_exact[1:], positions)),
+        )
+    )
+
     bullets, nonempty_lines, density = bullet_density(text)
+    checks.append(Check("fact-bullet-density", density >= 0.30, f"bullets={bullets}, lines={nonempty_lines}, density={density:.2f}"))
+    checks.append(Check("few-long-paragraphs", long_paragraph_count(text) <= 2, f"long_paragraphs={long_paragraph_count(text)}"))
+    checks.append(Check("fact-length-band", 1800 <= len(text) <= 6500, f"{len(text)} chars; expected 1800..6500"))
 
+    required_fact_tokens = [
+        "Z1",
+        "B2",
+        "OA2",
+        "原型",
+        "060",
+        "093",
+        "061",
+        "066",
+        "088",
+        "101",
+        "NO_GO",
+        "2/11",
+        "commit",
+        "push",
+    ]
+    present = [token for token in required_fact_tokens if token in text]
+    checks.append(Check("factual-content-tokens", len(present) >= 12, ",".join(present)))
+
+    forbidden_report_phrases = [
+        "今天真正完成的是",
+        "今天的价值",
+        "最重要",
+        "最有价值",
+        "结论很硬",
+        "显微镜",
+        "一句话",
+        "不是单纯",
+        "不是终点",
+    ]
+    found = [phrase for phrase in forbidden_report_phrases if phrase in text]
+    checks.append(Check("no-vague-report-phrasing", not found, ",".join(found) or "-"))
+    checks.append(Check("no-marketing-summary", "完成项" not in headings, "avoid delivery-summary section names as top-level style"))
+
+
+def check_legacy_report(text: str, headings: list[str], checks: list[Check], path: Path) -> None:
     required_exact = [
         "# CD1 日报 Agent 板块",
         "## 今日主线",
@@ -83,10 +153,12 @@ def check_report(path: Path) -> dict[str, Any]:
         )
     )
     checks.append(Check("narrative-length", len(text) >= 3000, f"{len(text)} chars; min=3000"))
+    bullets, nonempty_lines, density = bullet_density(text)
     checks.append(Check("not-checklist-dominant", density <= 0.18, f"bullets={bullets}, lines={nonempty_lines}, density={density:.2f}"))
     checks.append(Check("archive-pointer", "归档指针" in text, "归档指针"))
     checks.append(Check("mainline-and-status", "今日主线" in text and "纪律与状态" in text, "今日主线 + 纪律与状态"))
     checks.append(Check("no-marketing-summary", "完成项" not in headings and "验证" not in headings, "avoid delivery-summary section names as top-level style"))
+
     if "2026-07-27" in path.name:
         day_scope_tokens = ["B-design", "D-code", "TEST", "REL", "OPS", "DOC", "CMP", "PLAT", "BAR-EVAL", ".codex"]
         present = [token for token in day_scope_tokens if token in text]
@@ -141,6 +213,19 @@ def check_report(path: Path) -> dict[str, Any]:
         found_phrases = [phrase for phrase in forbidden_artifact_dump_phrases if phrase in text]
         checks.append(Check("no-artifact-dump-phrasing", not found_phrases, ",".join(found_phrases) or "-"))
 
+
+def check_report(path: Path, day: str) -> dict[str, Any]:
+    checks: list[Check] = [Check("file-exists", path.is_file(), as_posix(path))]
+    if not path.exists():
+        return {"status": "fail", "path": as_posix(path), "checks": [item.to_dict() for item in checks]}
+
+    text = path.read_text(encoding="utf-8")
+    headings = heading_lines(text)
+    if is_fact_report_day(day):
+        check_fact_report(text, headings, checks)
+    else:
+        check_legacy_report(text, headings, checks, path)
+
     ok = all(item.ok for item in checks)
     return {
         "status": "pass" if ok else "fail",
@@ -164,7 +249,7 @@ def main() -> int:
     parser.add_argument("--summary-line", action="store_true")
     args = parser.parse_args()
 
-    result = check_report(daily_path(args.date))
+    result = check_report(daily_path(args.date), args.date)
     if args.json:
         print(json.dumps(result, ensure_ascii=False, indent=2))
     elif args.summary_line:
