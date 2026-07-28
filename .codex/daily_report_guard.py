@@ -89,9 +89,16 @@ def check_fact_report(text: str, headings: list[str], checks: list[Check]) -> No
     ]
     present = [token for token in required_fact_tokens if token in text]
     checks.append(Check("factual-content-tokens", len(present) >= 12, ",".join(present)))
-    required_fact_phrases = ["跑了", "修了", "优化", "验证", "commit", "push"]
-    present_phrases = [phrase for phrase in required_fact_phrases if phrase in text]
-    checks.append(Check("daily-fact-verbs", len(present_phrases) == len(required_fact_phrases), ",".join(present_phrases)))
+    required_fact_phrase_groups = [
+        ("ran", ["跑了"]),
+        ("fixed", ["修了"]),
+        ("optimized", ["优化"]),
+        ("validated", ["验证"]),
+        ("committed", ["commit", "提交"]),
+        ("pushed", ["push", "推送"]),
+    ]
+    present_phrases = [name for name, options in required_fact_phrase_groups if any(option in text for option in options)]
+    checks.append(Check("daily-fact-verbs", len(present_phrases) == len(required_fact_phrase_groups), ",".join(present_phrases)))
 
     forbidden_report_phrases = [
         "今天真正完成的是",
