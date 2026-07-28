@@ -281,13 +281,13 @@ print("目录:\n" + "\n".join(f"- {t}" for t in toc))
 
 **效果**:大型多会话重构不会退化成一堆各自为战的零碎修补。
 
-### 6.3 缺 Codex 项目级 `.codex/` 时,直接创建最小 wrapper
+### 6.3 缺 Codex 项目级 `.codex/` 时,直接创建最小落地面
 
-**问题**:技巧写进文档,但当前 Codex 项目没有对应 `.codex` hook/config/wrapper,下一次 session 还是不会自动执行。把“项目里没有 `.codex/`”“hook 没装”当解释,本质还是没落地。
+**问题**:技巧写进文档,但当前 Codex 项目没有对应 `.codex` hook/config/checker,下一次 session 还是不会自动执行。把“项目里没有 `.codex/`”“hook 没装”当解释,本质还是没落地。
 
-**做法**:`.codex/` 是 Codex 专属项目本地面,新建它本身不影响 Claude 或其他工具使用。只要在允许写区内,就主动创建最小 wrapper。已有 `.claude` 专用工具时,`.codex` 只做转发;已有项目文档和 ritual 时,不要跑通用 init 强覆盖,也不要覆盖已有 `.codex` 内容。创建后必须跑语法、JSON、hook 输出、关键 gate 的反向验证。
+**做法**:`.codex/` 是 Codex 专属项目本地面,新建它本身不影响 Claude 或其他工具使用。只要在允许写区内,就主动创建最小 Codex 原生落地面。已有其他工具专用工具/ritual 时,不读取、不转发、不扫描其私有目录,只把可复用纪律转译成 `.codex` 原生 hook/checker/guard;已有项目文档和 ritual 时,不要跑通用 init 强覆盖,也不要覆盖已有 `.codex` 内容。创建后必须跑语法、JSON、hook 输出、关键 gate 的反向验证。
 
-**效果**:缺失的 Codex 自动化面被补齐。风险不在“新建 `.codex/`”,而在覆盖已有专用内容或修改通用规则。
+**效果**:缺失的 Codex 自动化面被补齐。风险不在“新建 `.codex/`”,而在覆盖已有专用内容、依赖其他工具私有面或修改通用规则。
 
 ---
 

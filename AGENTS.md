@@ -1,6 +1,6 @@
 # Skill Platform 项目 · Codex 上下文
 
-> 这是给"未来 session 里的 Codex"读的第一份文件。请按顺序读完本文件 + ROADMAP.md + STATUS.md + DECISIONS.md,**再开始干活**。
+> 这是给"未来 session 里的 Codex"读的第一份文件。请按顺序读完本文件 + `.codex/MEMORY.md` + ROADMAP.md + STATUS.md + DECISIONS.md,**再开始干活**。
 
 ## 我是谁
 
@@ -19,7 +19,8 @@
 - ✍️ **session 记忆 ritual(不要忘,人会忘所以全推给你)**:
   - 每完成一块有意义的工作 → 立即 update STATUS.md。**STATUS 是覆盖式现状快照、不是追加日志(D-042)**:写新状态时覆盖旧的、别往下堆;被替换的旧细节**挪**进当日 `_sessions/`(挪不是复制,别两处各留一份)。STATUS 永远 ≤ 一屏(~60 行),超了就清;历史在 `_sessions/`、别在 STATUS 里留 changelog。结构=现在做什么 / 在途线程 / 卡点 / 按需细读指针。
   - session 中如果新决策诞生 → 立即加到 DECISIONS.md
-  - 每次 session 结束前 → 在 `_sessions/<date>-<n>.md` 写总结(n = 当天下一个序号)
+  - session 中如果沉淀出可复用、跨会话、跨模块的规则 → 立即写入 `D:/work/资料/skills/.codex/MEMORY.md`；`_sessions/` 只做审计历史,不是通用记忆
+  - 每次 session 结束前 → 在 `_sessions/<date>-<n>.md` 写总结(n = 当天下一个序号),只记本次发生的事实和追溯证据,不要把通用规则只埋在 session 里
   - 这些都**不要等用户提醒**——他会忘,你不要忘。Stop hook 会兜底提醒,但被 hook 提醒说明你已经漏了
 
 ## 项目是什么
@@ -55,14 +56,15 @@
 ## 关键文档(按这个顺序读)
 
 1. `AGENTS.md` ← 本文件
-2. `ROADMAP.md` ← 4 阶段长期规划
-3. `STATUS.md` ← 现在到哪了 / 立刻该做什么
-4. `DECISIONS.md` ← 已做决策(勿推翻)
-5. **`TOOL-HARDENING-PLAN.md` ← 当前阶段治理计划(D-060):11 条验收 bar + 全流程 shakedown 方法 + §0 当前位置 + §2 方向 + §2.1 恒定方法(全链路两层 shakedown · D-063 · 项目级、勿改、优化整套 skills 的唯一路径)+ §3 执行清单(带状态) + §4 台账(含缺陷 fan-out 台账)。开工必读——先看计划走到哪、下一步哪块,别掉进「随手抓个模块修个 bug」模式,别在 11 bar 未全过时提转/回 N。优化任何 skill 都按 §2.1 两层走:①一个模块真走完 PRD 之后整条链(S1..S7)别停 X.4;②一个缺陷跨段 fan-out 上下游各段技能、逐条 A/B、真缺口才折、库恒 157。**
-6. `_sessions/<最近日期>.md` ← 上次 session 总结(增量上下文)
-7. `_eval/README.md` ← eval 框架使用(如存在)
-8. `docs/skills_workflow_v2.md` ← 157 skill 全景
-9. 外部参考:`D:/projects/python/ai_work/video/cinemaai/AGENTS.md`(CinemaAI 项目自己的 context)
+2. `.codex/MEMORY.md` ← Codex 通用记忆:跨会话/跨模块硬规则,优先于翻 session
+3. `ROADMAP.md` ← 4 阶段长期规划
+4. `STATUS.md` ← 现在到哪了 / 立刻该做什么
+5. `DECISIONS.md` ← 已做决策(勿推翻)
+6. **`TOOL-HARDENING-PLAN.md` ← 当前阶段治理计划(D-060):11 条验收 bar + 全流程 shakedown 方法 + §0 当前位置 + §2 方向 + §2.1 恒定方法(全链路两层 shakedown · D-063 · 项目级、勿改、优化整套 skills 的唯一路径)+ §3 执行清单(带状态) + §4 台账(含缺陷 fan-out 台账)。开工必读——先看计划走到哪、下一步哪块,别掉进「随手抓个模块修个 bug」模式,别在 11 bar 未全过时提转/回 N。优化任何 skill 都按 §2.1 两层走:①一个模块真走完 PRD 之后整条链(S1..S7)别停 X.4;②一个缺陷跨段 fan-out 上下游各段技能、逐条 A/B、真缺口才折、库恒 157。**
+7. `_sessions/<最近日期>.md` ← 仅按需追溯事实,不是通用规则来源
+8. `_eval/README.md` ← eval 框架使用(如存在)
+9. `docs/skills_workflow_v2.md` ← 157 skill 全景
+10. 外部参考:`D:/projects/python/ai_work/video/cinemaai/AGENTS.md`(CinemaAI 项目自己的 context)
 
 ## 🔒 强制红线(每会话必守,不可由子任务/agent/workflow 绕过)
 
@@ -98,7 +100,8 @@
 5. ✅ **session 结束前主动写 `_sessions/<date>-<n>.md`**(主动,别等)
 6. ✅ 新决策诞生时立即加到 DECISIONS.md
 7. ✅ 如果 Stop hook 给你提醒了 ritual,**说明你已经漏了**——立即补做,并在 _sessions 里 reflect 为什么漏了
-8. ✅ **Codex 项目缺 `.codex/` 不是理由**:`.codex/` 是 Codex 专属项目本地面,新建它本身不影响 Claude 或其他工具使用。在允许写区内,如果当前 Codex 项目缺少必要 `.codex` hook/config/wrapper/checker,就主动创建最小落地面并验证;不要把“没有 `.codex/` / 没自动跑”当成跳过执行纪律的理由。真正要谨慎的是覆盖已有 `.codex` 内容、强跑通用 init、或改通用规则;已有 `.claude` 专用 ritual 时优先用 `.codex` wrapper 转发。
+8. ✅ **Codex 项目缺 `.codex/` 不是理由**:`.codex/` 是 Codex 专属项目本地面,新建它本身不影响 Claude 或其他工具使用。在允许写区内,如果当前 Codex 项目缺少必要 `.codex` hook/config/checker,就主动创建最小落地面并验证;不要把“没有 `.codex/` / 没自动跑”当成跳过执行纪律的理由。真正要谨慎的是覆盖已有 `.codex` 内容、强跑通用 init、或改通用规则;已有其他工具专用 ritual 时,不读取、不转发、不扫描其私有目录,只把可复用纪律转译成 `.codex` 原生 hook/checker/guard。
+9. ✅ **中文路径/中文正文读取必须走 UTF-8 安全面**:`D:/work/资料/skills/.codex/utf8_io.py` 或单个 Python UTF-8 reader；不要把 PowerShell `Get-Content`/`Select-String` 输出或 PowerShell 文本管道结果当成中文文件事实,不要在 shell 命令里直接写中文路径。读完/改完跑 `python D:/work/资料/skills/.codex/utf8_io.py scan --summary-line`。
 
 ## 一些上下文细节
 
