@@ -66,32 +66,10 @@ def long_paragraph_count(text: str) -> int:
 
 
 def check_fact_report(text: str, headings: list[str], checks: list[Check]) -> None:
-    required_exact = [
-        "# CD1 日报 Agent 板块",
-        "## 今日事实",
-        "## 跑了哪些模块",
-        "## 修了哪些问题",
-        "## 做了哪些优化",
-        "## 验证结果",
-        "## 边界状态",
-        "## 归档指针",
-    ]
-    for token in required_exact:
-        checks.append(Check(f"heading-token:{token}", token in text, token))
-
-    positions = [text.find(marker) for marker in required_exact[1:]]
-    checks.append(
-        Check(
-            "fact-heading-order",
-            all(pos >= 0 for pos in positions) and positions == sorted(positions),
-            " | ".join(f"{marker}:{pos}" for marker, pos in zip(required_exact[1:], positions)),
-        )
-    )
-
     bullets, nonempty_lines, density = bullet_density(text)
-    checks.append(Check("fact-bullet-density", density >= 0.30, f"bullets={bullets}, lines={nonempty_lines}, density={density:.2f}"))
+    checks.append(Check("fact-content-bullet-density", density >= 0.18, f"bullets={bullets}, lines={nonempty_lines}, density={density:.2f}"))
     checks.append(Check("few-long-paragraphs", long_paragraph_count(text) <= 2, f"long_paragraphs={long_paragraph_count(text)}"))
-    checks.append(Check("fact-length-band", 1800 <= len(text) <= 6500, f"{len(text)} chars; expected 1800..6500"))
+    checks.append(Check("fact-length-band", 2200 <= len(text) <= 8000, f"{len(text)} chars; expected 2200..8000"))
 
     required_fact_tokens = [
         "Z1",
@@ -111,6 +89,9 @@ def check_fact_report(text: str, headings: list[str], checks: list[Check]) -> No
     ]
     present = [token for token in required_fact_tokens if token in text]
     checks.append(Check("factual-content-tokens", len(present) >= 12, ",".join(present)))
+    required_fact_phrases = ["跑了", "修了", "优化", "验证", "commit", "push"]
+    present_phrases = [phrase for phrase in required_fact_phrases if phrase in text]
+    checks.append(Check("daily-fact-verbs", len(present_phrases) == len(required_fact_phrases), ",".join(present_phrases)))
 
     forbidden_report_phrases = [
         "今天真正完成的是",
@@ -129,6 +110,8 @@ def check_fact_report(text: str, headings: list[str], checks: list[Check]) -> No
 
 
 def check_legacy_report(text: str, headings: list[str], checks: list[Check], path: Path) -> None:
+    day_match = re.search(r"CD1-(\d{4}-\d{2}-\d{2})-", path.name)
+    fact_day = bool(day_match and is_fact_report_day(day_match.group(1)))
     required_exact = [
         "# CD1 日报 Agent 板块",
         "## 今日主线",
@@ -154,10 +137,13 @@ def check_legacy_report(text: str, headings: list[str], checks: list[Check], pat
     )
     checks.append(Check("narrative-length", len(text) >= 3000, f"{len(text)} chars; min=3000"))
     bullets, nonempty_lines, density = bullet_density(text)
-    checks.append(Check("not-checklist-dominant", density <= 0.18, f"bullets={bullets}, lines={nonempty_lines}, density={density:.2f}"))
+    if not fact_day:
+        checks.append(Check("not-checklist-dominant", density <= 0.18, f"bullets={bullets}, lines={nonempty_lines}, density={density:.2f}"))
     checks.append(Check("archive-pointer", "归档指针" in text, "归档指针"))
     checks.append(Check("mainline-and-status", "今日主线" in text and "纪律与状态" in text, "今日主线 + 纪律与状态"))
     checks.append(Check("no-marketing-summary", "完成项" not in headings and "验证" not in headings, "avoid delivery-summary section names as top-level style"))
+    if fact_day:
+        check_fact_report(text, headings, checks)
 
     if "2026-07-27" in path.name:
         day_scope_tokens = ["B-design", "D-code", "TEST", "REL", "OPS", "DOC", "CMP", "PLAT", "BAR-EVAL", ".codex"]
@@ -221,10 +207,7 @@ def check_report(path: Path, day: str) -> dict[str, Any]:
 
     text = path.read_text(encoding="utf-8")
     headings = heading_lines(text)
-    if is_fact_report_day(day):
-        check_fact_report(text, headings, checks)
-    else:
-        check_legacy_report(text, headings, checks, path)
+    check_legacy_report(text, headings, checks, path)
 
     ok = all(item.ok for item in checks)
     return {
