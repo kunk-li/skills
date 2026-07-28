@@ -174,6 +174,23 @@ def check_completion_closure_guard() -> Check:
     return Check("completion-closure-selftest", ok, output or f"exit={proc.returncode}")
 
 
+def check_daily_report_guard() -> Check:
+    path = CODEX_DIR / "daily_report_guard.py"
+    if not path.exists():
+        return Check("daily-report-guard-selftest", False, f"missing {as_posix(path)}")
+    proc = subprocess.run(
+        [sys.executable, str(path), "--self-test", "--summary-line"],
+        cwd=str(ROOT),
+        capture_output=True,
+        text=True,
+        encoding="utf-8",
+        errors="replace",
+    )
+    output = " ".join((proc.stdout + "\n" + proc.stderr).split())
+    ok = proc.returncode == 0 and "status=pass" in output
+    return Check("daily-report-guard-selftest", ok, output or f"exit={proc.returncode}")
+
+
 def run_checks() -> list[Check]:
     report = build_report()
     checks: list[Check] = [
@@ -187,6 +204,7 @@ def run_checks() -> list[Check]:
     checks.append(check_session_start_memory())
     checks.append(check_utf8_guard())
     checks.append(check_completion_closure_guard())
+    checks.append(check_daily_report_guard())
     checks.append(check_hooks_registered())
     return checks
 

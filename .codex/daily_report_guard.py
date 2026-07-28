@@ -218,6 +218,95 @@ def check_report(path: Path, day: str) -> dict[str, Any]:
     }
 
 
+def check_text_report(text: str, path_name: str) -> dict[str, Any]:
+    checks = [Check("file-exists", True, path_name)]
+    headings = heading_lines(text)
+    check_legacy_report(text, headings, checks, Path(path_name))
+    ok = all(item.ok for item in checks)
+    return {
+        "status": "pass" if ok else "fail",
+        "path": path_name,
+        "headings": headings,
+        "checks": [item.to_dict() for item in checks],
+    }
+
+
+def fact_style_fixture() -> str:
+    facts = "\n".join(
+        [
+            "- 跑了 Z1 风控模块，CMP 从 10/19 修到 18/19，仍保留生产集成缺口。",
+            "- 跑了 B2 审批模块，当前 NO_GO，bar 为 2/11。",
+            "- 跑了 OA2 独立代码包，验证 `OA2_SELF_CONTAINED_SMOKE passed=16`。",
+            "- 跑了原型分析，使用 019、020、021、025、029、051、052。",
+            "- 修了 D-code 绕过 060 implement 的问题。",
+            "- 修了 OA1/OA2 绑定口径错误。",
+            "- 优化 043、044、093 三个硬折。",
+            "- 优化 061、066、088、101 runtime boundary chain。",
+            "- 优化 060、061、088 feature-depth batch。",
+            "- 验证 daily report guard、UTF-8 guard、project guard。",
+            "- commit `abc1234`，push `origin/main`。",
+        ]
+        * 3
+    )
+    return f"""# CD1 日报 Agent 板块 2026-07-28
+
+## 今日主线
+
+今天按旧日报样式陈述事实。
+
+## 一 跑了哪些模块
+
+{facts}
+
+## 二 修了哪些问题
+
+{facts}
+
+## 三 做了哪些优化
+
+{facts}
+
+## 纪律与状态
+
+{facts}
+
+## 明日候选
+
+继续内部自动队列，不是用户待办。
+
+归档指针：`D:/work/资料/skills/STATUS.md`。
+"""
+
+
+def new_heading_fixture() -> str:
+    return fact_style_fixture().replace("## 今日主线", "## 今日事实").replace("## 一 跑了哪些模块", "## 跑了哪些模块")
+
+
+def vague_report_fixture() -> str:
+    return fact_style_fixture().replace("今天按旧日报样式陈述事实。", "今天真正完成的是一次最重要的价值复盘。")
+
+
+def self_test_payload() -> dict[str, Any]:
+    cases = [
+        ("old_style_fact_passes", fact_style_fixture(), "pass"),
+        ("new_heading_structure_fails", new_heading_fixture(), "fail"),
+        ("vague_report_prose_fails", vague_report_fixture(), "fail"),
+    ]
+    checks = []
+    for name, text, expected in cases:
+        result = check_text_report(text, "CD1-2026-07-28-日报-Agent板块.md")
+        checks.append({"name": name, "ok": result["status"] == expected, "detail": result["status"]})
+    failed = [item["name"] for item in checks if not item["ok"]]
+    return {"status": "pass" if not failed else "fail", "checks": checks, "failed": failed}
+
+
+def self_test_summary(payload: dict[str, Any]) -> str:
+    checks = payload["checks"]
+    passed = sum(1 for item in checks if item["ok"])
+    failed = ",".join(payload["failed"]) or "-"
+    return f"CODEX-DAILY-REPORT-GUARD-SELFTEST status={payload['status']} checks={passed}/{len(checks)} failed={failed}"
+
+
 def summary(result: dict[str, Any]) -> str:
     checks = result["checks"]
     passed = sum(1 for item in checks if item["ok"])
@@ -227,10 +316,22 @@ def summary(result: dict[str, Any]) -> str:
 
 def main() -> int:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--date", required=True, help="YYYY-MM-DD")
+    parser.add_argument("--date", help="YYYY-MM-DD")
     parser.add_argument("--json", action="store_true")
     parser.add_argument("--summary-line", action="store_true")
+    parser.add_argument("--self-test", action="store_true")
     args = parser.parse_args()
+
+    if args.self_test:
+        payload = self_test_payload()
+        if args.json:
+            print(json.dumps(payload, ensure_ascii=False, indent=2))
+        else:
+            print(self_test_summary(payload))
+        return 0 if payload["status"] == "pass" else 2
+
+    if not args.date:
+        parser.error("--date is required unless --self-test is used")
 
     result = check_report(daily_path(args.date), args.date)
     if args.json:
