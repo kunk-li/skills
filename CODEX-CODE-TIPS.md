@@ -1,15 +1,10 @@
 # 用好 Codex 的一些实战方法(通用 · 持续更新)
 
-这是一份从 `D:/work/资料/skills/CLAUDE-CODE-TIPS.md` 抽象出来、按 Codex 机制重写的通用文档。目标很简单:任何项目 clone 下来后,照这里建立 `AGENTS.md`、`.codex/config.toml`、hooks、状态快照和验证脚本,就能让 Codex 更像一个稳定工程同事,而不是每次从零开始的聊天窗口。
+这是一份从同目录的 `CLAUDE-CODE-TIPS.md` 抽象出来、按 Codex 机制重写的通用文档。目标很简单:任何项目 clone 下来后,照这里建立 `AGENTS.md`、`.codex/config.toml`、hooks、状态快照和验证脚本,就能让 Codex 更像一个稳定工程同事,而不是每次从零开始的聊天窗口。
 
 参考来源:2026-07-22 抓取的 OpenAI Codex manual,重点参考 Best practices、Prompting、config、hooks、skills、plugins、MCP、automations 和 multi-agent 相关章节。
 
-配套工具在 `D:/work/资料/skills/_tools/codex-project-kit/`。新项目优先跑:
-
-```powershell
-python D:/work/资料/skills/_tools/codex-project-kit/codex_project_tool.py init --root D:/path/to/your/repo
-python D:/work/资料/skills/_tools/codex-project-kit/codex_project_tool.py check --root D:/path/to/your/repo
-```
+**路径与发布约定**:文中的 `.codex/`、`AGENTS.md` 等均相对当前项目根目录。示例不绑定作者电脑的盘符、用户名、工作目录或未提交的本地工具；需要自定义脚本时,脚本和调用说明必须一起进入版本库。
 
 ## 一、上下文与记忆:让 Codex 每次开局就知道项目规矩
 
@@ -37,7 +32,7 @@ Codex 原生的长期入口不是 Claude Code 的 `CLAUDE.md`,而是 `AGENTS.md`
 - `DECISIONS.md`:只增不改的决策记录,避免重复推翻。
 - `_sessions/YYYY-MM-DD-session-N.md`:会话历史,细节放这里,不要堆进 `STATUS.md`。
 
-配套工具的 `init` 命令会自动生成这四类文件。
+这四类文件可以直接手工建立。远程读者不应依赖某个未发布的初始化脚本才能使用这套约定。
 
 ### 1.3 用 Codex `SessionStart` hook 注入轻量上下文
 
@@ -89,30 +84,25 @@ multi_agent = true
 - 需要人工审批的外部动作。
 - 模糊的“质量感觉”。
 
-配套工具生成的 `.codex/hooks.json` 默认只启用 `SessionStart` 和 `Stop`,属于低风险提醒型工具。
+起步时只启用 `SessionStart` 和 `Stop` 这类低风险提醒型 hook。hook 配置和被调用脚本必须一起提交；如果只写了思路、没有随仓脚本,就明确标为“需要自行实现”,不要写成可直接执行。
 
-### 2.3 用 kit 初始化所有项目
+### 2.3 不依赖初始化工具,手工建立最低配
 
-本仓提供通用初始化工具:
+远程文档不能假定读者拥有作者本地脚本。一个可移植的最低配结构是:
 
-```powershell
-python D:/work/资料/skills/_tools/codex-project-kit/codex_project_tool.py init --root D:/path/to/repo
+```text
+<repo-root>/
+├── AGENTS.md
+├── STATUS.md
+├── DECISIONS.md
+├── _sessions/
+└── .codex/
+    ├── config.toml
+    ├── hooks.json
+    └── hooks/
 ```
 
-它会生成:
-
-- `AGENTS.md`
-- `STATUS.md`
-- `DECISIONS.md`
-- `CODEX-GOVERNANCE-PLAN.md`
-- `_sessions/`
-- `.codex/config.toml`
-- `.codex/hooks.json`
-- `.codex/hooks/session_start_context.py`
-- `.codex/hooks/stop_ritual_check.py`
-- `docs/code_review.md`
-
-生成后在 Codex CLI 里用 `/hooks` review 并 trust 新 hooks。
+先手工建立四类记忆文件；只有项目确实需要自动注入或收尾检查时,再添加 `.codex/` 配置和 hook。每个 hook 引用的脚本都必须存在于同一仓库并进入版本控制。配置完成后在 Codex CLI 里用 `/hooks` review 并 trust 新 hooks。
 
 ## 三、提示与协作:让 Codex 少猜、快做、做完
 
@@ -349,18 +339,20 @@ Codex 可以多找候选,但不能把候选当 findings。尤其 n=1 单点信�
 
 多阶段链路里,“文件存在”不等于“skill 真跑过”,“skill 产物齐”也不等于“阶段真过”。标 done 前必须做两层反验:
 
-- 先跑项目定义的执行检查,例如 `chain_exec_check --phase X`,结果必须全 SKILL_OUT,不能是 HANDWRITTEN。
+- 先跑项目文档中明确、且随仓提供的执行检查；如果没有专用检查器,就逐项核验产物来源、阶段出口条件和状态文件。人工补写文件不能冒充正式流程产物。
 - 再跑阶段出口/状态检查,确认 JSON 可读、evidence 非空无乱码、阶段出口条件通过。
-- D-code/代码生成阶段不能靠目录、包说明、历史编译日志 marker 判 PASS。出口检查必须真实跑编译、测试和 no-stub 扫描;这些运行结果只能作为 evidence,不能由“文件存在”替代。
-- 产物命名分歧由检查器吸收。合法产物用了 `workflow_alias` 或中文别名时,检查器应按同阶段 `producer_skill`/契约头反查,不要改产物去迁就检查器。
-- gate 的阻断只锚定结构化字段,如 `completion_axes.stage_exit`、`stage_completion_audit --json` 的 `mainline_readiness/blockers/stage_exit`;不要在自由文本 evidence 里扫 `no-go` 子串。
+- 代码生成阶段不能靠目录、包说明或历史日志标记判 PASS。出口检查必须真实跑编译、测试、占位实现扫描和最小运行验证；“文件存在”不能替代运行证据。
+- 合法的产物别名应由随仓检查器根据元数据识别,不要改产物迁就本地检查器。
+- gate 的阻断只锚定公开、结构化的状态字段,不要扫描自由文本关键词替代正式判定。
 
-状态文件不要手工整行替换。用项目提供的小工具只改一格,写完马上 `json.load` 回读校验。凡是 evidence 出现 `???`、`\ufffd`、路径变成 `D:/work/??/` 这类编码损坏,一律先修 state,不许继续在坏状态上报完成。
+状态 JSON 不要做字符串替换,要用标准 JSON 解析器或仓库内已提交的更新工具修改,写完马上回读校验。凡是 evidence 出现 `???`、`\ufffd`、路径根目录变成乱码这类编码损坏,一律先修 state,不许继续在坏状态上报完成。
 
 ## 更新记录
 
-- 2026-07-22:初版。按 `D:/work/资料/skills/CLAUDE-CODE-TIPS.md` 的 6 区结构,重写为 Codex 原生机制版,并配套 `D:/work/资料/skills/_tools/codex-project-kit/`。
+- 2026-07-22:初版。按同目录 `CLAUDE-CODE-TIPS.md` 的 6 区结构,重写为 Codex 原生机制版。
 - 2026-07-22:同步 Claude Code 技巧新增项:加 `5.5 判工具好坏看真产出,要比就全量比`,新增第七区「多步任务的执行节奏」4 条。
-- 2026-07-23:补 `7.5 标 done 前必须跑机器反验,不要手改状态 JSON`,来源是 F 绩效 C-task/D-code 连续误判与 state JSON 损坏复盘。
+- 2026-07-23:补 `7.5 标 done 前必须跑机器反验,不要手改状态 JSON`,来源是多阶段任务中的产物来源误判与状态 JSON 损坏复盘。
 - 2026-07-23:补 `6.5 缺 .codex/ 时直接创建最小项目落地面`,明确“没有 .codex/hook”不是免责理由,且新建 `.codex/` 本身不影响其他工具使用。
-- 2026-07-23:补 D-124 细则:D-code 必须编译/测试/no-stub 真跑,alias 由检查器识别,gate 只看结构化字段不扫自由文本。
+- 2026-07-23:补代码阶段出口细则:编译、测试、占位实现扫描和最小运行验证必须真跑；别名由随仓检查器识别，gate 只看结构化字段。
+- 2026-07-30:清理机器绑定路径。项目内引用改为仓库相对路径,目标项目改用 `<target-project-root>` 占位符。
+- 2026-07-30:清理未发布本地工具和项目内部术语依赖；文档改为不依赖初始化工具也能落地。
