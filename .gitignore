@@ -30,3 +30,5 @@ _exec/
 _tools/
 # Claude Code 内部配置与 hook(机器专有,不上远端)
 .claude/
+# Codex 项目本地配置、hook、guard 与运行状态(机器专有,不上远端)
+/.codex/
