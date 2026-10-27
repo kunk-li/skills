@@ -53,6 +53,25 @@
 
 详见 ROADMAP.md(长期规划)和 STATUS.md(当下状态)。
 
+## Codex 硬门禁(2026-07-29 起)
+
+### 主线与支线定义：POST_SAMPLE_SKILL_ATTRIBUTION_BRANCH — Post-sample mainline-comparison skill-attribution branch rule
+
+- **主线**是一个真实 OA 模块的整模块验证：固定真实 PRD 与团队代码，沿完整 SDLC skills 链生成产物，完成代码功能级对照并形成差距结果，最终由 11 条验收 bar 给出样本结论。代码对照结果属于主线证据；已有结果有效时，支线不得重做主线对照或重跑整条主线。
+- **支线**是主线之后消费明确主线证据的从属工作单元，不是新模块样本，也不改变主线样本结论。支线类型可以不同；当支线目标是从代码对照差距找 skill 缺口时，必须执行下面的因果归因流程。
+- **主线对照差距归因支线**以主线已有的代码功能级对照结果为输入，对差距做同类横扫，并沿完整 S1-S7 产物和交接链定位首次偏差。每项都记录：链路是否发现问题；未发现时，在哪一段、因何未发现，以及需要什么检查才能发现；已发现时，为何未体现在实现中、在哪次交接或产物转换中丢失。证据不足时只把对应归因标成未证实，不回头重做已完成的主线。
+- 只有完成上述归因后，才判断问题属于可优化的现有 skill、缺失的 skill、非 skill 的实现/链路问题，还是没有可折叠缺口。PRE/POST A/B 是验证已归因 skill 候选是否产生可复用改善的后续步骤，不是支线起点，也不能替代根因分析；候选最终按 fold/no_fold/deferred 收口。
+- 对本地 skill 归因，已固定的 PRD、代码和全链产物就是分析输入，不要求外部系统或凭据。生产集成证据另按其边界报告，不得倒过来阻止本地归因。
+
+- `D:/work/资料/skills/AGENTS.md` 是项目内最低强制约束；`.codex/MEMORY.md`、`STATUS.md`、`DECISIONS.md`、`TOOL-HARDENING-PLAN.md` 只能加严或补充,不能绕过这里的红线。
+- 每次 `UserPromptSubmit` 必须由 `D:/work/资料/skills/.codex/hooks/request_context_inject.py` 注入当前状态；回答前按注入的 `STATUS.md`、`TOOL-HARDENING-PLAN.md §0`、`oa_module_state.json` 对齐,不要凭旧上下文。
+- 每次 Stop/最终收口必须跑 `D:/work/资料/skills/.codex/hooks/stop_completion_closure.py` -> `D:/work/资料/skills/.codex/completion_closure_guard.py`；closure/provenance/complete claim guard 不过,不得 final。
+- 任何模块、任何阶段链,没有 `D:/work/资料/skills/.codex/formal_skill_chain_runner.py` 生成并验证的 `skill_invocation_manifest.json`,不得称为 formal skills 链路真实跑通,不得计入主线样本。
+- runner manifest、独立 output、非 hardcoded restamp 仍只证明 structural provenance/artifact shape。正式计数必须再过两门：`D:/work/资料/skills/.codex/formal_skill_execution_origin_guard.py` 验证当前 Codex 任务的两阶段 execution intent/receipt；`D:/work/资料/skills/.codex/formal_skill_execution_guard.py` 从 exact hash-bound zip 独立重建并从 immutable outputs 独立复算逐 invocation 正式合同义务与 output evidence。缺执行来源证据统一 `NOT_COUNTED_UNTIL_EXECUTION_ORIGIN_VALIDATION`；确认脚本预写再 record 则为 `NOT_COUNTED_PROVENANCE_SHAPE_ONLY`。有完整来源与语义证据但存在 `failed_with_gap` / `blocked_with_handoff` 时,只能计为 `COUNTED_AS_SUBSTANTIVE_FORMAL_SKILL_CHAIN_RUN_NO_GO`,不得说合同通过或生产达标。
+- 正确的 Codex-native 顺序固定为：当前 Codex 任务加载 exact formal skill zip，完整读取 `SKILL.md` 及其要求的 references，调用 runner `begin`；`begin` 必须在目标 output 不存在时冻结 skill read-set、输入 hash、planned outputs、Codex thread id 与随机 nonce，生成 execution intent；Codex 按合同生成独立产物后，runner `record` 消费该 intent 并写 receipt。`refresh` 同样必须先 `begin-refresh`，且历史无合法 receipt 的 invocation 禁止倒填 Codex-native 来源。它不要求 Anthropic 或其他外部 API。未绑定/未读取 skill 的 Codex 自写产物、人工手写产物、Python 生成器、per-module materializer 和“先写产物再 runner record”只能算 harness evidence；不能冒充 skill 生成产物。
+- `全部/真实/完整/full/complete` 必须拆开说:阶段是否全量执行、是否达标、D-code 是否 production-shaped、测试/代码对比/BAR-EVAL/production external integration 证据是什么。11 bar 未全过或生产外部集成未清,就必须明说 `NO_GO`。
+- 这些规则是全模块规则,不是 B3 特例；后续 B4/B5/Z/A 任意模块同样适用。
+
 ## 关键文档(按这个顺序读)
 
 1. `AGENTS.md` ← 本文件
@@ -102,6 +121,8 @@
 7. ✅ 如果 Stop hook 给你提醒了 ritual,**说明你已经漏了**——立即补做,并在 _sessions 里 reflect 为什么漏了
 8. ✅ **Codex 项目缺 `.codex/` 不是理由**:`.codex/` 是 Codex 专属项目本地面,新建它本身不影响 Claude 或其他工具使用。在允许写区内,如果当前 Codex 项目缺少必要 `.codex` hook/config/checker,就主动创建最小落地面并验证;不要把“没有 `.codex/` / 没自动跑”当成跳过执行纪律的理由。真正要谨慎的是覆盖已有 `.codex` 内容、强跑通用 init、或改通用规则;已有其他工具专用 ritual 时,不读取、不转发、不扫描其私有目录,只把可复用纪律转译成 `.codex` 原生 hook/checker/guard。
 9. ✅ **中文路径/中文正文读取必须走 UTF-8 安全面**:`D:/work/资料/skills/.codex/utf8_io.py` 或单个 Python UTF-8 reader；不要把 PowerShell `Get-Content`/`Select-String` 输出或 PowerShell 文本管道结果当成中文文件事实,不要在 shell 命令里直接写中文路径。读完/改完跑 `python D:/work/资料/skills/.codex/utf8_io.py scan --summary-line`。
+10. ✅ **formal skills 链路计数必须过“runner + execution origin + 逐 invocation 语义合同”三门**:`formal_skill_chain_runner.py begin` 必须在 output 生成前创建 thread/nonce/hash-bound execution intent，`record` 只能消费对应 intent；`formal_skill_chain_runner.py validate` 验 manifest/hash/阶段覆盖；`formal_skill_execution_origin_guard.py` 独立复算两阶段 receipt；`formal_skill_execution_guard.py` 独立重建并复算 obligation inventory 与 output evidence。多个 skill 盖章到同一个薄 output、旧硬编码 package restamp、人工/脚本预先写产物再 record,一律只能算 `NOT_COUNTED_PROVENANCE_SHAPE_ONLY`；缺来源凭证为 `NOT_COUNTED_UNTIL_EXECUTION_ORIGIN_VALIDATION`；缺语义证据为 `NOT_COUNTED_UNTIL_SUBSTANTIVE_FULL_VALIDATION`。有完整 evidence 但义务含 `failed_with_gap` / `blocked_with_handoff` 时,只可标 `COUNTED_AS_SUBSTANTIVE_FORMAL_SKILL_CHAIN_RUN_NO_GO`；必须把 execution origin、semantic completeness、contract conformance、BAR-EVAL、production external integration 分开报告。
+11. ✅ **用户指出一个问题时必须同类横扫**:先归类失败类型,再横扫同类入口/状态/审计/guard/产物/话术,一次性更新并验证。不能只补用户点名的那个文件或那一句话。当前项目用 `D:/work/资料/skills/.codex/one_pass_scope_guard.py` 检查这条。
 
 ## 一些上下文细节
 
